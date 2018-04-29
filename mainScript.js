@@ -1,24 +1,20 @@
 /*globals $:false*/
 /*jslint devel: true*/
+"use strict";
 
-// let global = {
-//   // searchField: $('.searchField'),
-//   // buttonTest: $('.testButton')
-//   searchField: document.getElementsByClassName("searchField"),
-//   testButton: document.getElementsByClassName("testButton")
-// };
+// Global variables
+let global = {
+  searchField: $('.searchField'),
+  searchBtn: $('#searchBtn'),
+  searchedQuery: $('#searchedQuery')
+};
 
-var searchBtn = document.getElementsByClassName("searchBtn");
-
-searchBtn.addEventListener("click", function() {
-  console.log("button was clicked");
+// When everything has loaded
+$(document).ready(function() {
+  global.searchBtn.on("click", function() {
+    global.searchedQuery.html(global.searchField.val());
+  })
 });
-
-// $(document).ready(function() {
-//   global.buttonTest.click(function(){
-//     console.log("Button clicked");
-//   });
-// });
 
 // module.exports.clickButton = clickButton;
 
