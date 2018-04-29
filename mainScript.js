@@ -1,18 +1,24 @@
 /*globals $:false*/
 /*jslint devel: true*/
 
-let global = {
-  // searchField: $('.searchField'),
-  // buttonTest: $('.testButton')
-  searchField: document.getElementsByClassName("searchField"),
-  testButton: document.getElementsByClassName("testButton")
-};
+// let global = {
+//   // searchField: $('.searchField'),
+//   // buttonTest: $('.testButton')
+//   searchField: document.getElementsByClassName("searchField"),
+//   testButton: document.getElementsByClassName("testButton")
+// };
 
-$(document).ready(function() {
-  global.buttonTest.click(function(){
-    console.log("Button clicked");
-  });
+var searchBtn = document.getElementsByClassName("searchBtn");
+
+searchBtn.addEventListener("click", function() {
+  console.log("button was clicked");
 });
 
-module.exports.global = global;
+// $(document).ready(function() {
+//   global.buttonTest.click(function(){
+//     console.log("Button clicked");
+//   });
+// });
+
+// module.exports.clickButton = clickButton;
 
