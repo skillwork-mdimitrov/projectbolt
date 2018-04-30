@@ -9,21 +9,26 @@ var fs = require('fs'); // file system
    ============================================================== */
 var server = http.createServer(function (request, response) {
     // Handle HTML
+  try {
     if(request.url === "/") {
       fs.readFile('index.html', function(err, data) {
         if(err instanceof Error){
           console.log(err + " HTML failed to load");
         }
         response.writeHead(200, {'Content-Type': 'text/html'});
-        if(typeof data !== 'undefined' || data !== null) {
-          response.write(data.toString());
+        try {
+          response.write(data);
         }
-        else {
-          response.write("Couldn't read HTML, so get this text instead");
+        catch (e) {
+          response.write("Couldn't read HTML, so get this text instead" + e);
         }
         response.end();
       });
     }
+  }
+  catch (e) {
+    console.log("CANT READ THIS INDEX HTML");
+  }
     // Handle scripts
     if(request.url === "/mainScript.js") {
       fs.readFile('mainScript.js', function(err, data) {
@@ -31,11 +36,11 @@ var server = http.createServer(function (request, response) {
           console.log(err + " Scripts failed to load");
         }
         response.writeHead(200, {'Content-Type': 'application/javascript'});
-        if(typeof data !== 'undefined' || data !== null) {
-          response.write(data.toString());
+        try {
+          response.write(data);
         }
-        else {
-          response.write("Couldn't read Script, so get this text instead");
+        catch (e) {
+          response.write("Couldn't read SCRIPT, so get this text instead" + e);
         }
         response.end();
       });
@@ -47,11 +52,11 @@ var server = http.createServer(function (request, response) {
           console.log(err + " Images failed to load");
         }
           response.writeHead(200, {'Content-Type': 'image/png'});
-        if(typeof data !== 'undefined' || data !== null) {
-          response.write(data.toString());
+        try {
+          response.write(data);
         }
-        else {
-          response.write("Couldn't read Images, so get this text instead");
+        catch (e) {
+          response.write("Couldn't read IMAGES, so get this text instead" + e);
         }
           response.end();
       });
@@ -63,11 +68,11 @@ var server = http.createServer(function (request, response) {
           console.log(err + " Loading styles failed");
         }
         response.writeHead(200, {'Content-Type': 'text/css'});
-        if(typeof data !== 'undefined' || data !== null) {
-          response.write(data.toString());
+        try {
+          response.write(data);
         }
-        else {
-          response.write("Couldn't read CSS, so get this text instead");
+        catch (e) {
+          response.write("Couldn't read HTML, so get this text instead" + e);
         }
         response.end();
       })
