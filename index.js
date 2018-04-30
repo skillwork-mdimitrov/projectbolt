@@ -29,6 +29,7 @@ var server = http.createServer(function (request, response) {
   catch (e) {
     console.log("CANT READ THIS INDEX HTML");
   }
+  try {
     // Handle scripts
     if(request.url === "/mainScript.js") {
       fs.readFile('mainScript.js', function(err, data) {
@@ -45,7 +46,12 @@ var server = http.createServer(function (request, response) {
         response.end();
       });
     }
+  }
+  catch (e) {
+    console.log("Scripts can't load" + e);
+  }
     // Handle images
+  try {
     if(request.url === "/images/thunder.png") {
       fs.readFile('images/thunder.png', function(err, data) {
         if(err instanceof Error){
@@ -61,7 +67,12 @@ var server = http.createServer(function (request, response) {
           response.end();
       });
     }
+  }
+  catch (e) {
+    console.log("Images can't load" + e)
+  }
     // Handle CSS
+  try {
     if(request.url === "/styles/style_index.css") {
       fs.readFile("styles/style_index.css", function(err, data) {
         if(err instanceof Error){
@@ -77,6 +88,10 @@ var server = http.createServer(function (request, response) {
         response.end();
       })
     }
+  }
+  catch (e) {
+    console.log("Styles can't load" + e);
+  }
 });
 // =====================================================================================================================
 
