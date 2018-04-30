@@ -11,7 +11,7 @@ filePath = path.join(__dirname, 'index.html');
    ============================================================== */
 var server = http.createServer(function (request, response) {
   // Handle HTML
-  if(request.url.endsWith("/")) {
+  if(request.url.endsWith(".net/")) {
     fs.readFile(filePath, function(err, data) {
       if(err instanceof Error){
         console.log(err + " HTML failed to load");
