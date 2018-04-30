@@ -3,7 +3,6 @@
 var http = require('http');
 const url = require('url');
 var fs = require('fs'); // file system
-path = require('path');
 // =====================================================================================================================
 
 /* SERVER
@@ -24,18 +23,18 @@ var server = http.createServer(function (request, response) {
         console.log(err + " Scripts failed to load");
       }
       response.writeHead(200, {'Content-Type': 'application/javascript'});
-      response.write(data.toString());
+      response.write(data);
       response.end();
     });
   }
   // Handle images
-  if(request.url.endsWith("/images/thunder.png")) {
+  if(request.url.endsWith("/images/thunderBolt.ico")) {
     fs.readFile('./images/thunder.png', function(err, data) {
       if(err instanceof Error){
         console.log(err + " Images failed to load");
       }
-      response.writeHead(200, {'Content-Type': 'image/png'});
-      response.write(data.toString());
+      response.writeHead(200, {'Content-Type': 'image/x-icon'});
+      response.write(data);
       response.end();
     });
   }
@@ -46,7 +45,7 @@ var server = http.createServer(function (request, response) {
         console.log(err + " Loading styles failed");
       }
       response.writeHead(200, {'Content-Type': 'text/css'});
-      response.write(data.toString());
+      response.write(data);
       response.end();
     })
   }
