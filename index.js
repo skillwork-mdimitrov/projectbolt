@@ -58,7 +58,7 @@ var server = http.createServer(function (request, response) {
 /* PORT
    ============================================================== */
 // Specify port
-var port = process.env.PORT || 1337;
+var port = process.env.PORT || 80;
 // Listen to port
 server.listen(port);
 // =====================================================================================================================
