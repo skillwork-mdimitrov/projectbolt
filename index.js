@@ -15,7 +15,7 @@ var server = http.createServer(function (request, response) {
           console.log(err + " HTML failed to load");
         }
         response.writeHead(200, {'Content-Type': 'text/html'});
-        if(typeof data === 'undefined' || data === null) {
+        if(typeof data !== 'undefined' || data !== null) {
           response.write(data.toString());
         }
         else {
@@ -31,7 +31,7 @@ var server = http.createServer(function (request, response) {
           console.log(err + " Scripts failed to load");
         }
         response.writeHead(200, {'Content-Type': 'application/javascript'});
-        if(typeof data === 'undefined' || data === null) {
+        if(typeof data !== 'undefined' || data !== null) {
           response.write(data.toString());
         }
         else {
@@ -47,7 +47,7 @@ var server = http.createServer(function (request, response) {
           console.log(err + " Images failed to load");
         }
           response.writeHead(200, {'Content-Type': 'image/png'});
-        if(typeof data === 'undefined' || data === null) {
+        if(typeof data !== 'undefined' || data !== null) {
           response.write(data.toString());
         }
         else {
@@ -63,7 +63,7 @@ var server = http.createServer(function (request, response) {
           console.log(err + " Loading styles failed");
         }
         response.writeHead(200, {'Content-Type': 'text/css'});
-        if(typeof data === 'undefined' || data === null) {
+        if(typeof data !== 'undefined' || data !== null) {
           response.write(data.toString());
         }
         else {
