@@ -20,7 +20,7 @@ var server = http.createServer(function (request, response) {
     //   response.write(data.toString());
     //   response.end();
     // });
-    alert("HTML LOADED");
+    console.log(request.url);
     console.log("HTML LOADED");
   }
   try {
