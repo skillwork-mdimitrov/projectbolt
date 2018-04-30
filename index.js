@@ -10,49 +10,46 @@ path = require('path');
    ============================================================== */
 var server = http.createServer(function (request, response) {
   // Handle HTML
-  fs.readFile("index.html", function (err, data) {
-    response.writeHead(200, {'Content-type': 'text/html'});
-    response.write(data);
-    response.end();
-  });
-  // try {
-  // // Handle scripts
-  // if(request.url.endsWith("/mainScript.js")) {
-  //   fs.readFile('./mainScript.js', function(err, data) {
-  //     if(err instanceof Error){
-  //       console.log(err + " Scripts failed to load");
-  //     }
-  //     response.writeHead(200, {'Content-Type': 'application/javascript'});
-  //     response.write(data.toString());
-  //     response.end();
-  //   });
-  // }
-  // // Handle images
-  // if(request.url.endsWith("/images/thunder.png")) {
-  //   fs.readFile('./images/thunder.png', function(err, data) {
-  //     if(err instanceof Error){
-  //       console.log(err + " Images failed to load");
-  //     }
-  //     response.writeHead(200, {'Content-Type': 'image/png'});
-  //     response.write(data.toString());
-  //     response.end();
-  //   });
-  // }
-  // // Handle CSS
-  // if(request.url.endsWith("/styles/style_index.css")) {
-  //   fs.readFile("./styles/style_index.css", function(err, data) {
-  //     if(err instanceof Error){
-  //       console.log(err + " Loading styles failed");
-  //     }
-  //     response.writeHead(200, {'Content-Type': 'text/css'});
-  //     response.write(data.toString());
-  //     response.end();
-  //   })
-  // }
-  // }
-  // catch (e) {
-  //   console.log("Can't load the rest");
-  // }
+  if(request.url.endsWith("/")) {
+    fs.readFile("index.html", function (err, data) {
+      response.writeHead(200, {'Content-type': 'text/html'});
+      response.write(data);
+      response.end();
+    });
+  }
+  // Handle scripts
+  if(request.url.endsWith("/mainScript.js")) {
+    fs.readFile('./mainScript.js', function(err, data) {
+      if(err instanceof Error){
+        console.log(err + " Scripts failed to load");
+      }
+      response.writeHead(200, {'Content-Type': 'application/javascript'});
+      response.write(data.toString());
+      response.end();
+    });
+  }
+  // Handle images
+  if(request.url.endsWith("/images/thunder.png")) {
+    fs.readFile('./images/thunder.png', function(err, data) {
+      if(err instanceof Error){
+        console.log(err + " Images failed to load");
+      }
+      response.writeHead(200, {'Content-Type': 'image/png'});
+      response.write(data.toString());
+      response.end();
+    });
+  }
+  // Handle CSS
+  if(request.url.endsWith("/styles/style_index.css")) {
+    fs.readFile("./styles/style_index.css", function(err, data) {
+      if(err instanceof Error){
+        console.log(err + " Loading styles failed");
+      }
+      response.writeHead(200, {'Content-Type': 'text/css'});
+      response.write(data.toString());
+      response.end();
+    })
+  }
 });
 // =====================================================================================================================
 
