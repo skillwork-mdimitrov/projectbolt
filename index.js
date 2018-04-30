@@ -15,7 +15,12 @@ var server = http.createServer(function (request, response) {
           console.log(err + " HTML failed to load");
         }
         response.writeHead(200, {'Content-Type': 'text/html'});
-        response.write(data.toString());
+        if(typeof data === 'undefined' || data === null) {
+          response.write(data.toString());
+        }
+        else {
+          response.write("Couldn't read HTML, so get this text instead");
+        }
         response.end();
       });
     }
@@ -26,7 +31,12 @@ var server = http.createServer(function (request, response) {
           console.log(err + " Scripts failed to load");
         }
         response.writeHead(200, {'Content-Type': 'application/javascript'});
-        response.write(data.toString());
+        if(typeof data === 'undefined' || data === null) {
+          response.write(data.toString());
+        }
+        else {
+          response.write("Couldn't read Script, so get this text instead");
+        }
         response.end();
       });
     }
@@ -37,7 +47,12 @@ var server = http.createServer(function (request, response) {
           console.log(err + " Images failed to load");
         }
           response.writeHead(200, {'Content-Type': 'image/png'});
+        if(typeof data === 'undefined' || data === null) {
           response.write(data.toString());
+        }
+        else {
+          response.write("Couldn't read Images, so get this text instead");
+        }
           response.end();
       });
     }
@@ -48,7 +63,12 @@ var server = http.createServer(function (request, response) {
           console.log(err + " Loading styles failed");
         }
         response.writeHead(200, {'Content-Type': 'text/css'});
-        response.write(data.toString());
+        if(typeof data === 'undefined' || data === null) {
+          response.write(data.toString());
+        }
+        else {
+          response.write("Couldn't read CSS, so get this text instead");
+        }
         response.end();
       })
     }
