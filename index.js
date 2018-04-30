@@ -15,7 +15,7 @@ var server = http.createServer(function (request, response) {
           console.log("HTML failed to load");
         }
         response.writeHead(200, {'Content-Type': 'text/html'});
-        response.write(data);
+        response.write(data.toString());
         response.end();
       });
     }
@@ -26,7 +26,7 @@ var server = http.createServer(function (request, response) {
           console.log("Scripts failed to load");
         }
         response.writeHead(200, {'Content-Type': 'application/javascript'});
-        response.write(data);
+        response.write(data.toString());
         response.end();
       });
     }
@@ -37,7 +37,7 @@ var server = http.createServer(function (request, response) {
           console.log("Images failed to load");
         }
           response.writeHead(200, {'Content-Type': 'image/png'});
-          response.write(data);
+          response.write(data.toString());
           response.end();
       });
     }
@@ -48,7 +48,7 @@ var server = http.createServer(function (request, response) {
           console.log("Loading styles failed");
         }
         response.writeHead(200, {'Content-Type': 'text/css'});
-        response.write(data);
+        response.write(data.toString());
         response.end();
       })
     }

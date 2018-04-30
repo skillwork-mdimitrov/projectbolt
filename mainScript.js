@@ -12,7 +12,7 @@ let global = {
 // When everything has loaded
 $(document).ready(function() {
   global.searchBtn.on("click", function() {
-    global.searchedQuery.html(global.searchField.val());
+    global.searchedQuery.html("<em>The search query is ... </em>" + global.searchField.val());
   })
 });
 
