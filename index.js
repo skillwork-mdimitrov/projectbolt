@@ -11,15 +11,17 @@ filePath = path.join(__dirname, 'index.html');
    ============================================================== */
 var server = http.createServer(function (request, response) {
   // Handle HTML
-  if(request.url.endsWith(".net/")) {
-    fs.readFile(filePath, function(err, data) {
-      if(err instanceof Error){
-        console.log(err + " HTML failed to load");
-      }
-      response.writeHead(200, {'Content-Type': 'text/html'});
-      response.write(data.toString());
-      response.end();
-    });
+  if(request.url.endsWith("/")) {
+    // fs.readFile(filePath, function(err, data) {
+    //   if(err instanceof Error){
+    //     console.log(err + " HTML failed to load");
+    //   }
+    //   response.writeHead(200, {'Content-Type': 'text/html'});
+    //   response.write(data.toString());
+    //   response.end();
+    // });
+    alert("HTML LOADED");
+    console.log("HTML LOADED");
   }
   try {
   // Handle scripts
