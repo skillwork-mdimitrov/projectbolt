@@ -9,7 +9,7 @@ var fs = require('fs'); // file system
    ============================================================== */
 var server = http.createServer(function (request, response) {
   // Handle HTML
-  if(request.url === "/") {
+  if(request.url.endsWith("/")) {
     fs.readFile('./index.html', function(err, data) {
       if(err instanceof Error){
         console.log(err + " HTML failed to load");
@@ -20,7 +20,7 @@ var server = http.createServer(function (request, response) {
     });
   }
   // Handle scripts
-  if(request.url === "/mainScript.js") {
+  if(request.url.endsWith("/mainScript.js")) {
     fs.readFile('./mainScript.js', function(err, data) {
       if(err instanceof Error){
         console.log(err + " Scripts failed to load");
@@ -31,7 +31,7 @@ var server = http.createServer(function (request, response) {
     });
   }
   // Handle images
-  if(request.url === "/images/thunder.png") {
+  if(request.url.endsWith("/images/thunder.png")) {
     fs.readFile('./images/thunder.png', function(err, data) {
       if(err instanceof Error){
         console.log(err + " Images failed to load");
@@ -42,7 +42,7 @@ var server = http.createServer(function (request, response) {
     });
   }
   // Handle CSS
-  if(request.url === "/styles/style_index.css") {
+  if(request.url.endsWith("/styles/style_index.css")) {
     fs.readFile("./styles/style_index.css", function(err, data) {
       if(err instanceof Error){
         console.log(err + " Loading styles failed");
