@@ -16,12 +16,18 @@ $(document).ready(function() {
    ============================================================== */
   global.searchBtn.on("click", function() {
     // global.searchedQuery.html("<em>The search query is ... </em>" + global.searchField.val());
-    // URL is hardcoded, not secure way of requesting for server files (will be fixed)
-    $.ajax({url: "scripts/sqltest/sqltest.js", success: function(result){
-      global.searchedQuery.html(result);
+
+    // Send AJAX request on searchBtn click
+    $.ajax({url: "scripts/sqltest/sqltest.js", success: function(result){ // HC URL + exposed server architecture (will fix later)
+      // Cover all JS scenarios for falsy results
+      if(result === 'undefined' || typeof result === 'undefined' || result === null) {
+        global.searchedQuery.html("Couldn't fetch results from the database");
+      }
+      // Correct results, display them
+      else {
+        global.searchedQuery.html(result);
+      }
     }});
   })
 });
-
-// module.exports.clickButton = clickButton;
 

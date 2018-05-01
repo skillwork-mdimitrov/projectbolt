@@ -7,6 +7,7 @@
 var http = require('http');
 const url = require('url');
 var fs = require('fs'); // file system
+var sql = require('./scripts/sqltest/sqltest');
 // =====================================================================================================================
 
 /* SERVER
@@ -24,16 +25,9 @@ var server = http.createServer(function (request, response) {
     });
   }
   // Handle scripts
-  if(request.url.includes("/scripts/")) {
-    let fileToBeRead = ""; // depending on the URL specify the file that needs to be read
-    // Request is for the main page script (event listeners, etc.)
-    if(request.url.endsWith("mainScript.js")) {
-      fileToBeRead = "./scripts/mainScript.js"; // HC
-    }
-    // Request is for the script that will pull information from the Azure DB
-    else if(request.url.endsWith("sqltest.js")) {
-      fileToBeRead = "./scripts/sqltest/sqltest.js"; // HC
-    }
+  if(request.url.endsWith("mainScript.js")) {
+    let fileToBeRead = "./scripts/mainScript.js"; // depending on the URL specify the file that needs to be read
+
     // Serve the request, return a response and close the request
     fs.readFile(fileToBeRead, function(err, data) {
       if(err instanceof Error){
@@ -44,6 +38,16 @@ var server = http.createServer(function (request, response) {
       response.end();
     });
   }
+
+  // Request is for the script that will pull information from the Azure DB
+  if(request.url.endsWith("sqltest.js")) {
+    let toReturn = sql.queryDB() + "";
+    console.log(toReturn);
+    response.writeHead(200, {'Content-Type': 'application/javascript'});
+    response.write(toReturn);
+    response.end();
+  }
+
   // Handle images
   if(request.url.includes("/images/")) {
     let fileToBeRead = ""; // depending on the URL specify the file that needs to be read
