@@ -28,12 +28,22 @@ var server = http.createServer(function (request, response) {
     });
   }
   // Handle images
-  if(request.url.endsWith("/images/thunderBolt.ico")) {
-    fs.readFile('./images/thunder.png', function(err, data) {
+  if(request.url.includes("/images/")) {
+    var fileToBeRead = ""; // depending on the URL specify the file that needs to be read
+    var fileType = ""; // depending on the URL specify the file type
+    if(request.url.endsWith("thunder.png")) {
+      fileToBeRead = "./images/thunder.png";
+      fileType = "png";
+    }
+    else if(request.url.endsWith("magnifyingGlass.png")) {
+      fileToBeRead = "./images/magnifyingGlass.png";
+      fileType = "png";
+    }
+    fs.readFile(fileToBeRead, function(err, data) {
       if(err instanceof Error){
         console.log(err + " Images failed to load");
       }
-      response.writeHead(200, {'Content-Type': 'image/x-icon'});
+      response.writeHead(200, {'Content-Type': 'image/' + fileType});
       response.write(data);
       response.end();
     });
