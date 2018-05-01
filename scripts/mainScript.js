@@ -13,27 +13,28 @@ let global = {
 $(document).ready(function() {
 
   /* EVENT LISTENERS
-   ============================================================== */
+    ============================================================== */
   global.searchBtn.on("click", function() {
-    // global.searchedQuery.html("<em>The search query is ... </em>" + global.searchField.val());
+    try {
+      // VARIABLES
+      var xhttp;
+      xhttp = new XMLHttpRequest();
 
-    // Send AJAX request on searchBtn click
-    $.ajax({url: "scripts/sqltest/sqltest.js",
-      success: function(result){ // HC URL + exposed server architecture (will fix later)
-        // Cover all JS scenarios for falsy results
-        if(result === 'undefined' || typeof result === 'undefined' || result === null) {
-          global.searchedQuery.html("Couldn't fetch results from the database");
+      xhttp.onreadystatechange = function() {
+        var DONE = 4; // readyState 4 means the request is done.
+        var OK = 200; // status 200 is a successful return.
+        if (this.readyState === DONE && this.status === OK) {
+          global.searchedQuery.html(this.responseText);
         }
-        // Correct results, display them
-        else {
-          global.searchedQuery.html(result);
-        }
-      },
-      error: function(XMLHttpRequest, textStatus, errorThrown) {
-        console.log("Status: " + textStatus +"Error: " + errorThrown);
-        global.searchedQuery.html("Bad request");
-      }
-      });
-  })
+      };
+      xhttp.open("POST", "scripts/sqltest/sqltest.js",  true);
+      xhttp.send();
+    }
+    catch(e) {
+      console.log('Caught Exception: ' + e.message);
+    }
+  });
 });
+
+
 
