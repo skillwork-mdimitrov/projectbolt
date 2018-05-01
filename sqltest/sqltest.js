@@ -2,52 +2,48 @@ var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
 
 var config = {
-  userName: '', // update me
-  password: 'FUCKYOU', // update me
-  database: 'mytestdb', // for sure
-  server: 'localhost' // for sure
+  userName: 'pbadmin', // update me
+  password: '56(E+!,?NGQ85tY"a%l#%5IU~[J>GU', // update me
+  server: 'projectbolt.database.windows.net', // update me
+  options: {
+    database: 'ProjectBolt', // update me
+    encrypt: true
+  }
 };
-
-// var config = {
-//   userName: 'testUser', // update me
-//   // password: 'admin',  // update me
-//   server: 'MAKSIM-PC', // update me
-//   database: 'mytestdb', // update me
-//   option: {
-//     instanceName: "MSSQLSERVER", // update me
-//     database: 'mytestdb' // update me
-//   }
-// };
 
 var connection = new Connection(config);
 
-connection.on('connect', function (err) {
-  if (err) {
-    console.log(err);
-  } else {
-    executeStatement();
-  }
-});
-
-function executeStatement() {
-  request = new Request("USE NodeSql; select * from Code ", function (err, rowCount) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(rowCount + ' rows');
-    }
-    connection.close();
-  });
-
-  request.on('row', function (columns) {
-    columns.forEach(function (column) {
-      if (column.value === null) {
-        console.log('NULL');
-      } else {
-        console.log(column.value);
+// Attempt to connect and execute queries if connection goes through
+connection.on('connect', function(err)
+    {
+      if (err)
+      {
+        console.log(err)
       }
+      else
+      {
+        queryDatabase()
+      }
+    }
+);
+
+function queryDatabase() {
+  console.log('Reading rows from the Table...');
+
+  // Read all rows from table
+  request = new Request(
+      "SELECT TOP 20 pc.Name as CategoryName, p.name as ProductName FROM [SalesLT].[ProductCategory] pc JOIN [SalesLT].[Product] p ON pc.productcategoryid = p.productcategoryid",
+      function(err, rowCount, rows)
+      {
+        console.log(rowCount + ' row(s) returned');
+        process.exit();
+      }
+  );
+
+  request.on('row', function(columns) {
+    columns.forEach(function(column) {
+      console.log("%s\t%s", column.metadata.colName, column.value);
     });
   });
-
   connection.execSql(request);
 }
