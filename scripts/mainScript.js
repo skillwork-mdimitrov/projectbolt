@@ -16,7 +16,8 @@ $(document).ready(function() {
    ============================================================== */
   global.searchBtn.on("click", function() {
     // global.searchedQuery.html("<em>The search query is ... </em>" + global.searchField.val());
-    $.ajax({url: "sqltest.js", success: function(result){
+    // URL is hardcoded, not secure way of requesting for server files (will be fixed)
+    $.ajax({url: "scripts/sqltest/sqltest.js", success: function(result){
       global.searchedQuery.html(result);
     }});
   })
