@@ -30,7 +30,7 @@ $(document).ready(function() {
         }
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
-        console.log("Status: " + textStatus); alert("Error: " + errorThrown);
+        console.log("Status: " + textStatus +"Error: " + errorThrown);
         global.searchedQuery.html("Bad request");
       }
       });

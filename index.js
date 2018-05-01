@@ -7,7 +7,6 @@
 var http = require('http');
 const url = require('url');
 var fs = require('fs'); // file system
-var sql = require('./scripts/sqltest/sqltest');
 // =====================================================================================================================
 
 /* SERVER
@@ -41,10 +40,8 @@ var server = http.createServer(function (request, response) {
 
   // Request is for the script that will pull information from the Azure DB
   if(request.url.endsWith("sqltest.js")) {
-    let toReturn = sql.queryDB() + "";
-    console.log(toReturn);
     response.writeHead(200, {'Content-Type': 'application/javascript'});
-    response.write(toReturn);
+    response.write("To be implemented with sqltest.js");
     response.end();
   }
 
