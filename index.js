@@ -11,6 +11,9 @@ var server = http.createServer(function (request, response) {
   // Handle HTML
   if(request.url.endsWith("/")) {
     fs.readFile("index.html", function (err, data) {
+      if(err instanceof Error){
+        console.log(err + " _HTML failed to load");
+      }
       response.writeHead(200, {'Content-type': 'text/html'});
       response.write(data);
       response.end();
@@ -18,9 +21,9 @@ var server = http.createServer(function (request, response) {
   }
   // Handle scripts
   if(request.url.endsWith("/mainScript.js")) {
-    fs.readFile('./mainScript.js', function(err, data) {
+    fs.readFile('./scripts/mainScript.js', function(err, data) {
       if(err instanceof Error){
-        console.log(err + " Scripts failed to load");
+        console.log(err + " _Scripts failed to load");
       }
       response.writeHead(200, {'Content-Type': 'application/javascript'});
       response.write(data);
@@ -41,7 +44,7 @@ var server = http.createServer(function (request, response) {
     }
     fs.readFile(fileToBeRead, function(err, data) {
       if(err instanceof Error){
-        console.log(err + " Images failed to load");
+        console.log(err + " _Images failed to load");
       }
       response.writeHead(200, {'Content-Type': 'image/' + fileType});
       response.write(data);
@@ -52,7 +55,7 @@ var server = http.createServer(function (request, response) {
   if(request.url.endsWith("/styles/style_index.css")) {
     fs.readFile("./styles/style_index.css", function(err, data) {
       if(err instanceof Error){
-        console.log(err + " Loading styles failed");
+        console.log(err + " _Loading styles failed");
       }
       response.writeHead(200, {'Content-Type': 'text/css'});
       response.write(data);
