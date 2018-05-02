@@ -3,6 +3,17 @@
   height: 500px;
 }
 
+.searchContainer .searchBar {
+  display: flex;
+  align-content: center;
+  width: 400px;
+  height: 40px;
+}
+
+.searchContainer .searchBar .magnifyingGlass {
+  width: 50px;
+}
+
 .searchContainer input[type=text] {
   width: 130px;
   -webkit-transition: width 0.4s ease-in-out;
@@ -11,7 +22,7 @@
 
 /* When the input field gets focus, change its width to 100% */
 .searchContainer input[type=text]:focus {
-  width: 100%;
+  width: 70%;
 }
 
 #searchBtn {
