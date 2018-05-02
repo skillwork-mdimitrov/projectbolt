@@ -1,13 +1,14 @@
 /* LEGEND, COMMENTS
    ============================================================== */
 // HC = Hard coded
+// PtS = Problems to solve
 
 /* VARIABLES
    ============================================================== */
 var http = require('http');
-const url = require('url');
+// const url = require('url'); // maybe delete
 var fs = require('fs'); // file system
-var yellingModule = require('./scripts/testForImporting');
+let database = require('./scripts/sqltest/sqltest');
 // =====================================================================================================================
 
 /* SERVER
@@ -39,11 +40,16 @@ var server = http.createServer(function (request, response) {
     });
   }
 
-  // Request is for the script that will pull information from the Azure DB
+  // Query Azure DB request
   if(request.url.endsWith("sqltest.js")) {
-    yellingModule.yellLoudly();
+    let toWrite = "";
+    database.queryDatabase(); // Fetch from database
+    // PtS, the array keeps growing
+    for(let i=0;i<database.dbResults.length;i++) {
+      toWrite += database.dbResults[i];
+    }
     response.writeHead(200, {'Content-Type': 'application/javascript'});
-    response.write(yellingModule.yellLoudly());
+    response.write(toWrite);
     response.end();
   }
 
