@@ -7,6 +7,7 @@
 var http = require('http');
 const url = require('url');
 var fs = require('fs'); // file system
+var yellingModule = require('./scripts/testForImporting');
 // =====================================================================================================================
 
 /* SERVER
@@ -40,8 +41,9 @@ var server = http.createServer(function (request, response) {
 
   // Request is for the script that will pull information from the Azure DB
   if(request.url.endsWith("sqltest.js")) {
+    yellingModule.yellLoudly();
     response.writeHead(200, {'Content-Type': 'application/javascript'});
-    response.write("To be implemented with sqltest.js");
+    response.write(yellingModule.yellLoudly());
     response.end();
   }
 
