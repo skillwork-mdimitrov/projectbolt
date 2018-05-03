@@ -1,3 +1,9 @@
+/* JSHint quality control options
+   ============================================================== */
+/*globals $:false*/
+/*jslint devel: true*/
+/*jshint esversion: 6*/
+
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
 var dbResults = []; // will store the results from the queries
@@ -15,14 +21,14 @@ var config = {
 var connection = new Connection(config);
 
 // Attempt to connect and execute queries if connection goes through
-connection.on('connect', function(err) {
-  if (err) {
-    console.log(err);
-  }
-  else {
-    queryDatabase();
- }
-});
+// connection.on('connect', function(err) {
+//   if (err) {
+//     console.log(err);
+//   }
+//   else {
+//     queryDatabase();
+//  }
+// });
 
 function queryDatabase() {
   // console.log('Reading rows from the Table...');
@@ -30,6 +36,7 @@ function queryDatabase() {
   // Read all rows from table
   request = new Request(
       "SELECT * FROM questions",
+      // Can't scrap this, because Request expects another parameter
       function(err, rowCount, rows) {
         // console.log(rowCount + ' row(s) returned');
         // process.exit();
@@ -38,16 +45,22 @@ function queryDatabase() {
 
   request.on('row', function(columns) {
     columns.forEach(function(column) {
-      let toReturn = ""; // will store the results of each column
+      // console.log("sqltest speaking:");
       // console.log("%s\t%s", column.metadata.colName, column.value);
+      // Push each result into the dbResults array
       dbResults.push(column.metadata.colName + "\t" + column.value + "\n");
-      // return toReturn; // after each column loop, return the results
     });
   });
 
   connection.execSql(request);
 }
 
+function getDbResults() {
+  // console.log(dbResults);
+  return dbResults;
+}
+
+
 // Make publicly available
 module.exports.queryDatabase = queryDatabase;
-module.exports.dbResults = dbResults;
+module.exports.getDbResults = getDbResults;

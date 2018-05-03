@@ -23,10 +23,10 @@ function sendRequestSQL() {
       var DONE = 4; // readyState 4 means the request is done.
       var OK = 200; // status 200 is a successful return.
       if (this.readyState === DONE && this.status === OK) {
-        global.searchedQuery.html(this.responseText);
+        global.searchedQuery.html(this.responseText); // the response.write results will be displayed here
       }
     };
-    xhttp.open("POST", "scripts/sqltest/sqltest.js",  true);
+    xhttp.open("POST", "scripts/sqltest/sqltest.js", true);
     xhttp.send();
   }
   catch(e) {
@@ -37,7 +37,7 @@ function sendRequestSQL() {
 // When everything has loaded
 $(document).ready(function() {
   "use strict";
-  /* EVENT LISTENERS
+  /* ATTACH EVENT LISTENERS
     ============================================================== */
   global.searchBtn.on("click", function() {
     sendRequestSQL();
