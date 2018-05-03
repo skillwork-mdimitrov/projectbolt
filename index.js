@@ -1,3 +1,9 @@
+/* JSHint quality control options
+   ============================================================== */
+/*globals $:false*/
+/*jslint devel: true*/
+/*jshint esversion: 6*/
+
 /* LEGEND, COMMENTS
    ============================================================== */
 // HC = Hard coded
@@ -14,6 +20,7 @@ let database = require('./scripts/sqltest/sqltest');
 /* SERVER
    ============================================================== */
 var server = http.createServer(function (request, response) {
+  "use strict";
   // Handle HTML
   if(request.url.endsWith("/")) {
     fs.readFile("index.html", function (err, data) {
@@ -43,8 +50,6 @@ var server = http.createServer(function (request, response) {
   // Query Azure DB request
   if(request.url.endsWith("sqltest.js")) {
     let toWrite = "";
-    database.queryDatabase(); // Fetch from database
-    // PtS, the array keeps growing
     for(let i=0;i<database.dbResults.length;i++) {
       toWrite += database.dbResults[i];
     }
@@ -83,7 +88,7 @@ var server = http.createServer(function (request, response) {
       response.writeHead(200, {'Content-Type': 'text/css'});
       response.write(data);
       response.end();
-    })
+    });
   }
 });
 // =====================================================================================================================
