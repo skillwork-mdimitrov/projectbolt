@@ -49,39 +49,16 @@ var server = http.createServer(function (request, response) {
 
   // Handle Azure DB query request
   if(request.url.endsWith("sqltest.js")) {
-    // let toWrite = "";
-    // for(let i=0;i<database.dbResults.length;i++) {
-    //   toWrite += database.dbResults[i];
-    // }
-    // database.queryDatabase(); // query the db, which will save the results into dbResults;
-
-    let promise = new Promise(function(resolve, reject) {
-      let happy = true;
-      setTimeout(function() {
-        if(happy) {
-          resolve("He's happy!");
-        } else {
-          reject("He ain't happy");
-        }
-      }, 1500);
-    });
-
-    let suckATit = async function() {
-      let toWrite = await promise;
-      console.log(toWrite);
-    }();
-
-    response.writeHead(200, {'Content-Type': 'application/javascript'});
-    response.write("blabla");
-    response.end();
+    let toWrite = "";
+    database.queryDatabase(); // query the db, which will save the results into dbResults;
 
     // hacky async ... wait half a sec, until the queryDatabase() finishes executing
-    // setTimeout(function() {
-    //   toWrite = database.dbResults.join();
-    //   response.writeHead(200, {'Content-Type': 'application/javascript'});
-    //   response.write(toWrite);
-    //   response.end();
-    // }, 1000);
+    setTimeout(function() {
+      toWrite = database.dbResults.join();
+      response.writeHead(200, {'Content-Type': 'application/javascript'});
+      response.write(toWrite);
+      response.end();
+    }, 750);
   }
 
   // Handle images

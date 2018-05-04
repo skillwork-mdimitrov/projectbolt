@@ -20,6 +20,7 @@ var config = {
 
 var connection = new Connection(config);
 
+// On connect, not needed for now
 // Attempt to connect and execute queries if connection goes through
 // connection.on('connect', function(err) {
 //   if (err) {
@@ -45,7 +46,6 @@ function queryDatabase() {
 
   request.on('row', function(columns) {
     columns.forEach(function(column) {
-      // console.log("sqltest speaking:");
       // console.log("%s\t%s", column.metadata.colName, column.value);
       // Push each result into the dbResults array
       dbResults.push(column.metadata.colName + "\t" + column.value + "\n");
@@ -55,12 +55,6 @@ function queryDatabase() {
   connection.execSql(request);
 }
 
-function getDbResults() {
-  // console.log(dbResults);
-  return dbResults;
-}
-
-
 // Make publicly available
 module.exports.queryDatabase = queryDatabase;
-module.exports.getDbResults = getDbResults;
+module.exports.dbResults = dbResults;
