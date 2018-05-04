@@ -12,7 +12,7 @@ function evaluate_query()
 {
     query = document.getElementById("query").value;
     var output = document.getElementById("output");
-    
+
     output.innerHTML = "";
     questions.forEach(print_similarity, output);
 }
@@ -50,7 +50,6 @@ function get_similarity(question)
         similarity += get_string_length_similarity(question) * string_length_weight;
         similarity += get_word_occurence_similarity(question) * word_occurence_weight;
         similarity += get_word_position_similarity(question) * word_position_weight;
-        similarity += get_sentence_occurence_similarity(question) * sentence_occurence_weight;
     }
 
     return Math.round(similarity);

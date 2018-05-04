@@ -47,6 +47,21 @@ var server = http.createServer(function (request, response) {
     });
   }
 
+  // Handle string comparison request
+  if(request.url.endsWith("string_compare.js")) {
+    let fileToBeRead = "./scripts/string_compare.js"; // depending on the URL specify the file that needs to be read
+
+    // Serve the request, return a response and close the request
+    fs.readFile(fileToBeRead, function(err, data) {
+      if(err instanceof Error){
+        console.log(err + " _Scripts failed to load");
+      }
+      response.writeHead(200, {'Content-Type': 'application/javascript'});
+      response.write(data);
+      response.end();
+    });
+  }
+
   // Handle Azure DB query request
   if(request.url.endsWith("sqltest.js")) {
     let toWrite = "";

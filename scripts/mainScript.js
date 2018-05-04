@@ -40,7 +40,8 @@ $(document).ready(function() {
   /* ATTACH EVENT LISTENERS
     ============================================================== */
   global.searchBtn.on("click", function() {
-    sendRequestSQL();
+    // sendRequestSQL();
+    evaluate_query();
   });
 });
 
