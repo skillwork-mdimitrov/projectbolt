@@ -32,7 +32,7 @@ var server = http.createServer(function (request, response) {
       response.end();
     });
   }
-  // Handle scripts
+  // Handle main JS script
   if(request.url.endsWith("mainScript.js")) {
     let fileToBeRead = "./scripts/mainScript.js"; // depending on the URL specify the file that needs to be read
 
@@ -47,15 +47,18 @@ var server = http.createServer(function (request, response) {
     });
   }
 
-  // Query Azure DB request
+  // Handle Azure DB query request
   if(request.url.endsWith("sqltest.js")) {
     let toWrite = "";
-    for(let i=0;i<database.dbResults.length;i++) {
-      toWrite += database.dbResults[i];
-    }
-    response.writeHead(200, {'Content-Type': 'application/javascript'});
-    response.write(toWrite);
-    response.end();
+    database.queryDatabase(); // query the db, which will save the results into dbResults;
+
+    // hacky async ... wait half a sec, until the queryDatabase() finishes executing
+    setTimeout(function() {
+      toWrite = database.dbResults.join();
+      response.writeHead(200, {'Content-Type': 'application/javascript'});
+      response.write(toWrite);
+      response.end();
+    }, 750);
   }
 
   // Handle images
@@ -100,5 +103,4 @@ var port = process.env.PORT || 1337;
 // Listen to port
 server.listen(port);
 // =====================================================================================================================
-
 console.log("Server running at http://localhost:%d", port);
