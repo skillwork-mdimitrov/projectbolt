@@ -8,13 +8,13 @@ var questions = [
                 "And the stars?"
                 ];
 
-function evaluate_query()
+function evaluate_query(theQuery)
 {
     query = document.getElementById("query").value;
     var output = document.getElementById("output");
 
     output.innerHTML = "";
-    questions.forEach(print_similarity, output);
+    theQuery.forEach(print_similarity, output);
 }
 
 function print_similarity(item)

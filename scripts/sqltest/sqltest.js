@@ -48,7 +48,7 @@ function queryDatabase() {
     columns.forEach(function(column) {
       // console.log("%s\t%s", column.metadata.colName, column.value);
       // Push each result into the dbResults array
-      dbResults.push(column.metadata.colName + "\t" + column.value + "\n");
+      dbResults.push(column.value + "\n");
     });
   });
 

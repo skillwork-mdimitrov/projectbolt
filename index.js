@@ -32,7 +32,11 @@ var server = http.createServer(function (request, response) {
       response.end();
     });
   }
-  // Handle main JS script
+
+  /* SCRIPT HANDLING
+   ============================================================== */
+
+  // Serve the main script on initial page load
   if(request.url.endsWith("mainScript.js")) {
     let fileToBeRead = "./scripts/mainScript.js"; // depending on the URL specify the file that needs to be read
 
@@ -47,7 +51,7 @@ var server = http.createServer(function (request, response) {
     });
   }
 
-  // Handle string comparison request
+  // Serve the string comparison algorithm on page load
   if(request.url.endsWith("string_compare.js")) {
     let fileToBeRead = "./scripts/string_compare.js"; // depending on the URL specify the file that needs to be read
 
@@ -60,6 +64,20 @@ var server = http.createServer(function (request, response) {
       response.write(data);
       response.end();
     });
+  }
+
+  // Handle the search for questions request
+  if(request.url.endsWith("dynamic_request_fetchDB")) {
+    let toWrite = "";
+    database.queryDatabase(); // will change name
+
+    // hacky async ... wait 750 msec, until the queryDatabase() finishes executing
+    setTimeout(function() {
+      toWrite = database.dbResults.join();
+      response.writeHead(200, {'Content-Type': 'application/javascript'});
+      response.write(toWrite);
+      response.end();
+    }, 750);
   }
 
   // Handle Azure DB query request
