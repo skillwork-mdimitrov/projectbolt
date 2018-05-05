@@ -73,7 +73,7 @@ var server = http.createServer(function (request, response) {
 
     // hacky async ... wait 750 msec, until the queryDatabase() finishes executing
     setTimeout(function() {
-      toWrite = database.dbResults.join();
+      toWrite = database.dbResults.join(); // since response needs to return a string, join() the results
       response.writeHead(200, {'Content-Type': 'application/javascript'});
       response.write(toWrite);
       response.end();

@@ -8,32 +8,10 @@
 let global = {
   searchField: $('.searchField'),
   searchBtn: $('#searchBtn'),
-  searchedQuery: $('#searchedQuery'),
   questions: [] // will store all the questions from the database
 };
 
 // Global functions
-function sendRequestSQL() {
-  "use strict";
-  try {
-    // VARIABLES
-    var xhttp;
-    xhttp = new XMLHttpRequest();
-
-    xhttp.onreadystatechange = function() {
-      var DONE = 4; // readyState 4 means the request is done.
-      var OK = 200; // status 200 is a successful return.
-      if (this.readyState === DONE && this.status === OK) {
-        global.searchedQuery.html(this.responseText); // the response.write results will be displayed here
-      }
-    };
-    xhttp.open("POST", "scripts/sqltest/sqltest.js", true);
-    xhttp.send();
-  }
-  catch(e) {
-    console.log('Caught Exception: ' + e.message);
-  }
-}
 
 // Fetch the whole database
 function fetchDB() {
@@ -47,8 +25,9 @@ function fetchDB() {
       var DONE = 4; // readyState 4 means the request is done.
       var OK = 200; // status 200 is a successful return.
       if (this.readyState === DONE && this.status === OK) {
-        // the results from this request will be stored in the questions variable
-        global.questions = this.responseText.split("\n");
+        // the results from this request will be stored in the questions variable.
+        // since the results coming from the AJAX request are as string, split by coma first and then store in array
+        global.questions = this.responseText.split(",");
       }
     };
     xhttp.open("POST", "dynamic_request_fetchDB", true);

@@ -32,23 +32,24 @@ var connection = new Connection(config);
 // });
 
 function queryDatabase() {
-  // console.log('Reading rows from the Table...');
+  dbResults.length = 0; // clear the array from previous results, before populating it again
 
   // Read all rows from table
   request = new Request(
-      "SELECT * FROM questions",
-      // Can't scrap this, because Request expects another parameter
+      "SELECT question FROM questions",
+      // Can't scrap the below function, because Request expects another parameter
       function(err, rowCount, rows) {
         // console.log(rowCount + ' row(s) returned');
         // process.exit();
       }
   );
 
+  /* TODO: Will try here to make a promise that if(request.row.next() === null) resolve the promise with the dbResults
+  , so in the node file, .then(write(data)) won't have to do the hacky async */
   request.on('row', function(columns) {
     columns.forEach(function(column) {
-      // console.log("%s\t%s", column.metadata.colName, column.value);
       // Push each result into the dbResults array
-      dbResults.push(column.value + "\n");
+      dbResults.push(column.value);
     });
   });
 

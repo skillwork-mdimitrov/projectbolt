@@ -22,7 +22,7 @@
 
 /* When the input field gets focus, change its width to 100% */
 .searchContainer input[type=text]:focus {
-  width: 70%;
+  width: 100%;
 }
 
 #searchBtn {
