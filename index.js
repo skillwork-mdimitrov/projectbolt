@@ -52,8 +52,8 @@ var server = http.createServer(function (request, response) {
   }
 
   // Serve the string comparison algorithm on page load
-  if(request.url.endsWith("string_compare.js")) {
-    let fileToBeRead = "./scripts/string_compare.js"; // depending on the URL specify the file that needs to be read
+  if(request.url.endsWith("stringCompare.js")) {
+    let fileToBeRead = "./scripts/stringCompare.js"; // depending on the URL specify the file that needs to be read
 
     // Serve the request, return a response and close the request
     fs.readFile(fileToBeRead, function(err, data) {
