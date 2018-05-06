@@ -1,10 +1,12 @@
 // THIS NEEDS TO BE DELETED
 var query;
+var sanitizedQuery;
 // ------------------------
 
 function evaluateQuery(theQuery)
 {
     query = document.getElementById("query").value;
+    sanitizedQuery = sanitize(query);
     var output = document.getElementById("output");
 
     output.innerHTML = "";
@@ -67,9 +69,9 @@ function getStringLengthSimilarity(question)
 {
     var similarity = 100;
 
-    if (query.length !== question.length)
+    if (sanitizedQuery.length !== question.length)
     {
-        var difference = Math.abs(query.length - question.length);
+        var difference = Math.abs(sanitizedQuery.length - question.length);
         if (difference < question.length)
         {
             similarity -= similarity * (difference / question.length);
@@ -100,7 +102,7 @@ function getCharacterOccurenceSimilarity(question)
     var decrement = similarity / questionCharacters.length;
     questionCharacters.forEach(function(character)
     {
-        if (query.indexOf(character) === -1)
+        if (sanitizedQuery.indexOf(character) === -1)
         {
             similarity -= decrement;
         }
@@ -116,7 +118,7 @@ function getCharacterPositionSimilarity(question)
     var decrement = similarity / question.length;
     for (var i = 0; i < question.length; i++)
     {
-        if (question.charAt(i) !== query.charAt(i))
+        if (question.charAt(i) !== sanitizedQuery.charAt(i))
         {
             similarity -= decrement;
         }
@@ -129,13 +131,13 @@ function getWordOccurenceSimilarity(question)
 {
     var similarity = 100;
 
-    var question_words = question.split(" ");
-    var query_words = query.split(" ");
+    var questionWords = question.split(" ");
+    var queryWords = sanitizedQuery.split(" ");
 
-    var decrement = similarity / question_words.length;
-    question_words.forEach(function(word)
+    var decrement = similarity / questionWords.length;
+    questionWords.forEach(function(word)
     {
-        if (query_words.indexOf(word) === -1)
+        if (queryWords.indexOf(word) === -1)
         {
             similarity -= decrement;
         }
@@ -149,7 +151,7 @@ function getWordPositionSimilarity(question)
     var similarity = 100;
 
     var questionWords = question.split(" ");
-    var queryWords = query.split(" ");
+    var queryWords = sanitizedQuery.split(" ");
 
     var decrement = similarity / questionWords.length;
     for (var i = 0; i < questionWords.length; i++)
@@ -175,7 +177,7 @@ function getSentenceOccurenceSimilarity(question)
             var questionSubstring = question.substring(j, j+i);
             if (questionSubstring.length >= i)
             {
-                if (query.indexOf(questionSubstring) !== -1 && questionSubstring.length > 0)
+                if (sanitizedQuery.indexOf(questionSubstring) !== -1 && questionSubstring.length > 0)
                 {
                     maxSimilarityCount = i;
                     break;
@@ -183,7 +185,7 @@ function getSentenceOccurenceSimilarity(question)
             }            
         }
     }
-    var relativeSimilarity = maxSimilarityCount/query.length;
+    var relativeSimilarity = maxSimilarityCount/sanitizedQuery.length;
     similarity *= relativeSimilarity;
     
     return similarity;
