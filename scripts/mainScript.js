@@ -11,6 +11,13 @@ let global = {
   questions: [] // will store all the questions from the database
 };
 
+var outsideResolve;
+var outsideReject;
+var scriptPromise = new Promise(function(resolve, reject) {
+  outsideResolve = resolve;
+  outsideReject = reject;
+});
+
 // Global functions
 
 // Fetch the whole database
@@ -28,6 +35,7 @@ function fetchDB() {
         // the results from this request will be stored in the questions variable.
         // since the results coming from the AJAX request are as string, split by coma first and then store in array
         global.questions = this.responseText.split(",");
+        outsideResolve(global.questions);
       }
     };
     xhttp.open("POST", "dynamic_request_fetchDB", true);
@@ -46,10 +54,14 @@ $(document).ready(function() {
   global.searchInput.on("input", function() {
     // sendRequestSQL();
     fetchDB(); // send a request that fetches the db rows
-    // hacky async ... wait 2 seconds (so the results had for sure arrived and then display them)
-    setTimeout(function() {
-      evaluateQuery(global.questions);
-    }, 2000);
+    scriptPromise.then(function(resolve) {
+      evaluateQuery(resolve);
+    })
+
+    // // hacky async ... wait 2 seconds (so the results had for sure arrived and then display them)
+    // setTimeout(function() {
+    //   evaluateQuery(global.questions);
+    // }, 2000);
   });
 });
 

@@ -69,21 +69,20 @@ var server = http.createServer(function (request, response) {
   // Handle the search for questions request
   if(request.url.endsWith("dynamic_request_fetchDB")) {
     let toWrite = "";
-    database.queryDatabase(); // will change name
-
-    // hacky async ... wait 750 msec, until the queryDatabase() finishes executing
-    setTimeout(function() {
-      toWrite = database.dbResults.join(); // since response needs to return a string, join() the results
+    database.queryDatabase();
+    database.promise.then(function(resolve) {
+      toWrite = resolve.join(); // since response needs to return a string, join() the results
       response.writeHead(200, {'Content-Type': 'application/javascript'});
       response.write(toWrite);
       response.end();
-    }, 750);
+    });
   }
 
   // Handle Azure DB query request
   if(request.url.endsWith("sqltest.js")) {
     let toWrite = "";
     database.queryDatabase(); // query the db, which will save the results into dbResults;
+    console.log(database.promise);
 
     // hacky async ... wait half a sec, until the queryDatabase() finishes executing
     setTimeout(function() {
