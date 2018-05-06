@@ -37,11 +37,11 @@ function getSimilarity(question)
     else
     {
         var stringLengthWeight = 0.05;
-        var characterOccurenceWeight = 0.125;
+        var characterOccurenceWeight = 0.175;
         var characterPositionWeight = 0.125;
         var wordOccurenceWeight = 0.20;
         var wordPositionWeight = 0.15;
-        var sentenceOccurenceWeight = 0.25;
+        var sentenceOccurenceWeight = 0.20;
 
         similarity += getStringLengthSimilarity(sanitizedQuestion) * stringLengthWeight;
         similarity += getCharacterOccurenceSimilarity(sanitizedQuestion) * characterOccurenceWeight;
