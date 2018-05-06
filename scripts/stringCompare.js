@@ -11,9 +11,8 @@ function evaluateQuery(theQuery)
     var output = document.getElementById("output");
 
     output.innerHTML = "";
-    theQuery.forEach(mapSimilarities);
-
     questionSimilarityMapping = new Map();
+    theQuery.forEach(mapSimilarities);
 
     questionSimilarityMapping[Symbol.iterator] = function* () {
         yield* [...this.entries()].sort((a, b) =>  b[1] - a[1]);
