@@ -8,14 +8,16 @@ var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
 var dbResults = []; // will store the results from the queries
 
-var outsideResolve;
-var outsideReject;
-var promise = new Promise(function(resolve, reject) {
+// Promise
+var outsideResolve; // will become dataLoading's Promise.resolve
+var outsideReject; // will become dataLoading's Promise.reject
+var dataLoading = new Promise(function(resolve, reject) {
+  "use strict";
   outsideResolve = resolve;
   outsideReject = reject;
 });
 
-
+// TODO separate in own module + import here
 var config = {
   userName: 'pbadmin',
   password: '56(E+!,?NGQ85tY"a%l#%5IU~[J>GU',
@@ -47,14 +49,10 @@ function queryDatabase() {
       "SELECT question FROM questions",
       // Can't scrap the below function, because Request expects another parameter
       function(err, rowCount, rows) {
-        numRows = rowCount; // not async ...
         // process.exit();
       }
   );
 
-  /* TODO: Will try here to make a promise that if(request.row.next() === null) resolve the promise with the dbResults
-  , so in the node file, .then(write(data)) won't have to do the hacky async
-  Find out how to check which element of the foreach is the last one, so I can then resolve the promise */
   request.on('row', function(columns) {
     columns.forEach(function(column) {
       // Push each result into the dbResults array
@@ -62,13 +60,19 @@ function queryDatabase() {
     });
   });
 
-  request.on("doneInProc", function (rowCount, more) {
-    outsideResolve(dbResults);
-  });
-
   connection.execSql(request);
+
+  // Completion status of the SQL statement
+  request.on("doneInProc", function (rowCount) {
+    if(rowCount > 0) {
+      outsideResolve(dbResults); // fulfill the promise, return the results from the query (dbResults)
+    }
+    else {
+      outsideReject(new Error("Empty results"));
+    }
+  });
 }
 
 // Make publicly available
 module.exports.queryDatabase = queryDatabase;
-module.exports.promise = promise;
+module.exports.dataLoading = dataLoading;

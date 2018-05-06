@@ -11,9 +11,10 @@ let global = {
   questions: [] // will store all the questions from the database
 };
 
-var outsideResolve;
-var outsideReject;
+var outsideResolve; // will become scriptPromise's Promise.resolve
+var outsideReject; // will become scriptPromise's Promise.reject
 var scriptPromise = new Promise(function(resolve, reject) {
+  "use strict";
   outsideResolve = resolve;
   outsideReject = reject;
 });
@@ -56,7 +57,7 @@ $(document).ready(function() {
     fetchDB(); // send a request that fetches the db rows
     scriptPromise.then(function(resolve) {
       evaluateQuery(resolve);
-    })
+    });
 
     // // hacky async ... wait 2 seconds (so the results had for sure arrived and then display them)
     // setTimeout(function() {
