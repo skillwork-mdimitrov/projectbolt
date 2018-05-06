@@ -40,7 +40,7 @@ var connection = new Connection(config);
 // });
 
 function queryDatabase() {
-  dbResults.length = 0; // clear the array from previous results, before populating it again
+  // dbResults.length = 0; // clear the array from previous results, before populating it again
 
   // Read all rows from table
   request = new Request(
