@@ -1,6 +1,7 @@
 // THIS NEEDS TO BE DELETED
 var query;
 var sanitizedQuery;
+var questionSimilarityMapping;
 // ------------------------
 
 function evaluateQuery(theQuery)
@@ -10,19 +11,28 @@ function evaluateQuery(theQuery)
     var output = document.getElementById("output");
 
     output.innerHTML = "";
-    theQuery.forEach(printSimilarity, output);
+    theQuery.forEach(mapSimilarities);
+
+    questionSimilarityMapping = new Map();
+
+    questionSimilarityMapping[Symbol.iterator] = function* () {
+        yield* [...this.entries()].sort((a, b) =>  b[1] - a[1]);
+    }
+
+    for (let [key, value] of questionSimilarityMapping) {
+        var newRow = output.insertRow(0);
+
+        var question_cell = newRow.insertCell(0);
+        var similarityCell = newRow.insertCell(1);
+
+        question_cell.innerHTML = key;
+        similarityCell.innerHTML = value + "%";
+    }
 }
 
-function printSimilarity(item)
+function mapSimilarities(item)
 {
-    var similarity = getSimilarity(item);
-    var newRow = this.insertRow(0);
-
-    var question_cell = newRow.insertCell(0);
-    var similarityCell = newRow.insertCell(1);
-
-    question_cell.innerHTML = item;
-    similarityCell.innerHTML = similarity + "%";  
+    questionSimilarityMapping.set(item, getSimilarity(item));  
 }
 
 function getSimilarity(question)
