@@ -55,11 +55,11 @@ function getSimilarity(question)
     return Math.round(similarity);
 }
 
-function sanitize(question)
+function sanitize(string)
 {
-    var sanitizedQuestion = question;
+    var sanitizedQuestion = string;
 
-    sanitizedQuestion = question.toLowerCase();
+    sanitizedQuestion = string.toLowerCase();
     sanitizedQuestion = sanitizedQuestion.replace(/[^\w\s]/g, "");
 
     return sanitizedQuestion;
