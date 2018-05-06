@@ -48,7 +48,7 @@ $(document).ready(function() {
     fetchDB(); // send a request that fetches the db rows
     // hacky async ... wait 2 seconds (so the results had for sure arrived and then display them)
     setTimeout(function() {
-      evaluate_query(global.questions);
+      evaluateQuery(global.questions);
     }, 2000);
   });
 });
