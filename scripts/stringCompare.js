@@ -33,6 +33,8 @@ function getSimilarity(question)
     }
     else
     {
+        var sanitizedQuestion = sanitize(question);
+
         var stringLengthWeight = 0.05;
         var characterOccurenceWeight = 0.125;
         var characterPositionWeight = 0.125;
@@ -40,15 +42,25 @@ function getSimilarity(question)
         var wordPositionWeight = 0.15;
         var sentenceOccurenceWeight = 0.25;
 
-        similarity += getStringLengthSimilarity(question) * stringLengthWeight;
-        similarity += getCharacterOccurenceSimilarity(question) * characterOccurenceWeight;
-        similarity += getCharacterPositionSimilarity(question) * characterPositionWeight;
-        similarity += getWordOccurenceSimilarity(question) * wordOccurenceWeight;
-        similarity += getWordPositionSimilarity(question) * wordPositionWeight;
-        similarity += getSentenceOccurenceSimilarity(question) * sentenceOccurenceWeight;
+        similarity += getStringLengthSimilarity(sanitizedQuestion) * stringLengthWeight;
+        similarity += getCharacterOccurenceSimilarity(sanitizedQuestion) * characterOccurenceWeight;
+        similarity += getCharacterPositionSimilarity(sanitizedQuestion) * characterPositionWeight;
+        similarity += getWordOccurenceSimilarity(sanitizedQuestion) * wordOccurenceWeight;
+        similarity += getWordPositionSimilarity(sanitizedQuestion) * wordPositionWeight;
+        similarity += getSentenceOccurenceSimilarity(sanitizedQuestion) * sentenceOccurenceWeight;
     }
 
     return Math.round(similarity);
+}
+
+function sanitize(question)
+{
+    var sanitizedQuestion = question;
+
+    sanitizedQuestion = question.toLowerCase();
+    sanitizedQuestion = sanitizedQuestion.replace(/[^\w\s]/g, "");
+
+    return sanitizedQuestion;
 }
 
 function getStringLengthSimilarity(question)
