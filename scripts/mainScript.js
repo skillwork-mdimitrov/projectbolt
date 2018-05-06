@@ -8,7 +8,6 @@
 let global = {
   searchField: $('.searchField'),
   searchInput: $('#query'),
-  searchBtn: $('#searchBtn'),
   questions: [] // will store all the questions from the database
 };
 
@@ -44,15 +43,6 @@ $(document).ready(function() {
   "use strict";
   /* ATTACH EVENT LISTENERS
     ============================================================== */
-  global.searchBtn.on("click", function() {
-    // sendRequestSQL();
-    fetchDB(); // send a request that fetches the db rows
-    // hacky async ... wait 2 seconds (so the results had for sure arrived and then display them)
-    setTimeout(function() {
-      evaluateQuery(global.questions);
-    }, 2000);
-  });
-
   global.searchInput.on("input", function() {
     // sendRequestSQL();
     fetchDB(); // send a request that fetches the db rows
