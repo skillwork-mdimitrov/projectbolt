@@ -88,23 +88,44 @@ function getCharacterOccurenceSimilarity(question)
 {
     var similarity = 100;
 
-    var questionCharacters = [];
+    var questionCharacterCounts = {};
     for (var i = 0; i < question.length; i++)
     {
-        var character = question.charAt(i);        
-        if (questionCharacters.indexOf(character) === -1)
+        if (questionCharacterCounts[question.charAt(i)] === undefined)
         {
-            questionCharacters.push(character);
+            questionCharacterCounts[question.charAt(i)] = 1;
+        }  
+        else
+        {
+            questionCharacterCounts[question.charAt(i)] += 1;
+        }
+    }
+    var queryCharacterCounts = {};
+    for (var i = 0; i < sanitizedQuery.length; i++)
+    {
+        if (queryCharacterCounts[sanitizedQuery.charAt(i)] === undefined)
+        {
+            queryCharacterCounts[sanitizedQuery.charAt(i)] = 1;
+        }  
+        else
+        {
+            queryCharacterCounts[sanitizedQuery.charAt(i)] += 1;
         }
     }
 
-    var decrement = similarity / questionCharacters.length;
-    questionCharacters.forEach(function(character)
-    {
-        if (sanitizedQuery.indexOf(character) === -1)
+    var decrement = similarity / (Object.keys(questionCharacterCounts).length*2);
+    Object.keys(questionCharacterCounts).forEach( function(key) {
+        if (queryCharacterCounts[key] === undefined)
         {
-            similarity -= decrement;
+            similarity -= decrement * 2;
         }
+        else
+        {
+            if (queryCharacterCounts[key] !== questionCharacterCounts[key])
+            {
+                similarity -= decrement;
+            }
+        }    
     });
 
     return similarity;
@@ -133,13 +154,44 @@ function getWordOccurenceSimilarity(question)
     var questionWords = question.split(" ");
     var queryWords = sanitizedQuery.split(" ");
 
-    var decrement = similarity / questionWords.length;
-    questionWords.forEach(function(word)
+    var questionWordCounts = {};
+    questionWords.forEach( function(word)
     {
-        if (queryWords.indexOf(word) === -1)
+        if (questionWordCounts[word] === undefined)
         {
-            similarity -= decrement;
+            questionWordCounts[word] = 1;
+        }  
+        else
+        {
+            questionWordCounts[word] += 1;
         }
+    });
+    var queryWordCounts = {};
+    queryWords.forEach( function(word)
+    {
+        if (queryWordCounts[word] === undefined)
+        {
+            queryWordCounts[word] = 1;
+        }  
+        else
+        {
+            queryWordCounts[word] += 1;
+        }
+    });
+
+    var decrement = similarity / (Object.keys(questionWordCounts).length*2);
+    Object.keys(questionWordCounts).forEach( function(key) {
+        if (queryWordCounts[key] === undefined)
+        {
+            similarity -= decrement * 2;
+        }
+        else
+        {
+            if (queryWordCounts[key] !== questionWordCounts[key])
+            {
+                similarity -= decrement;
+            }
+        }    
     });
 
     return similarity;
