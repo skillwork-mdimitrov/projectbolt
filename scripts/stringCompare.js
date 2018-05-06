@@ -28,15 +28,14 @@ function printSimilarity(item)
 function getSimilarity(question)
 {
     var similarity = 0;
+    var sanitizedQuestion = sanitize(question);
 
-    if (query === question)
+    if (query === question || sanitizedQuery === sanitizedQuestion)
     {
         similarity = 100;
     }
     else
     {
-        var sanitizedQuestion = sanitize(question);
-
         var stringLengthWeight = 0.05;
         var characterOccurenceWeight = 0.125;
         var characterPositionWeight = 0.125;
