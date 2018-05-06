@@ -33,55 +33,39 @@ function getSimilarity(question)
     }
     else
     {
-        var characterOccurenceWeight = 0.1;
-        var characterPositionWeight = 0.1;
-        var stringLengthWeight = 0.1;
-        var wordOccurenceWeight = 0.25;
-        var wordPositionWeight = 0.35;
+        var stringLengthWeight = 0.05;
+        var characterOccurenceWeight = 0.125;
+        var characterPositionWeight = 0.125;
+        var wordOccurenceWeight = 0.20;
+        var wordPositionWeight = 0.15;
+        var sentenceOccurenceWeight = 0.25;
 
+        similarity += getStringLengthSimilarity(question) * stringLengthWeight;
         similarity += getCharacterOccurenceSimilarity(question) * characterOccurenceWeight;
         similarity += getCharacterPositionSimilarity(question) * characterPositionWeight;
-        similarity += getStringLengthSimilarity(question) * stringLengthWeight;
         similarity += getWordOccurenceSimilarity(question) * wordOccurenceWeight;
         similarity += getWordPositionSimilarity(question) * wordPositionWeight;
+        similarity += getSentenceOccurenceSimilarity(question) * sentenceOccurenceWeight;
     }
 
     return Math.round(similarity);
 }
 
-function getWordOccurenceSimilarity(question)
+function getStringLengthSimilarity(question)
 {
     var similarity = 100;
 
-    var question_words = question.split(" ");
-    var query_words = query.split(" ");
-
-    var decrement = similarity / question_words.length;
-    question_words.forEach(function(word)
+    if (query.length !== question.length)
     {
-        if (query_words.indexOf(word) === -1)
+        var difference = Math.abs(query.length - question.length);
+        if (difference < question.length)
         {
-            similarity -= decrement;
+            similarity -= similarity * (difference / question.length);
         }
-    });
-
-    return similarity;
-}
-
-function getWordPositionSimilarity(question)
-{
-    var similarity = 100;
-
-    var questionWords = question.split(" ");
-    var queryWords = query.split(" ");
-
-    var decrement = similarity / questionWords.length;
-    for (var i = 0; i < questionWords.length; i++)
-    {
-        if (questionWords[i] !== queryWords[i])
+        else
         {
-            similarity -= decrement;
-        }
+            similarity = 0;
+        }        
     }
 
     return similarity;
@@ -129,22 +113,66 @@ function getCharacterPositionSimilarity(question)
     return similarity;
 }
 
-function getStringLengthSimilarity(question)
+function getWordOccurenceSimilarity(question)
 {
     var similarity = 100;
 
-    if (query.length !== question.length)
+    var question_words = question.split(" ");
+    var query_words = query.split(" ");
+
+    var decrement = similarity / question_words.length;
+    question_words.forEach(function(word)
     {
-        var difference = Math.abs(query.length - question.length);
-        if (difference < question.length)
+        if (query_words.indexOf(word) === -1)
         {
-            similarity -= similarity * (difference / question.length);
+            similarity -= decrement;
         }
-        else
+    });
+
+    return similarity;
+}
+
+function getWordPositionSimilarity(question)
+{
+    var similarity = 100;
+
+    var questionWords = question.split(" ");
+    var queryWords = query.split(" ");
+
+    var decrement = similarity / questionWords.length;
+    for (var i = 0; i < questionWords.length; i++)
+    {
+        if (questionWords[i] !== queryWords[i])
         {
-            similarity = 0;
-        }        
+            similarity -= decrement;
+        }
     }
 
+    return similarity;
+}
+
+function getSentenceOccurenceSimilarity(question)
+{
+    var similarity = 100;
+
+    var maxSimilarityCount = 0;
+    for (var i = 1; i < question.length; i++)
+    {
+        for (var j = 0; j < question.length; j++)
+        {
+            var questionSubstring = question.substring(j, j+i);
+            if (questionSubstring.length >= i)
+            {
+                if (query.indexOf(questionSubstring) !== -1 && questionSubstring.length > 0)
+                {
+                    maxSimilarityCount = i;
+                    break;
+                }
+            }            
+        }
+    }
+    var relativeSimilarity = maxSimilarityCount/query.length;
+    similarity *= relativeSimilarity;
+    
     return similarity;
 }
