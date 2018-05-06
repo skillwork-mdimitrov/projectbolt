@@ -53,7 +53,7 @@ $(document).ready(function() {
     }, 2000);
   });
 
-  global.searchInput.on("change", function() {
+  global.searchInput.on("input", function() {
     // sendRequestSQL();
     fetchDB(); // send a request that fetches the db rows
     // hacky async ... wait 2 seconds (so the results had for sure arrived and then display them)
