@@ -16,7 +16,7 @@ function evaluateQuery(theQuery)
     theQuery.forEach(mapSimilarities);
 
     questionSimilarityMapping[Symbol.iterator] = function* () {
-        yield* [...this.entries()].sort((a, b) =>  a[1] - b[1]);
+        yield* [...this.entries()].sort((a, b) =>  b[1] - a[1]);
     }
 
     // for (let [key, value] of questionSimilarityMapping) {
