@@ -42,6 +42,7 @@ function initDropdown()
     var input = document.getElementById("query");
     autoCompleter = new Awesomplete(input, {
         minChars: 1,
+        sort: false,
         filter: function (text, input)
         {
             return true;
