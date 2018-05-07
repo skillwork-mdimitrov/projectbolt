@@ -32,6 +32,7 @@ function evaluateQuery(theQuery)
     var optionsArray = []
     for (let [key, value] of questionSimilarityMapping) {
         optionsArray.push(key + " " + value + "%");
+        console.log(key + " " + value + "%");
     }
     autoCompleter.list = optionsArray;
     autoCompleter.evaluate();
