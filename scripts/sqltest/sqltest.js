@@ -11,7 +11,7 @@ var dbResults = []; // will store the results from the queries
 var config = {
   userName: 'pbadmin',
   password: '56(E+!,?NGQ85tY"a%l#%5IU~[J>GU',
-  server: 'projectbolt.database.windows.net',
+  server: 'projectboltrenew.database.windows.net',
   options: {
     database: 'ProjectBolt',
     encrypt: true
