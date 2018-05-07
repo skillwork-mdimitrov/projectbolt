@@ -38,12 +38,12 @@ var server = http.createServer(function (request, response) {
 
   // Serve the main script on initial page load
   if(request.url.endsWith("mainScript.js")) {
-    let fileToBeRead = "./scripts/mainScript.js"; // depending on the URL specify the file that needs to be read
+    let fileToBeRead = "./scripts/mainScript.js";
 
     // Serve the request, return a response and close the request
     fs.readFile(fileToBeRead, function(err, data) {
       if(err instanceof Error){
-        console.log(err + " _Scripts failed to load");
+        console.log(err + " _Main script failed to load");
       }
       response.writeHead(200, {'Content-Type': 'application/javascript'});
       response.write(data);
@@ -53,7 +53,7 @@ var server = http.createServer(function (request, response) {
 
   // Serve the string comparison algorithm on page load
   if(request.url.endsWith("stringCompare.js")) {
-    let fileToBeRead = "./scripts/stringCompare.js"; // depending on the URL specify the file that needs to be read
+    let fileToBeRead = "./scripts/stringCompare.js";
 
     // Serve the request, return a response and close the request
     fs.readFile(fileToBeRead, function(err, data) {
@@ -69,29 +69,16 @@ var server = http.createServer(function (request, response) {
   // Handle the search for questions request
   if(request.url.endsWith("dynamic_request_fetchDB")) {
     let toWrite = "";
-    database.queryDatabase(); // will change name
-
-    // hacky async ... wait 750 msec, until the queryDatabase() finishes executing
-    setTimeout(function() {
-      toWrite = database.dbResults.join(); // since response needs to return a string, join() the results
+    database.queryDatabase(); // select every question from the database and store it in dbResults array
+    database.dataLoading.then(function(resolve) {
+      toWrite = resolve.join(); // since response needs to return a string, join() the results
       response.writeHead(200, {'Content-Type': 'application/javascript'});
       response.write(toWrite);
       response.end();
-    }, 750);
-  }
-
-  // Handle Azure DB query request
-  if(request.url.endsWith("sqltest.js")) {
-    let toWrite = "";
-    database.queryDatabase(); // query the db, which will save the results into dbResults;
-
-    // hacky async ... wait half a sec, until the queryDatabase() finishes executing
-    setTimeout(function() {
-      toWrite = database.dbResults.join();
-      response.writeHead(200, {'Content-Type': 'application/javascript'});
-      response.write(toWrite);
-      response.end();
-    }, 750);
+    })
+    .catch(function (error) {
+      console.log("Empty rows returned from queryDatabase. Error " + error.message);
+    });
   }
 
   // Handle images
