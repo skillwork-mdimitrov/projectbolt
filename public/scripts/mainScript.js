@@ -26,19 +26,26 @@ var dbDataLoaded = new Promise(function(resolve, reject) {
 // AJAX request for "dynamic_request_fetchDB" (will return all the rows from the db and store them in an array)
 function fetchDB() {
   "use strict";
-    $.ajax({
-    type: "POST",
-    url: "dynamic_request_fetchDB",
-    success: function(result){
-      // since the results coming from the AJAX request are as string, split by coma first and then store in array
-      global.questions = result.split(",");
-      // the results from this request will be stored in the questions variable.
-      outsideResolve(global.questions);
-    },
-    error: function(XMLHttpRequest, textStatus, errorThrown) {
-      console.log("Error caught, status: " + textStatus + " error: " + errorThrown);
-    }
-  });
+  try {
+    // VARIABLES
+    var xhttp;
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      var DONE = 4; // readyState 4 means the request is done.
+      var OK = 200; // status 200 is a successful return.
+      if (this.readyState === DONE && this.status === OK) {
+        // the results from this request will be stored in the questions variable.
+        // since the results coming from the AJAX request are as string, split by coma first and then store in array
+        global.questions = this.responseText.split(",");
+        outsideResolve(global.questions);
+      }
+    };
+    xhttp.open("GET", "dynamic_request_fetchDB", true);
+    xhttp.send();
+  }
+  catch(e) {
+    console.log('Caught Exception: ' + e.message);
+  }
 }
 // =====================================================================================================================
 
