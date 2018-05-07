@@ -2,6 +2,7 @@
 var query;
 var sanitizedQuery;
 var questionSimilarityMapping;
+var autoCompleter;
 // ------------------------
 
 function evaluateQuery(theQuery)
@@ -18,15 +19,34 @@ function evaluateQuery(theQuery)
         yield* [...this.entries()].sort((a, b) =>  a[1] - b[1]);
     }
 
+    // for (let [key, value] of questionSimilarityMapping) {
+    //     var newRow = output.insertRow(0);
+
+    //     var question_cell = newRow.insertCell(0);
+    //     var similarityCell = newRow.insertCell(1);
+
+    //     question_cell.innerHTML = key;
+    //     similarityCell.innerHTML = value + "%";
+    // }
+
+    var optionsArray = []
     for (let [key, value] of questionSimilarityMapping) {
-        var newRow = output.insertRow(0);
-
-        var question_cell = newRow.insertCell(0);
-        var similarityCell = newRow.insertCell(1);
-
-        question_cell.innerHTML = key;
-        similarityCell.innerHTML = value + "%";
+        optionsArray.push(key + " " + value + "%");
     }
+    autoCompleter.list = optionsArray;
+    autoCompleter.evaluate();
+}
+
+function initDropdown()
+{
+    var input = document.getElementById("query");
+    autoCompleter = new Awesomplete(input, {
+        minChars: 1,
+        filter: function (text, input)
+        {
+            return true;
+        }
+    });
 }
 
 function mapSimilarities(item)
