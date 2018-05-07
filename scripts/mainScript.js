@@ -4,24 +4,26 @@
 /*jslint devel: true*/
 /*jshint esversion: 6*/
 
-// Global variables
+/* Global variables
+ ============================================================== */
 let global = {
   searchField: $('.searchField'),
   searchInput: $('#query'),
   questions: [] // will store all the questions from the database
 };
 
-var outsideResolve; // will become scriptPromise's Promise.resolve
-var outsideReject; // will become scriptPromise's Promise.reject
-var scriptPromise = new Promise(function(resolve, reject) {
+var outsideResolve; // will become dbDataLoaded's Promise.resolve
+var outsideReject; // will become dbDataLoaded's Promise.reject
+var dbDataLoaded = new Promise(function(resolve, reject) {
   "use strict";
   outsideResolve = resolve;
   outsideReject = reject;
 });
+// =====================================================================================================================
 
-// Global functions
-
-// Fetch the whole database
+/* Global functions
+ ============================================================== */
+// AJAX request for "dynamic_request_fetchDB" (will return all the rows from the db and store them in an array)
 function fetchDB() {
   "use strict";
     $.ajax({
@@ -38,6 +40,7 @@ function fetchDB() {
     }
   });
 }
+// =====================================================================================================================
 
 // When everything has loaded
 $(document).ready(function() {
@@ -46,7 +49,7 @@ $(document).ready(function() {
     ============================================================== */
   global.searchInput.on("input", function() {
     fetchDB(); // send a request that fetches the db rows
-    scriptPromise.then(function(resolve) {
+    dbDataLoaded.then(function(resolve) {
       evaluateQuery(resolve);
     });
   });
