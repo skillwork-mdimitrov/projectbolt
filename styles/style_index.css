@@ -1,12 +1,12 @@
 .searchContainer {
-  width: 600px;
+  width: 1000px;
   height: 700px;
 }
 
 .searchContainer .searchBar {
   display: flex;
   align-content: center;
-  width: 400px;
+  width: 900px;
   height: 40px;
 }
 
@@ -15,14 +15,9 @@
 }
 
 .searchContainer input[type=text] {
-  width: 130px;
+  width: 900px;
   -webkit-transition: width 0.4s ease-in-out;
   transition: width 0.4s ease-in-out;
-}
-
-/* When the input field gets focus, change its width to 100% */
-.searchContainer input[type=text]:focus {
-  width: 100%;
 }
 
 #searchBtn {
