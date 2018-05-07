@@ -7,40 +7,48 @@
 // Global variables
 let global = {
   searchField: $('.searchField'),
-  searchBtn: $('#searchBtn'),
-  searchedQuery: $('#searchedQuery')
+  searchInput: $('#query'),
+  questions: [] // will store all the questions from the database
 };
 
-// Global functions
-function sendRequestSQL() {
+var outsideResolve; // will become scriptPromise's Promise.resolve
+var outsideReject; // will become scriptPromise's Promise.reject
+var scriptPromise = new Promise(function(resolve, reject) {
   "use strict";
-  try {
-    // VARIABLES
-    var xhttp;
-    xhttp = new XMLHttpRequest();
+  outsideResolve = resolve;
+  outsideReject = reject;
+});
 
-    xhttp.onreadystatechange = function() {
-      var DONE = 4; // readyState 4 means the request is done.
-      var OK = 200; // status 200 is a successful return.
-      if (this.readyState === DONE && this.status === OK) {
-        global.searchedQuery.html(this.responseText);
-      }
-    };
-    xhttp.open("POST", "scripts/sqltest/sqltest.js",  true);
-    xhttp.send();
-  }
-  catch(e) {
-    console.log('Caught Exception: ' + e.message);
-  }
+// Global functions
+
+// Fetch the whole database
+function fetchDB() {
+  "use strict";
+    $.ajax({
+    type: "POST",
+    url: "dynamic_request_fetchDB",
+    success: function(result){
+      // since the results coming from the AJAX request are as string, split by coma first and then store in array
+      global.questions = result.split(",");
+      // the results from this request will be stored in the questions variable.
+      outsideResolve(global.questions);
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+      console.log("Error caught, status: " + textStatus + " error: " + errorThrown);
+    }
+  });
 }
 
 // When everything has loaded
 $(document).ready(function() {
   "use strict";
-  /* EVENT LISTENERS
+  /* ATTACH EVENT LISTENERS
     ============================================================== */
-  global.searchBtn.on("click", function() {
-    sendRequestSQL();
+  global.searchInput.on("input", function() {
+    fetchDB(); // send a request that fetches the db rows
+    scriptPromise.then(function(resolve) {
+      evaluateQuery(resolve);
+    });
   });
 });
 

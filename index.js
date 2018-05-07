@@ -32,9 +32,28 @@ var server = http.createServer(function (request, response) {
       response.end();
     });
   }
-  // Handle scripts
+
+  /* SCRIPT HANDLING
+   ============================================================== */
+
+  // Serve the main script on initial page load
   if(request.url.endsWith("mainScript.js")) {
-    let fileToBeRead = "./scripts/mainScript.js"; // depending on the URL specify the file that needs to be read
+    let fileToBeRead = "./scripts/mainScript.js";
+
+    // Serve the request, return a response and close the request
+    fs.readFile(fileToBeRead, function(err, data) {
+      if(err instanceof Error){
+        console.log(err + " _Main script failed to load");
+      }
+      response.writeHead(200, {'Content-Type': 'application/javascript'});
+      response.write(data);
+      response.end();
+    });
+  }
+
+  // Serve the string comparison algorithm on page load
+  if(request.url.endsWith("stringCompare.js")) {
+    let fileToBeRead = "./scripts/stringCompare.js";
 
     // Serve the request, return a response and close the request
     fs.readFile(fileToBeRead, function(err, data) {
@@ -47,15 +66,34 @@ var server = http.createServer(function (request, response) {
     });
   }
 
-  // Query Azure DB request
-  if(request.url.endsWith("sqltest.js")) {
+  // Serve the autocomplete script on page load
+  if(request.url.endsWith("awesomplete.js")) {
+    let fileToBeRead = "./scripts/awesomplete.js";
+
+    // Serve the request, return a response and close the request
+    fs.readFile(fileToBeRead, function(err, data) {
+      if(err instanceof Error){
+        console.log(err + " _Scripts failed to load");
+      }
+      response.writeHead(200, {'Content-Type': 'application/javascript'});
+      response.write(data);
+      response.end();
+    });
+  }
+
+  // Handle the search for questions request
+  if(request.url.endsWith("dynamic_request_fetchDB")) {
     let toWrite = "";
-    for(let i=0;i<database.dbResults.length;i++) {
-      toWrite += database.dbResults[i];
-    }
-    response.writeHead(200, {'Content-Type': 'application/javascript'});
-    response.write(toWrite);
-    response.end();
+    database.queryDatabase(); // select every question from the database and store it in dbResults array
+    database.dataLoading.then(function(resolve) {
+      toWrite = resolve.join(); // since response needs to return a string, join() the results
+      response.writeHead(200, {'Content-Type': 'application/javascript'});
+      response.write(toWrite);
+      response.end();
+    })
+    .catch(function (error) {
+      console.log("Empty rows returned from queryDatabase. Error " + error.message);
+    });
   }
 
   // Handle images
@@ -90,6 +128,17 @@ var server = http.createServer(function (request, response) {
       response.end();
     });
   }
+  // Handle more CSS
+  if(request.url.endsWith("/styles/awesomplete.css")) {
+    fs.readFile("./styles/awesomplete.css", function(err, data) {
+      if(err instanceof Error){
+        console.log(err + " _Loading styles failed");
+      }
+      response.writeHead(200, {'Content-Type': 'text/css'});
+      response.write(data);
+      response.end();
+    });
+  }
 });
 // =====================================================================================================================
 
@@ -100,5 +149,4 @@ var port = process.env.PORT || 1337;
 // Listen to port
 server.listen(port);
 // =====================================================================================================================
-
 console.log("Server running at http://localhost:%d", port);
