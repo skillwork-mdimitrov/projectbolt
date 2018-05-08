@@ -6,6 +6,7 @@
 
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
+var config = require('./dbConfig').config;
 var dbResults = []; // will store the results from the queries
 
 // Promise
@@ -17,42 +18,29 @@ var dataLoading = new Promise(function(resolve, reject) {
   outsideReject = reject;
 });
 
-// TODO separate in own module + import here
-var config = {
-  userName: 'pbadmin',
-  password: '56(E+!,?NGQ85tY"a%l#%5IU~[J>GU',
-  server: 'projectboltrenew.database.windows.net',
-  options: {
-    database: 'ProjectBolt',
-    encrypt: true
-  }
-};
-
 var connection = new Connection(config);
 
-// On connect, not needed for now
 // Attempt to connect and execute queries if connection goes through
-// connection.on('connect', function(err) {
-//   if (err) {
-//     console.log(err);
-//   }
-//   else {
-//     queryDatabase();
-//  }
-// });
+connection.on('connect', function(err) {
+  if (err) {
+    console.log(err);
+  }
+  else {
+    console.log("Successfully connected to the database!");
+ }
+});
 
-function queryDatabase() {
-  // dbResults.length = 0; // clear the array from previous results, before populating it again
-
-  // Read all rows from table
+function getResultsAsArray(sqlstatement) {
+  // Specify request
   request = new Request(
-      "SELECT question FROM questions",
+      sqlstatement,
       // Can't scrap the below function, because Request expects another parameter
       function(err, rowCount, rows) {
         // process.exit();
       }
   );
 
+  // For each row get the column value and store it in an array
   request.on('row', function(columns) {
     columns.forEach(function(column) {
       // Push each result into the dbResults array
@@ -60,12 +48,15 @@ function queryDatabase() {
     });
   });
 
+  // Execute this request
   connection.execSql(request);
 
-  // Completion status of the SQL statement
+  // Completion status of the SQL statement execution
   request.on("doneInProc", function (rowCount) {
     if(rowCount > 0) {
-      outsideResolve(dbResults); // fulfill the promise, return the results from the query (dbResults)
+      outsideResolve(dbResults);
+      // fulfill the promise. This will trigger the promise .then() event.
+      // The promise will return the dbResults, since it was passed as a parameter.
     }
     else {
       outsideReject(new Error("Empty results"));
@@ -73,7 +64,8 @@ function queryDatabase() {
   });
 }
 
+// If getResultsAsArray doesn't fit your requirements, make another function below and export it
 
 // Make publicly available
-module.exports.queryDatabase = queryDatabase;
+module.exports.getResultsAsArray = getResultsAsArray;
 module.exports.dataLoading = dataLoading;
