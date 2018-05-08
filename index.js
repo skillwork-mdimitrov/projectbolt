@@ -32,6 +32,14 @@ app.get('/dynamic_request_fetchDB', function(request, response) {
     console.log("Empty rows returned from queryDatabase. Error " + error.message);
   });
 });
+
+app.get('/dynamic_request_writeToDB', function(request, response) {
+    "use strict";
+    let toWrite = request.data;
+        response.write("whatever");
+        response.end();
+    })
+
 // =====================================================================================================================
 
 /* PORT

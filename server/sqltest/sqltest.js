@@ -73,6 +73,7 @@ function queryDatabase() {
   });
 }
 
+
 // Make publicly available
 module.exports.queryDatabase = queryDatabase;
 module.exports.dataLoading = dataLoading;
