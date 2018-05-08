@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<meta charset="utf-8"/>
 <html lang="en">
 <head>
-    <title>Bolt</title>
+	<meta charset="utf-8"/>
+    <title>Search & Compare</title>
     <link rel="icon" href="images/thunder.png"/>
     <link rel="stylesheet" type="text/css" href="styles/style_index.css">
     <link rel="stylesheet" type="text/css" href="styles/awesomplete.css" />
 </head>
+<!-- TODO Please separate JS function calling from the HTML -->
 <body onload="initDropdown()">
     <div class="searchContainer">
         <div class="searchBar">
@@ -15,10 +16,10 @@
         </div>
         <table id="output"></table>
     </div>
-    <!-- Load scripts after the DOM, down below ↓ -->
+    <!-- SCRIPTS, load them below, after the DOM ↓
+    ============================================================== -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
-
-    <script src="scripts/mainScript.js"></script>
+    <script src="scripts/compareScript.js"></script>
     <script src="scripts/stringCompare.js"></script>
     <script src="scripts/awesomplete.js" async></script>
 </body>
