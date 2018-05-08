@@ -1,17 +1,20 @@
 <html>
-	<head>
-		 <meta charset="UTF-8">
-	</head>
+  <head>
+    <meta charset="UTF-8">
+    <title>Form Example</title>
+    <script LANGUAGE="JavaScript" type="text/javascript">
+      function display() {
+        DispWin = window.open('','NewWin', 'toolbar=no,status=no,width=300,height=200')
+        message = "<b>Question: </b>" + document.questionForm.question.value + "<b />";
+        DispWin.document.write(message);
+      }
+    </script>
+  </head>
 	<body>
-		<form>
-		  Enter question:<br>
-		  <input type="text" name="question" id="Questions1212"><br>
-		  <input type="submit" value="Submit" id="SubmitToYourQuestion">
-		</form>
-		<script>
-			var questionValue = document.getElementById("Questions1212").value;
-			
-			console.log(questionValue);
-		</script>
+    <form name="questionForm">
+	     Enter question:<br>
+	     <input type="text" name="question" id="Questions1212"><br>
+	     <input type="submit" value="Submit" onClick="display();" id="SubmitToYourQuestion">
+    </form>
 	</body>
 </html>
