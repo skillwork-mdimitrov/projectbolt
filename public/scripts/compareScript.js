@@ -23,29 +23,25 @@ var dbDataLoaded = new Promise(function(resolve, reject) {
 
 /* Global functions
  ============================================================== */
-// AJAX request for "dynamic_request_fetchDB" (will return all the rows from the db and store them in an array)
+// jQuery AJAX request for "dynamic_request_fetchDB" (will return all the rows from the db and store them in an array)
 function fetchDB() {
   "use strict";
-  try {
-    // VARIABLES
-    var xhttp;
-    xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      var DONE = 4; // readyState 4 means the request is done.
-      var OK = 200; // status 200 is a successful return.
-      if (this.readyState === DONE && this.status === OK) {
-        // the results from this request will be stored in the questions variable.
-        // since the results coming from the AJAX request are as string, split by coma first and then store in array
-        global.questions = this.responseText.split(",");
-        outsideResolve(global.questions);
-      }
-    };
-    xhttp.open("GET", "dynamic_request_fetchDB", true);
-    xhttp.send();
-  }
-  catch(e) {
-    console.log('Caught Exception: ' + e.message);
-  }
+  $.ajax({
+    type: 'GET',
+    url: 'dynamic_request_fetchDB',
+    success: function(data){
+      // the results from this request will be stored in the questions variable.
+      // since the results coming from the AJAX request are as string, split by coma first and then store in array
+      global.questions = data.split(",");
+      outsideResolve(global.questions);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
+      console.log('jqXHR: ' + jqXHR);
+      console.log('textStatus: ' + textStatus);
+      console.log('errorThrown: ' + errorThrown);
+    }
+  });
 }
 // =====================================================================================================================
 

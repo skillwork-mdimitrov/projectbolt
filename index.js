@@ -25,7 +25,6 @@ app.get('/dynamic_request_fetchDB', function(request, response) {
   database.queryDatabase(); // select every question from the database and store it in dbResults array
   database.dataLoading.then(function(resolve) {
     toWrite = resolve.join(); // since response needs to return a string, join() the results
-    response.writeHead(200, {'Content-Type': 'application/javascript'});
     response.write(toWrite);
     response.end();
   })
