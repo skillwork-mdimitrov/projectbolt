@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<meta charset="utf-8"/>
+<html lang="en">
+<head>
+    <title>Search & Compare</title>
+    <link rel="icon" href="images/thunder.png"/>
+    <link rel="stylesheet" type="text/css" href="styles/style_index.css">
+    <link rel="stylesheet" type="text/css" href="styles/awesomplete.css" />
+</head>
+<!-- TODO Please separate JS function calling from the HTML -->
+<body onload="initDropdown()">
+    <div class="searchContainer">
+        <div class="searchBar">
+            <img class="magnifyingGlass" src="images/magnifyingGlass.png" alt="searchIcon">
+            <input id="query" type="text" placeholder="Search..">
+        </div>
+        <table id="output"></table>
+    </div>
+    <!-- SCRIPTS, load them below, after the DOM ↓
+    ============================================================== -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
+    <script src="scripts/mainScript.js"></script>
+    <script src="scripts/stringCompare.js"></script>
+    <script src="scripts/awesomplete.js" async></script>
+</body>
+</html>

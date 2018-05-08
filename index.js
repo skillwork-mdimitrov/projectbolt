@@ -20,6 +20,7 @@ const app = express();
 app.use(express.static('public')); // Will handle every static file placed in the public directory
 
 app.get('/dynamic_request_fetchDB', function(request, response) {
+  "use strict";
   let toWrite = "";
   database.queryDatabase(); // select every question from the database and store it in dbResults array
   database.dataLoading.then(function(resolve) {
