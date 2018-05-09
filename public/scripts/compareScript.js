@@ -55,6 +55,7 @@ $(document).ready(function() {
     dbDataLoaded.then(function(resolve) {
       evaluateQuery(resolve);
     });
+    // TODO add catch in case promise failed
   });
 });
 

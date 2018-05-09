@@ -11,6 +11,7 @@
 /* VARIABLES
    ============================================================== */
 let selectingQueries = require('./server/sqlCommands/selectingQueries');
+let insertingQueries = require('./server/sqlCommands/insertingQueries');
 const express = require('express');
 const app = express();
 // =====================================================================================================================
@@ -33,7 +34,19 @@ app.get('/dynamic_request_fetchDB', function(request, response) {
   });
 });
 
-// Alex test
+/* INSERTING INTO THE DB EXAMPLE METHOD
+   ============================================================== */
+/*
+  // This will fail if what you try to INSERT already exists in the database
+  insertingQueries.insertStatement("INSERT INTO questions (question) VALUES ('MyTeest')");
+  insertingQueries.insertion.then(function(resolve) {
+    console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
+  })
+  .catch(function (error) {
+    console.log("Insert failed - " + error.message); // re-write this in the response.write("Msg " + error)
+  });
+*/
+
 app.get('/dynamic_request_writeToDB', function(request, response) {
   "use strict";
   let toWrite = request.data;

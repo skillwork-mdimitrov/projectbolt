@@ -38,3 +38,6 @@ jspm_packages
 
 # package lock
 /package-lock.json
+
+# weird jQuery thing
+/jQuery

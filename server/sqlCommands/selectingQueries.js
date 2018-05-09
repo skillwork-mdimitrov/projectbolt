@@ -1,6 +1,5 @@
 /* JSHint quality control options
    ============================================================== */
-/*globals $:false*/
 /*jslint devel: true*/
 /*jshint esversion: 6*/
 
@@ -26,14 +25,14 @@ connection.on('connect', function(err) {
     console.log(err);
   }
   else {
-    console.log("Successfully connected to the database!");
+    console.log("selectingQueries script successfully connected to the database!");
  }
 });
 
 function getResultsAsArray(sqlstatement) {
   // Specify request
   request = new Request(
-      sqlstatement,
+      sqlstatement, // SELECT * etc
       // Can't scrap the below function, because Request expects another parameter
       function(err, rowCount, rows) {
         // process.exit();
@@ -51,12 +50,12 @@ function getResultsAsArray(sqlstatement) {
   // Execute this request
   connection.execSql(request);
 
-  // Completion status of the SQL statement execution
+  // Completion status of the SQL statement execution; TODO Check again if it's good validation
   request.on("doneInProc", function (rowCount) {
     if(rowCount > 0) {
-      outsideResolve(dbResults);
       // fulfill the promise. This will trigger the promise .then() event.
       // The promise will return the dbResults, since it was passed as a parameter.
+      outsideResolve(dbResults);
     }
     else {
       outsideReject(new Error("Empty results"));
