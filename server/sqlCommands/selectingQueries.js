@@ -11,11 +11,7 @@ var dbResults = []; // will store the results from the queries
 // Promise
 var outsideResolve; // will become dataLoading's Promise.resolve
 var outsideReject; // will become dataLoading's Promise.reject
-var dataLoading = new Promise(function(resolve, reject) {
-  "use strict";
-  outsideResolve = resolve;
-  outsideReject = reject;
-});
+var dataLoading; // will be the Promise that will tell you if the selection was successful or not
 
 var connection = new Connection(config);
 
@@ -29,7 +25,18 @@ connection.on('connect', function(err) {
  }
 });
 
+// The request will hang, if you give incorrect table/column name
 function getResultsAsArray(sqlstatement) {
+  // Every time this method is called, make a new promise
+  dataLoading = new Promise(function(resolve, reject) {
+    "use strict";
+    outsideResolve = resolve;
+    outsideReject = reject;
+  });
+
+  // Export this new promise every time you make a new one
+  module.exports.dataLoading = dataLoading;
+
   // Specify request
   request = new Request(
       sqlstatement, // SELECT * etc
@@ -50,7 +57,7 @@ function getResultsAsArray(sqlstatement) {
   // Execute this request
   connection.execSql(request);
 
-  // Completion status of the SQL statement execution; TODO Check again if it's good validation
+  // Completion status of the SQL statement execution.
   request.on("doneInProc", function (rowCount) {
     if(rowCount > 0) {
       // fulfill the promise. This will trigger the promise .then() event.
@@ -67,4 +74,3 @@ function getResultsAsArray(sqlstatement) {
 
 // Make publicly available
 module.exports.getResultsAsArray = getResultsAsArray;
-module.exports.dataLoading = dataLoading;

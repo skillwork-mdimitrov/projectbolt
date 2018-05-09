@@ -18,7 +18,8 @@ const app = express();
 
 /* SERVER
    ============================================================== */
-app.use(express.static('public')); // Will handle every static file placed in the public directory
+// Will handle every STATIC file placed in the public directory. Scripts that have to deal with the database are NOT static
+app.use(express.static('public'));
 
 app.get('/dynamic_request_fetchDB', function(request, response) {
   "use strict";
@@ -26,11 +27,13 @@ app.get('/dynamic_request_fetchDB', function(request, response) {
   selectingQueries.getResultsAsArray("SELECT question FROM questions"); // select every question from the database and store it in dbResults array
   selectingQueries.dataLoading.then(function(resolve) {
     toWrite = resolve.join(); // since response needs to return a string, join() the array results
-    response.write(toWrite);
+    response.write(toWrite); // return the results from the resolvement of the promise (the dbResults array) to the client
     response.end();
   })
   .catch(function (error) {
-    console.log("Empty rows returned from getResultsAsArray. Error " + error.message);
+    toWrite = error.message; // if the promise returns an error, catch it
+    response.write(toWrite); // return the error message to the client
+    response.end();
   });
 });
 
@@ -47,6 +50,7 @@ app.get('/dynamic_request_fetchDB', function(request, response) {
   });
 */
 
+// Test
 app.get('/dynamic_request_writeToDB', function(request, response) {
   "use strict";
   let toWrite = request.data;
