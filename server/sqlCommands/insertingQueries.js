@@ -10,11 +10,7 @@ var config = require('./dbConfig').config;
 // Promise
 var outsideResolve; // will become dataLoading's Promise.resolve
 var outsideReject; // will become dataLoading's Promise.reject
-var insertion = new Promise(function(resolve, reject) {
-  "use strict";
-  outsideResolve = resolve;
-  outsideReject = reject;
-});
+var insertion; // will be the Promise that will tell you if the insertion was successful or not
 
 var connection = new Connection(config);
 
@@ -29,6 +25,16 @@ connection.on('connect', function(err) {
 });
 
 function insertStatement(theSqlstatement) {
+  // Every time this method is called, make a new promise
+  insertion = new Promise(function(resolve, reject) {
+    "use strict";
+    outsideResolve = resolve;
+    outsideReject = reject;
+  });
+
+  // And export this new promise
+  module.exports.insertion = insertion;
+
   // Specify request
   request = new Request(
       theSqlstatement, // INSERT INTO etc
@@ -41,14 +47,13 @@ function insertStatement(theSqlstatement) {
   // Execute this request
   connection.execSql(request);
 
-  /* Promise will give you positive results if the first time it successfully passes. If you then
-     spam the same query (without restarting the server that is) it won't go in the Azure DB, but the promise will still
-     say it successfully inserted. Limit this behaviour in the front-end, if you can't let me know I can try
-     reevaluation the promise somehow */
+  // When the SQL execution is done, based on the result either fulfil the promise or reject it
   request.on('doneInProc', function (rowCount, more, rows) {
+    // If affected rows are more than 0, operation was a success
     if(rowCount > 0) {
-      outsideResolve("Insertion successful"); //
+      outsideResolve("Insertion successful");
     }
+    // If not, operation didn't affect any rows, it didn't go through
     else {
       outsideReject(new Error("Insertion didn't go through, 0 affected rows "));
     }
@@ -57,4 +62,3 @@ function insertStatement(theSqlstatement) {
 
 // Make publicly available
 module.exports.insertStatement = insertStatement;
-module.exports.insertion = insertion;

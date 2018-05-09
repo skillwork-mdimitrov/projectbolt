@@ -38,7 +38,7 @@ app.get('/dynamic_request_fetchDB', function(request, response) {
    ============================================================== */
 /*
   // This will fail if what you try to INSERT already exists in the database
-  insertingQueries.insertStatement("INSERT INTO questions (question) VALUES ('MyTeest')");
+  insertingQueries.insertStatement("INSERT INTO questions (question) VALUES ('Test11')");
   insertingQueries.insertion.then(function(resolve) {
     console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
   })
