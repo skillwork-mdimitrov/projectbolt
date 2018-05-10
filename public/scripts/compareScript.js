@@ -7,7 +7,6 @@
 /* Global variables
  ============================================================== */
 let global = {
-  searchField: $('.searchField'),
   searchInput: $('#query'),
   questions: [] // will store all the questions from the database
 };
@@ -36,7 +35,7 @@ function fetchDB() {
       outsideResolve(global.questions);
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
+      // Not a problem for now, but we'll need to cancel out previous promises when a new one is made
       console.log('jqXHR: ' + jqXHR);
       console.log('textStatus: ' + textStatus);
       console.log('errorThrown: ' + errorThrown);
@@ -54,6 +53,10 @@ $(document).ready(function() {
     fetchDB(); // send a request that fetches the db rows
     dbDataLoaded.then(function(resolve) {
       evaluateQuery(resolve);
+    })
+    .catch(function (error) {
+      let caughtError = error.message; // save the error for logging or showing the user
+      console.log(caughtError);
     });
   });
 });

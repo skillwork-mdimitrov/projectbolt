@@ -2,7 +2,7 @@
   "name": "sqltest",
   "version": "1.0.0",
   "description": "pulling stuff from an azure db",
-  "main": "sqltest.js",
+  "main": "selectingQueries.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.6.0",
+    "package.json": "^2.0.1",
     "tedious": "^2.3.1"
   }
 }
