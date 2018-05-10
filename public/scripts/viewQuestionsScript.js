@@ -37,6 +37,10 @@ function fetchAllQuestions() {
   });
 }
 
+function displayQuestions() {
+
+}
+
 // When everything has loaded
 $(document).ready(function() {
   "use strict";

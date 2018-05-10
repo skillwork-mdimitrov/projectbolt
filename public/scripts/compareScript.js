@@ -35,7 +35,7 @@ function fetchDB() {
       outsideResolve(global.questions);
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
+      // Not a problem for now, but we'll need to cancel out previous promises when a new one is made
       console.log('jqXHR: ' + jqXHR);
       console.log('textStatus: ' + textStatus);
       console.log('errorThrown: ' + errorThrown);
