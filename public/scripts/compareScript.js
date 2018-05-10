@@ -53,8 +53,11 @@ $(document).ready(function() {
     fetchDB(); // send a request that fetches the db rows
     dbDataLoaded.then(function(resolve) {
       evaluateQuery(resolve);
+    })
+    .catch(function (error) {
+      let caughtError = error.message; // if the promise returns an error, catch it
+      console.log(caughtError);
     });
-    // TODO add catch in case promise failed
   });
 });
 

@@ -27,6 +27,8 @@ connection.on('connect', function(err) {
 
 // The request will hang, if you give incorrect table/column name
 function getResultsAsArray(sqlstatement) {
+  dbResults.length = 0; // clear the currently stored dbResults, so on new request they can be added again
+
   // Every time this method is called, make a new promise
   dataLoading = new Promise(function(resolve, reject) {
     "use strict";
