@@ -55,7 +55,7 @@ $(document).ready(function() {
       evaluateQuery(resolve);
     })
     .catch(function (error) {
-      let caughtError = error.message; // if the promise returns an error, catch it
+      let caughtError = error.message; // save the error for logging or showing the user
       console.log(caughtError);
     });
   });

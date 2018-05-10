@@ -37,16 +37,44 @@ function fetchAllQuestions() {
   });
 }
 
-function displayQuestions() {
+let displayQuestions = function() {
+  "use strict";
+  let theTable = $('.Table')[0]; // since it's class, [0] is the first instance
 
-}
+  for(let i=0;i<questions.length;i++) {
+    let tableRow = document.createElement("div");
+    tableRow.setAttribute("class", "Table-row");
+
+    let rowItemQuestion = document.createElement("div");
+    rowItemQuestion.setAttribute("class", "Table-row-item u-Flex-grow9");
+    rowItemQuestion.setAttribute("data-header", "Header1");
+    rowItemQuestion.textContent = questions[i];
+
+    let rowItemUser = document.createElement("div");
+    rowItemUser.setAttribute("class", "Table-row-item u-Flex-grow1");
+    rowItemUser.setAttribute("data-header", "Header2");
+    rowItemUser.textContent = "Johny";
+
+    let rowItemAnswer = document.createElement("div");
+    rowItemAnswer.setAttribute("class", "Table-row-item u-Flex-grow1");
+    rowItemAnswer.style.textDecoration = "underline";
+    rowItemAnswer.style.color = "blue";
+    rowItemAnswer.setAttribute("data-header", "Header3");
+    rowItemAnswer.textContent = "Answers";
+
+    theTable.appendChild(tableRow);
+    tableRow.appendChild(rowItemQuestion);
+    tableRow.appendChild(rowItemUser);
+    tableRow.appendChild(rowItemAnswer);
+  }
+};
 
 // When everything has loaded
 $(document).ready(function() {
   "use strict";
   fetchAllQuestions(); // send a request to fetch all the questions from the db
   dbDataLoaded.then(function(resolve) {
-    console.log(resolve);
+    displayQuestions(); // when the questions arrive, generate and display them
   })
   .catch(function (error) {
     let caughtError = error.message; // if the promise returns an error, catch it
