@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>View questions</title>
-	</head>
-	<body>
-		<p>Question 1: X</p>
-		<p>Question 2: Y</p>
-		<p>Question 3: Z</p>
-		<p>Question 4: V</p>
-		<p>Question 5: T</p>
-		<!-- SCRIPTS, load them below, after the DOM ↓
-		============================================================== -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
-	</body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Questions</title>
+    <link rel="icon" href="images/questionPerson.png"/>
+    <link rel="stylesheet" type="text/css" href="styles/viewQuestions.css">
+  </head>
+  <body>
+  <table>
+    <tr>
+      <th>Subject</th>
+      <th>Posted by</th>
+      <th>Answers</th>
+    </tr>
+    <tr>
+      <td>What is machine learning</td>
+      <td>John</td>
+      <td>2</td>
+    </tr>
+  </table>
+  <!-- SCRIPTS, load them below, after the DOM ↓
+  ============================================================== -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
+  <script src="scripts/viewQuestionsScript.js"></script>
+  </body>
 </html>

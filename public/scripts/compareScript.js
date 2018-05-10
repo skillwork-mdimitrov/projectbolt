@@ -7,7 +7,6 @@
 /* Global variables
  ============================================================== */
 let global = {
-  searchField: $('.searchField'),
   searchInput: $('#query'),
   questions: [] // will store all the questions from the database
 };
