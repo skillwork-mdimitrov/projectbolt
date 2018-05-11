@@ -25,22 +25,25 @@ var dbDataLoaded = new Promise(function(resolve, reject) {
 // jQuery AJAX request for "dynamic_request_fetchDB" (will return all the rows from the db and store them in an array)
 function fetchDB() {
   "use strict";
-  $.ajax({
-    type: 'GET',
-    url: 'dynamic_request_fetchDB',
-    success: function(data){
-      // the results from this request will be stored in the questions variable.
-      // since the results coming from the AJAX request are as string, split by coma first and then store in array
-      global.questions = data.split(",");
-      outsideResolve(global.questions);
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      // Not a problem for now, but we'll need to cancel out previous promises when a new one is made
-      console.log('jqXHR: ' + jqXHR);
-      console.log('textStatus: ' + textStatus);
-      console.log('errorThrown: ' + errorThrown);
-    }
-  });
+  // The active check will prevent the user from firing too much requests too quickly, preventing internal server error
+  if(!$.active) {
+    $.ajax({
+      type: 'GET',
+      url: 'dynamic_request_fetchDB',
+      success: function(data){
+        // the results from this request will be stored in the questions variable.
+        // since the results coming from the AJAX request are as string, split by coma first and then store in array
+        global.questions = data.split(",");
+        outsideResolve(global.questions);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        // Not a problem for now, but we'll need to cancel out previous promises when a new one is made
+        console.log('jqXHR: ' + jqXHR);
+        console.log('textStatus: ' + textStatus);
+        console.log('errorThrown: ' + errorThrown);
+      }
+    });
+  }
 }
 // =====================================================================================================================
 
