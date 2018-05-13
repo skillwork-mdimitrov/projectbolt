@@ -1,20 +1,22 @@
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Form Example</title>
-    <script LANGUAGE="JavaScript" type="text/javascript">
-      function display() {
-        DispWin = window.open('','NewWin', 'toolbar=no,status=no,width=300,height=200')
-        message = "<b>Question: </b>" + document.questionForm.question.value + "<b />";
-        DispWin.document.write(message);
-      }
-    </script>
-  </head>
+    <head>
+		<meta charset="UTF-8">
+		<title>Form Example</title>
+		<script LANGUAGE="JavaScript" type="text/javascript">
+			function display() {
+				DispWin = window.open('','NewWin', 'toolbar=no,status=no,width=300,height=200')
+				message = "<b>Question: </b>" + document.questionForm.question.value + "<b />";
+				DispWin.document.write(message);
+			}
+		</script>
+    </head>
 	<body>
-    <form name="questionForm">
-	     Enter question:<br>
-	     <input type="text" name="question" id="Questions1212"><br>
-	     <input type="submit" value="Submit" onClick="display();" id="SubmitToYourQuestion">
-    </form>
+		<form name="questionForm">
+			 Enter question:<br>
+			 <input type="text" name="question" id="Questions1212"><br>
+			 <input type="submit" value="Submit" onClick="display();" id="SubmitToYourQuestion">
+		</form>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="scripts/addQuestion.js"></script>
 	</body>
 </html>
