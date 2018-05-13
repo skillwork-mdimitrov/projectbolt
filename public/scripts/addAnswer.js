@@ -2,11 +2,12 @@ console.log("hi!");
 let answeButton = $('#answerButton');
 let answerBox = $('#answerBox');
 
-function ajaxRequest(){
+
+function ajaxRequest(answerAsString){
     "use strict";
     $.ajax({
-        type: 'GET',
-        data: JSON.stringify(answerBox.value),
+        type: 'post',
+        data: {"answer" : answerAsString},
         url: 'dynamic_request_writeToDB',
         success: function(data){
         console.log("data written");
@@ -28,8 +29,7 @@ $(document).ready(function() {
     /* ATTACH EVENT LISTENERS
       ============================================================== */
     answeButton.on("click", function() {
-        console.log("clicked");
-        ajaxRequest();
+        ajaxRequest(answerBox.val());
 
     });
 });
