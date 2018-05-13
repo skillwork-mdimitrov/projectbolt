@@ -108,7 +108,7 @@ app.post('/dynamic_request_writeToDB', function(request, response) {
 app.post('/request_writing_question_todb', function(request, response) {
   "use strict";
   let question = request.body.question;
-  insertingQueries.insertStatement("INSERT INTO questions (question) VALUES ("'" + question + "'")";
+  insertingQueries.insertStatement("INSERT INTO questions (question) VALUES (" + "'" + question + "'" + ")");
   insertingQueries.insertion.then(function(resolve) {
     console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
   })
