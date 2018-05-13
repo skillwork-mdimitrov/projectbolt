@@ -13,6 +13,7 @@
 let selectingQueries = require('./server/sqlCommands/selectingQueries');
 let insertingQueries = require('./server/sqlCommands/insertingQueries');
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 // =====================================================================================================================
 
@@ -20,6 +21,10 @@ const app = express();
    ============================================================== */
 // Will handle every STATIC file placed in the public directory. Scripts that have to deal with the database are NOT static
 app.use(express.static('public'));
+
+// Posting request
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/dynamic_request_fetchDB', function(request, response) {
   "use strict";
@@ -51,12 +56,19 @@ app.get('/dynamic_request_fetchDB', function(request, response) {
   });
 */
 
-// Test
-app.get('/dynamic_request_writeToDB', function(request, response) {
+// Writting answers in the database ----!!Need to check if the data go in the dB
+app.post('/dynamic_request_writeToDB', function(request, response) {
   "use strict";
-  let toWrite = request.data;
-  response.write("whatever");
-  response.end();
+  let answer = request.body.answer;
+  console.log(answer);
+  insertingQueries.insertStatement("INSERT INTO answers (answer, questionid) VALUES (" + "'" + answer + "'" + ", '1')");
+  insertingQueries.insertion.then(function(resolve) {
+    console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
+  })
+      .catch(function (error) {
+        console.log("Insert failed - " + error.message); // re-write this in the response.write("Msg " + error)
+      });
+  response.end("A OK");
 });
 
 // =====================================================================================================================
