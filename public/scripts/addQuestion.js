@@ -1,14 +1,14 @@
 console.log("Testing");
-let answeButton = $('#answerButton');
-let answerBox = $('#answerBox');
+let questionButton = $('#SubmitToYourQuestion');
+let questionBox = $('#Questions1212');
 
 
-function ajaxRequest(answerAsString){
+function ajaxRequest(questionString){
     "use strict";
     $.ajax({
         type: 'post',
-        data: {"answer" : answerAsString},
-        url: 'dynamic_request_writeToDB',
+        data: {"question" : questionString},
+        url: 'request_writing_question_todb',
         success: function(data){
         console.log("data written");
         },
@@ -28,8 +28,7 @@ $(document).ready(function() {
     "use strict";
     /* ATTACH EVENT LISTENERS
       ============================================================== */
-    answeButton.on("click", function() {
-        ajaxRequest(answerBox.val());
-
+    questionButton.on("click", function() {
+        ajaxRequest(questionBox.val());
     });
 });
