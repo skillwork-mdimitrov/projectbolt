@@ -37,6 +37,22 @@ app.get('/dynamic_request_fetchDB', function(request, response) {
   });
 });
 
+app.get('/fetchQuestionAnswer', function(request, response) {
+  "use strict";
+  let toWrite = "";
+  selectingQueries.getResultsAsArray("SELECT answer FROM answers WHERE QuestionID=" + "'" + 1 + "'");
+  selectingQueries.dataLoading.then(function(resolve) {
+    toWrite = resolve.join(); // since response needs to return a string, join() the array results
+    response.write(toWrite); // return the results from the resolvement of the promise (the answer) to the client
+    response.end();
+  })
+  .catch(function (error) {
+    toWrite = error.message; // if the promise returns an error, catch it
+    response.write(toWrite); // return the error message to the client
+    response.end();
+  });
+});
+
 /* INSERTING INTO THE DB EXAMPLE METHOD
    ============================================================== */
 /*
