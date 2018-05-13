@@ -7,6 +7,7 @@ var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
 var config = require('./dbConfig').config;
 var dbResults = []; // will store the results from the queries
+let dbResultsJSON = {}; // will store the results from the queries in JSON format
 
 // Promise
 var outsideResolve; // will become dataLoading's Promise.resolve
@@ -72,7 +73,58 @@ function getResultsAsArray(sqlstatement) {
   });
 }
 
+// THIS IS SPECIFIC TO QUESTIONS AND THEIR ID, will change name later
+function getResultsAsJSON(sqlstatement) {
+  // dbResultsJSON = {}; // Make better
+
+  // Every time this method is called, make a new promise
+  dataLoading = new Promise(function(resolve, reject) {
+    "use strict";
+    outsideResolve = resolve;
+    outsideReject = reject;
+  });
+
+  // Export this new promise every time you make a new one
+  module.exports.dataLoading = dataLoading;
+
+  // Specify request
+  request = new Request(
+      sqlstatement, // SELECT * etc
+      // Can't scrap the below function, because Request expects another parameter
+      function(err, rowCount, rows) {
+        // process.exit();
+      }
+  );
+
+  request.on('row', function(columns) {
+    let uniqueIdentifier = columns[0].value; // the first's column value (the id of the question)
+    dbResultsJSON[uniqueIdentifier] = {};
+    columns.forEach(function(column) {
+      if(column.metadata.colName === 'id') {
+        dbResultsJSON[uniqueIdentifier].id = column.value;
+      }
+      if(column.metadata.colName === 'question') {
+        dbResultsJSON[uniqueIdentifier].question = column.value;
+      }
+    });
+  });
+
+  // Execute this request
+  connection.execSql(request);
+
+  // Completion status of the SQL statement execution.
+  request.on("doneInProc", function (rowCount) {
+    if(rowCount > 0) {
+      outsideResolve(dbResultsJSON);
+    }
+    else {
+      outsideReject(new Error("Empty results"));
+    }
+  });
+}
+
 // If getResultsAsArray doesn't fit your requirements, make another function below and export it
 
 // Make publicly available
 module.exports.getResultsAsArray = getResultsAsArray;
+module.exports.getResultsAsJSON = getResultsAsJSON;

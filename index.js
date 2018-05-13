@@ -42,10 +42,26 @@ app.get('/dynamic_request_fetchDB', function(request, response) {
   });
 });
 
-app.get('/fetchQuestionAnswer', function(request, response) {
+app.get('/fetchAllQuestions', function(request, response) {
   "use strict";
   let toWrite = "";
-  selectingQueries.getResultsAsArray("SELECT answer FROM answers WHERE QuestionID=" + "'" + 1 + "'");
+  selectingQueries.getResultsAsJSON("SELECT id, question FROM questions"); // select every question from the database and store it in dbResults array
+  selectingQueries.dataLoading.then(function(resolve) {
+    toWrite = resolve;
+    response.json(resolve);
+  })
+  .catch(function (error) {
+    toWrite = error.message; // if the promise returns an error, catch it
+    response.write(toWrite); // return the error message to the client
+    response.end();
+  });
+});
+
+app.post('/fetchQuestionAnswer', function(request, response) {
+  "use strict";
+  let toWrite = "";
+  let theRequestedQuestion = request.body.question;
+  selectingQueries.getResultsAsArray("SELECT answer FROM answers WHERE QuestionID=" + "'" + theRequestedQuestion + "'");
   selectingQueries.dataLoading.then(function(resolve) {
     toWrite = resolve.join(); // since response needs to return a string, join() the array results
     response.write(toWrite); // return the results from the resolvement of the promise (the answer) to the client
@@ -81,9 +97,9 @@ app.post('/dynamic_request_writeToDB', function(request, response) {
   insertingQueries.insertion.then(function(resolve) {
     console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
   })
-      .catch(function (error) {
-        console.log("Insert failed - " + error.message); // re-write this in the response.write("Msg " + error)
-      });
+  .catch(function (error) {
+    console.log("Insert failed - " + error.message); // re-write this in the response.write("Msg " + error)
+  });
   response.end("A OK");
 });
 

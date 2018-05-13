@@ -11,7 +11,8 @@
  * variables, like outsideResolve (see compareScripts.js), they will overwrite each other. Now they wont) */
 const vq = (function() {
   "use strict";
-  let questions = [];
+  // let questions = [];
+  let questions = {};
   var outsideResolve; // will become dbDataLoaded's Promise.resolve
   var outsideReject; // will become dbDataLoaded's Promise.reject
   var dbDataLoaded = new Promise(function(resolve, reject) {
@@ -28,17 +29,17 @@ const vq = (function() {
   };
 })();
 // =====================================================================================================================
-
-// jQuery AJAX request for "dynamic_request_fetchDB" (will return all the rows from the db and store them in an array)
 function fetchAllQuestions() {
   "use strict";
   $.ajax({
     type: 'GET',
-    url: 'dynamic_request_fetchDB',
+    url: 'fetchAllQuestions',
     success: function(data){
-      // the results from this request will be stored in the questions variable.
-      // since the results coming from the AJAX request are as string, split by coma first and then store in array
-      vq.questions = data.split(",");
+      // // the results from this request will be stored in the questions variable.
+      // // since the results coming from the AJAX request are as string, split by coma first and then store in array
+      // vq.questions = data.split(",");
+      // vq.outsideResolve(vq.questions);
+      vq.questions = data;
       vq.outsideResolve(vq.questions);
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -50,17 +51,14 @@ function fetchAllQuestions() {
   });
 }
 
-// jQuery AJAX request for "dynamic_request_fetchDB" (will return all the rows from the db and store them in an array)
-function fetchQuestionAnswer() {
+function fetchQuestionAnswer(whichQuestion) {
   "use strict";
   $.ajax({
-    type: 'GET',
+    type: 'POST',
     url: 'fetchQuestionAnswer',
+    data: whichQuestion,
     success: function(data){
-      // the results from this request will be stored in the questions variable.
-      // since the results coming from the AJAX request are as string, split by coma first and then store in array
-      vq.questions = data.split(",");
-      vq.outsideResolve(vq.questions);
+      alert(data);
     },
     error: function(jqXHR, textStatus, errorThrown) {
       alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
@@ -76,7 +74,7 @@ let displayQuestions = function() {
   "use strict";
   let theTable = $('.Table')[0]; // since it's class selector, [0] is the first instance
 
-  for(let i=0;i<vq.questions.length;i++) {
+  for(let i=1;i<=Object.keys(vq.questions).length;i++) {
     // A row with a question, user and answers
     let tableRow = document.createElement("div");
     tableRow.setAttribute("class", "Table-row");
@@ -85,7 +83,7 @@ let displayQuestions = function() {
     let rowItemQuestion = document.createElement("div");
     rowItemQuestion.setAttribute("class", "Table-row-item u-Flex-grow9");
     rowItemQuestion.setAttribute("data-header", "Question");
-    rowItemQuestion.textContent = vq.questions[i];
+    rowItemQuestion.textContent = vq.questions[i].question;
 
     // The user
     let rowItemUser = document.createElement("div");
@@ -98,7 +96,10 @@ let displayQuestions = function() {
     rowItemAnswer.setAttribute("class", "Table-row-item u-Flex-grow1");
     rowItemAnswer.setAttribute("data-header", "Answers");
     rowItemAnswer.addEventListener("click", function() {
-
+      let whichQuestion = {
+        question: vq.questions[i].id
+      };
+      fetchQuestionAnswer(whichQuestion);
     });
     // Styles
     rowItemAnswer.style.textDecoration = "underline";
