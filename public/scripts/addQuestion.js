@@ -10,7 +10,7 @@ function ajaxRequest(questionString){
         data: {"question" : questionString, "type": "question"},
         url: 'dynamic_request_writeToDB',
         success: function(data){
-          alert('Maks is now alerted and the answer is added!');
+          alert('Question added successfully');
         console.log("data written");
         },
         error: function(jqXHR, textStatus, errorThrown) {
