@@ -11,6 +11,7 @@ function ajaxRequest(answerAsString, questionID){
     data: {"answer" : answerAsString, "questionID" : questionID, "type": "answer"},
     url: 'dynamic_request_writeToDB',
     success: function(data){
+      alert('Maks is now alerted and the answer is added!');
       console.log("data written");
     },
     error: function(jqXHR, textStatus, errorThrown) {
