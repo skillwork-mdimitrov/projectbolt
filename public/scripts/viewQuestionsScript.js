@@ -74,7 +74,7 @@ let displayQuestions = function() {
   "use strict";
   let theTable = $('.Table')[0]; // since it's class selector, [0] is the first instance
 
-  for(let i=1;i<=Object.keys(vq.questions).length;i++) {
+  for(let element in vq.questions) {
     // A row with a question, user and answers
     let tableRow = document.createElement("div");
     tableRow.setAttribute("class", "Table-row");
@@ -83,7 +83,7 @@ let displayQuestions = function() {
     let rowItemQuestion = document.createElement("div");
     rowItemQuestion.setAttribute("class", "Table-row-item u-Flex-grow9");
     rowItemQuestion.setAttribute("data-header", "Question");
-    rowItemQuestion.textContent = vq.questions[i].question;
+    rowItemQuestion.textContent = vq.questions[element].question;
 
     // The user
     let rowItemUser = document.createElement("div");
@@ -97,7 +97,7 @@ let displayQuestions = function() {
     rowItemAnswer.setAttribute("data-header", "Answers");
     rowItemAnswer.addEventListener("click", function() {
       let whichQuestion = {
-        question: vq.questions[i].id
+        question: vq.questions[element].id
       };
       fetchQuestionAnswer(whichQuestion);
     });
