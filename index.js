@@ -52,11 +52,19 @@ app.get('/dynamic_request_fetchDB', function(request, response) {
 */
 
 // Test
-app.get('/dynamic_request_writeToDB', function(request, response) {
+app.post('/dynamic_request_writeToDB', function(request, response) {
   "use strict";
-  let toWrite = request.data;
-  response.write("whatever");
-  response.end();
+  let answer = request.body.answer;
+  let questionID = request.body.questionID;
+  console.log(answer);
+  insertingQueries.insertStatement("INSERT INTO answers (answer, questionid) VALUES (" + "'" + answer + "'" + ", '" + questionID + "')");
+  insertingQueries.insertion.then(function(resolve) {
+    console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
+  })
+      .catch(function (error) {
+        console.log("Insert failed - " + error.message); // re-write this in the response.write("Msg " + error)
+      });
+  response.end("A OK");
 });
 
 // =====================================================================================================================
