@@ -1,10 +1,10 @@
 // Select the Box and button
 let answerButton = $('#answerButton');
 let answerBox = $('#answerBox');
-let questionID = 1;
+let questionIDBox = $('#questionIDBox');
 
 //Request to run an SQL query on the database from the server to add new answers
-function ajaxRequest(answerAsString){
+function ajaxRequest(answerAsString, questionID){
   "use strict";
   $.ajax({
     type: 'post',
@@ -30,7 +30,7 @@ $(document).ready(function() {
   /* ATTACH EVENT LISTENERS
     ============================================================== */
   answerButton.on("click", function() {
-    ajaxRequest(answerBox.val());
+    ajaxRequest(answerBox.val(), questionIDBox.val());
 
   });
 });
