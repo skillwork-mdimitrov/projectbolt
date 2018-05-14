@@ -110,8 +110,8 @@ function getResultsAsJSON(sqlstatement) {
     // let count = 0;
     // dbResultsJSON[count] = {};
     columns.forEach(function(column) {
-      var colName = column.metadata.colName;
-      dbResultsJSON.push({colName: column.value});
+      let columnName = column.metadata.colName;
+      dbResultsJSON.push({[columnName]: column.value});
     });
   });
 
