@@ -76,7 +76,7 @@ $(document).ready(function(){
     loadAnswers();
     setTimeout(function() {
         loadUsers();
-    }, 75);    
+    }, 250);    
 });
 
 $(".rating").change(function() {
