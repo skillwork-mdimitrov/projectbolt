@@ -53,10 +53,17 @@ function loadUsers()
 }
 
 $(document).ready(function(){
+    $('#answerSelector').change(function() {
+        $('#ratingSelector').rating('clear rating');
+    });
+
+    $('#userSelector').change(function() {
+        $('#ratingSelector').rating('clear rating');
+    });
+
     //Add event listener for star rating
     $('#ratingSelector').on("click", function(){
       rateAnswer();
-      console.log("rated");
     });
 
     // Ititialising the rating widgets
@@ -80,6 +87,7 @@ function rateAnswer()
 {
     var answerID = $('#answerSelector').val();
     var userID = $('#userSelector').val();
+    var userName = $('#userSelector option:selected').text();
     var rating = $('#ratingSelector').rating('get rating');
 
     if (answerID !== null && userID !== null && rating > 0)
@@ -90,7 +98,7 @@ function rateAnswer()
             data: {"answer" : answerID, "user": userID, "rating": rating},
             url: 'request_writing_rating_todb',
             success: function(data){
-            console.log("data written");
+                console.log("Rating entered: " + userName + " rated " + rating);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
