@@ -135,17 +135,19 @@ app.post('/dynamic_request_writeToDB', function(request, response) {
 
 
 // Writing question in the database ----!!Need to check if the data go in the dB
-app.post('/request_writing_question_todb', function(request, response) {
+app.post('/dynamic_request_writeToDB', function(request, response) {
   "use strict";
-  let question = request.body.question;
-  insertingQueries.insertStatement("INSERT INTO questions (question) VALUES (" + "'" + question + "'" + ")");
+  let answer = request.body.answer;
+  let questionID = request.body.questionID;
+  console.log(answer);
+  insertingQueries.insertStatement("INSERT INTO answers (answer, questionid) VALUES (" + "'" + answer + "'" + ", '" + questionID + "')");
   insertingQueries.insertion.then(function(resolve) {
     console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
   })
-  .catch(function (error) {
-    console.log("Insert failed - " + error.message); // re-write this in the response.write("Msg " + error)
-  });
-  response.end("Request send");
+      .catch(function (error) {
+        console.log("Insert failed - " + error.message); // re-write this in the response.write("Msg " + error)
+      });
+  response.end("A OK");
 });
 
 // Writing rating in the database ----!!Need to check if the data go in the dB
