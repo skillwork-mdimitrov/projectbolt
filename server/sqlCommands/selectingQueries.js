@@ -75,7 +75,7 @@ function getResultsAsArray(sqlstatement) {
 
 // THIS IS SPECIFIC TO QUESTIONS AND THEIR ID, will change name later
 function getResultsAsJSON(sqlstatement) {
-  // dbResultsJSON = {}; // Make better
+  dbResultsJSON = {}; // Make better
 
   // Every time this method is called, make a new promise
   dataLoading = new Promise(function(resolve, reject) {
