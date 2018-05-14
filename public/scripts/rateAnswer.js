@@ -83,8 +83,8 @@ $(document).ready(function(){
         clearable: true
     });
 
-    // loadAnswers();
-    // loadUsers();
+    loadAnswers();
+    loadUsers();
     $.each(answers, function (index, value) {
         $('#answerSelector').append($('<option>', { 
             value: index,

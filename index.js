@@ -60,7 +60,7 @@ app.get('/fetchAllQuestions', function(request, response) {
 app.get('/fetchAllUsers', function(request, response) {
   "use strict";
   let toWrite = "";
-  selectingQueries.getResultsAsArray("SELECT id, firstname FROM users"); // select every question from the database and store it in dbResults array
+  selectingQueries.getResultsAsJSON("SELECT id, firstname FROM users"); // select every question from the database and store it in dbResults array
   selectingQueries.dataLoading.then(function(resolve) {
     toWrite = resolve;
     response.json(resolve);
