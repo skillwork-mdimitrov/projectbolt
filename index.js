@@ -156,7 +156,7 @@ app.post('/request_writing_rating_todb', function(request, response) {
   let userID = request.body.user;
   let rating = request.body.rating;
 
-  insertingQueries.insertStatement("INSERT INTO ratings (answerid, userid, rating) VALUES (" + answerID + ", " + userID + ", " + rating + ")");
+  insertingQueries.insertStatement("INSERT INTO ratings (answerid, userid, rating) VALUES ('" + answerID + "', '" + userID + "', '" + rating + "')");
   insertingQueries.insertion.then(function(resolve) {
     console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
   })
