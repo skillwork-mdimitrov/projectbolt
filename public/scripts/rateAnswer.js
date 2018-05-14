@@ -98,7 +98,7 @@ function rateAnswer()
             data: {"answer" : answerID, "user": userID, "rating": rating},
             url: 'request_writing_rating_todb',
             success: function(data){
-                console.log("Rating entered: " + userName + " rated " + rating);
+                alert("Rating entered: " + userName + " rated " + rating);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
