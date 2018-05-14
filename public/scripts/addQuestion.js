@@ -8,7 +8,7 @@ function ajaxRequest(questionString){
     $.ajax({
         type: 'post',
         data: {"question" : questionString, "type": "question"},
-        url: 'request_writing_question_todb',
+        url: 'dynamic_request_writeToDB',
         success: function(data){
         console.log("data written");
         },
