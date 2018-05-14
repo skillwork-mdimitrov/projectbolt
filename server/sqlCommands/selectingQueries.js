@@ -97,22 +97,24 @@ function getResultsAsJSON(sqlstatement) {
   );
 
   request.on('row', function(columns) {
-    // let uniqueIdentifier = columns[0].value; // the first's column value (the id of the question)
-    // dbResultsJSON[uniqueIdentifier] = {};
-    // columns.forEach(function(column) {
-    //   if(column.metadata.colName === 'id') {
-    //     dbResultsJSON[uniqueIdentifier].id = column.value;
-    //   }
-    //   if(column.metadata.colName === 'question') {
-    //     dbResultsJSON[uniqueIdentifier].question = column.value;
-    //   }
-    // });
+    let uniqueIdentifier = columns[0].value; // the first's column value (the id of the question)
+    dbResultsJSON[uniqueIdentifier] = {};
+    columns.forEach(function(column) {
+      // if(column.metadata.colName === 'id') {
+      //   dbResultsJSON[uniqueIdentifier].id = column.value;
+      // }
+      // if(column.metadata.colName === 'question') {
+      //   dbResultsJSON[uniqueIdentifier].question = column.value;
+      // }
+      dbResultsJSON[uniqueIdentifier].colName = column.value;
+    });
+
     // let count = 0;
     // dbResultsJSON[count] = {};
-    columns.forEach(function(column) {
-      let columnName = column.metadata.colName;
-      dbResultsJSON.push({[columnName]: column.value});
-    });
+    // columns.forEach(function(column) {
+    //   let columnName = column.metadata.colName;
+    //   dbResultsJSON.push({[columnName]: column.value});
+    // });
   });
 
   // Execute this request
