@@ -8,7 +8,7 @@ function ajaxRequest(answerAsString){
   "use strict";
   $.ajax({
     type: 'post',
-    data: {"answer" : answerAsString, "questionID" : questionID},
+    data: {"answer" : answerAsString, "questionID" : questionID, "type": "answer"},
     url: 'dynamic_request_writeToDB',
     success: function(data){
       console.log("data written");

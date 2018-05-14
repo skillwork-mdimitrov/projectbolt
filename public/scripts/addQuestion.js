@@ -7,7 +7,7 @@ function ajaxRequest(questionString){
     "use strict";
     $.ajax({
         type: 'post',
-        data: {"question" : questionString},
+        data: {"question" : questionString, "type": "question"},
         url: 'request_writing_question_todb',
         success: function(data){
         console.log("data written");
