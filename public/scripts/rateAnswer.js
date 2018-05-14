@@ -70,6 +70,12 @@ function loadUsers()
 }
 
 $(document).ready(function(){
+    //Add event listener for star rating
+    $('#ratingSelector').on("click", function(){
+      rateAnswer();
+      console.log("rated");
+    });
+
     // Ititialising the rating widgets
     $(".rating").rating({
         initialRating: 0,
