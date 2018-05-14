@@ -57,6 +57,36 @@ app.get('/fetchAllQuestions', function(request, response) {
   });
 });
 
+app.get('/fetchAllUsers', function(request, response) {
+  "use strict";
+  let toWrite = "";
+  selectingQueries.getResultsAsJSON("SELECT id, firstname FROM users"); // select every question from the database and store it in dbResults array
+  selectingQueries.dataLoading.then(function(resolve) {
+    toWrite = resolve;
+    response.json(resolve);
+  })
+  .catch(function (error) {
+    toWrite = error.message; // if the promise returns an error, catch it
+    response.write(toWrite); // return the error message to the client
+    response.end();
+  });
+});
+
+app.get('/fetchAllAnswers', function(request, response) {
+  "use strict";
+  let toWrite = "";
+  selectingQueries.getResultsAsJSON("SELECT id, answer FROM answers"); // select every question from the database and store it in dbResults array
+  selectingQueries.dataLoading.then(function(resolve) {
+    toWrite = resolve;
+    response.json(resolve);
+  })
+  .catch(function (error) {
+    toWrite = error.message; // if the promise returns an error, catch it
+    response.write(toWrite); // return the error message to the client
+    response.end();
+  });
+});
+
 app.post('/fetchQuestionAnswer', function(request, response) {
   "use strict";
   let toWrite = "";
@@ -109,6 +139,23 @@ app.post('/request_writing_question_todb', function(request, response) {
   "use strict";
   let question = request.body.question;
   insertingQueries.insertStatement("INSERT INTO questions (question) VALUES (" + "'" + question + "'" + ")");
+  insertingQueries.insertion.then(function(resolve) {
+    console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
+  })
+  .catch(function (error) {
+    console.log("Insert failed - " + error.message); // re-write this in the response.write("Msg " + error)
+  });
+  response.end("Request send");
+});
+
+// Writing rating in the database ----!!Need to check if the data go in the dB
+app.post('/request_writing_rating_todb', function(request, response) {
+  "use strict";
+  let answerID = request.body.answer;
+  let userID = request.body.user;
+  let rating = request.body.rating;
+
+  insertingQueries.insertStatement("INSERT INTO ratings (answerid, userid, rating) VALUES (" + answerID + ", " + userID + ", " + rating + ")");
   insertingQueries.insertion.then(function(resolve) {
     console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
   })
