@@ -97,8 +97,9 @@ function getResultsAsJSON(sqlstatement) {
   );
 
   request.on('row', function(columns) {
-    let uniqueIdentifier = columns[0].value; // the first's column value (the id of the question)
-    dbResultsJSON[uniqueIdentifier] = {};
+    // let uniqueIdentifier = columns[0].value; // the first's column value (the id of the question)
+    
+    dbResultsRow = {};
     columns.forEach(function(column) {
       // if(column.metadata.colName === 'id') {
       //   dbResultsJSON[uniqueIdentifier].id = column.value;
@@ -106,9 +107,9 @@ function getResultsAsJSON(sqlstatement) {
       // if(column.metadata.colName === 'question') {
       //   dbResultsJSON[uniqueIdentifier].question = column.value;
       // }
-      dbResultsJSON[uniqueIdentifier].colName = column.value;
+      dbResultsRow[column.metadata.colName] = column.value;
     });
-
+    dbResultsJSON.push(dbResultsRow);
     // let count = 0;
     // dbResultsJSON[count] = {};
     // columns.forEach(function(column) {
