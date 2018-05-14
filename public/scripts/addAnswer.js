@@ -31,7 +31,13 @@ $(document).ready(function() {
   /* ATTACH EVENT LISTENERS
     ============================================================== */
   answerButton.on("click", function() {
-    ajaxRequest(answerBox.val(), questionIDBox.val());
+    if (answerBox.val().length > 0 && questionIDBox.val().length > 0)
+    {
+      ajaxRequest(answerBox.val(), questionIDBox.val());
+    }
+    else{
+      alert('Please Type An Answer And QuestionID Into The BOX!')
+    }
 
   });
 });
