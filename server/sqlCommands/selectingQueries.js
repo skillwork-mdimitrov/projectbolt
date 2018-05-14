@@ -73,55 +73,6 @@ function getResultsAsArray(sqlstatement) {
   });
 }
 
-// The request will hang, if you give incorrect table/column name
-function getResultsAsLayeredArray(sqlstatement) {
-  dbResults.length = 0; // clear the currently stored dbResults, so on new request they can be added again
-
-  // Every time this method is called, make a new promise
-  dataLoading = new Promise(function(resolve, reject) {
-    "use strict";
-    outsideResolve = resolve;
-    outsideReject = reject;
-  });
-
-  // Export this new promise every time you make a new one
-  module.exports.dataLoading = dataLoading;
-
-  // Specify request
-  request = new Request(
-      sqlstatement, // SELECT * etc
-      // Can't scrap the below function, because Request expects another parameter
-      function(err, rowCount, rows) {
-        // process.exit();
-      }
-  );
-
-  // For each row get the column value and store it in an array
-  request.on('row', function(columns) {
-    var row = []
-    columns.forEach(function(column) {
-      // Push each result into the dbResults array
-      row.push(column.value);
-    });
-    dbResults.push(row);
-  });
-
-  // Execute this request
-  connection.execSql(request);
-
-  // Completion status of the SQL statement execution.
-  request.on("doneInProc", function (rowCount) {
-    if(rowCount > 0) {
-      // fulfill the promise. This will trigger the promise .then() event.
-      // The promise will return the dbResults, since it was passed as a parameter.
-      outsideResolve(dbResults);
-    }
-    else {
-      outsideReject(new Error("Empty results"));
-    }
-  });
-}
-
 // THIS IS SPECIFIC TO QUESTIONS AND THEIR ID, will change name later
 function getResultsAsJSON(sqlstatement) {
   // dbResultsJSON = {}; // Make better
