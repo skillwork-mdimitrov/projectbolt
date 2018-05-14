@@ -100,13 +100,14 @@ function getResultsAsJSON(sqlstatement) {
     let uniqueIdentifier = columns[0].value; // the first's column value (the id of the question)
     dbResultsJSON[uniqueIdentifier] = {};
     columns.forEach(function(column) {
+      let columnName = column.metadata.colName;
       // if(column.metadata.colName === 'id') {
       //   dbResultsJSON[uniqueIdentifier].id = column.value;
       // }
       // if(column.metadata.colName === 'question') {
       //   dbResultsJSON[uniqueIdentifier].question = column.value;
       // }
-      dbResultsJSON[uniqueIdentifier].colName = column.value;
+      dbResultsJSON[uniqueIdentifier][columnName] = column.value;
     });
 
     // let count = 0;
