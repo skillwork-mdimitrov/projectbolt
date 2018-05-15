@@ -35,9 +35,3 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
-
-# package lock
-/package-lock.json
-
-# weird jQuery thing
-/jQuery
