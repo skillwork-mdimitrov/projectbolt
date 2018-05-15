@@ -28,7 +28,7 @@ function addToTable(question) {
     let rowItemAnswerLink = document.createElement("a");
     rowItemAnswerLink.textContent = "Answers";
     rowItemAnswerLink.title = "Answers";
-    rowItemAnswerLink.href = "answers/"+questionID;  
+    rowItemAnswerLink.href = "answers.html?qid="+questionID;  
     rowItemAnswer.appendChild(rowItemAnswerLink);  
 
     // Append the question, user and answer to that table row
