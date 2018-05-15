@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 
 /* GET a promise */
 router.get('/get-all-questions', function(req, res, next) {
-  database.getAllQuestions().then((questions) => {
+  database.getJsonDataSet("SELECT * FROM Questions").then((questions) => {
     res.json(questions);
   }).catch(
    (reason) => {

@@ -11,18 +11,17 @@ var config = {
     }
 };
 
-function getAllQuestions()
+function getJsonDataSet(query)
 {
   return new Promise((resolve, reject) => {
     var connection = new Connection(config);
-
     connection.on('connect', function(err) {
         if (err) {
             console.log(err);
             reject(err);
         } else {
-            getQuestions(connection).then((questions) => {
-                resolve(questions);
+            getQueryResult(connection, query).then((dataSet) => {
+                resolve(dataSet);
             }).catch(
                 (reason) => {
                 console.log('Handle rejected promise ('+reason+') here.');
@@ -33,16 +32,16 @@ function getAllQuestions()
   });
 }
 
-function getQuestions(connection) {
+function getQueryResult(connection, query) {
     return new Promise((resolve, reject) => {
-        var questions = [];
+        var result = [];
 
-        request = new Request("SELECT * FROM Questions", function(err, rowCount) {
+        request = new Request(query, function(err, rowCount) {
             if (err) {
                 console.log(err);
                 reject(err);
             } else {
-                resolve(questions);
+                resolve(result);
             }
             connection.close();
         });
@@ -56,11 +55,11 @@ function getQuestions(connection) {
                     row[column.metadata.colName] = column.value;
                 }
             });
-            questions.push(row);
+            result.push(row);
         });
 
         connection.execSql(request);
     });  
 }
 
-exports.getAllQuestions = getAllQuestions;
+exports.getJsonDataSet = getJsonDataSet;
