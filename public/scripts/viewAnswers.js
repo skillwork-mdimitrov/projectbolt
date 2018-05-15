@@ -33,22 +33,25 @@ $(document).ready(function() {
         }        
     }
     
-    $.getJSON( "answers/"+questionID, function() {})
-    .done(function(data) {
-          console.log("Request complete");
-          $.each( data, function( key, val ) {
-            // First element contains the question text
-            if (key === 0)
-            {
-                document.getElementById("questionHeading").textContent = val["Question"];
-            }
-            else
-            {
-                addToTable([val["Answer"]]);
-            }            
-          });
-        })
-    .fail(function() {
-          console.log( "error");
-    }) 
+    if (questionID.length > 0)
+    {
+        $.getJSON( "answers/"+questionID, function() {})
+        .done(function(data) {
+              console.log("Request complete");
+              $.each( data, function( key, val ) {
+                // First element contains the question text
+                if (key === 0)
+                {
+                    document.getElementById("questionHeading").textContent = val["Question"];
+                }
+                else
+                {
+                    addToTable([val["Answer"]]);
+                }            
+              });
+            })
+        .fail(function() {
+              console.log( "error");
+        }) 
+    }
 });
