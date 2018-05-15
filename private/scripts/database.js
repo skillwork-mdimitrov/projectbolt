@@ -11,25 +11,48 @@ var config = {
     }
 };
 
+function runGenericQuery(query)
+{
+    return new Promise((resolve, reject) => {
+        var connection = new Connection(config);
+        connection.on('connect', function(err) {
+            if (err) {
+                console.log(err);
+                reject(err);
+            } else {
+                request = new Request(query, function(err) {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                    connection.close();
+                });        
+                connection.execSql(request);           
+            }
+        });
+    });
+}
+
 function getJsonDataSet(query)
 {
-  return new Promise((resolve, reject) => {
-    var connection = new Connection(config);
-    connection.on('connect', function(err) {
-        if (err) {
-            console.log(err);
-            reject(err);
-        } else {
-            getQueryResult(connection, query).then((dataSet) => {
-                resolve(dataSet);
-            }).catch(
-                (reason) => {
-                console.log('Handle rejected promise ('+reason+') here.');
-                reject(reason);
-            });            
-        }
-    });
-  });
+    return new Promise((resolve, reject) => {
+        var connection = new Connection(config);
+        connection.on('connect', function(err) {
+            if (err) {
+                console.log(err);
+                reject(err);
+            } else {
+                getQueryResult(connection, query).then((dataSet) => {
+                    resolve(dataSet);
+                }).catch((reason) => {
+                    console.log('Handle rejected promise ('+reason+') here.');
+                    reject(reason);
+                });            
+            }
+        });
+    }); 
 }
 
 function getQueryResult(connection, query) {
@@ -62,4 +85,5 @@ function getQueryResult(connection, query) {
     });  
 }
 
+exports.runGenericQuery = runGenericQuery;
 exports.getJsonDataSet = getJsonDataSet;
