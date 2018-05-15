@@ -2,11 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Bolt</title>
-    <link rel="icon" href="images/thunder.png"/>
-    <link rel="stylesheet" href="/stylesheets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Questions</title>
+
+    <link rel="icon" href="images/questionPerson.png"/>
+    <link rel="stylesheet" type="text/css" href="styles/viewQuestions.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="scripts/viewQuestions.js"></script>
   </head>
+
   <body>
-    <h1>Questions</h1>
+    <div id="questionsTable" class="Table">
+        <!-- Headings -->
+        <div class="Table-row Table-header">
+            <div class="Table-row-item u-Flex-grow9">Question</div>
+            <div class="Table-row-item u-Flex-grow1">User</div>
+            <div class="Table-row-item u-Flex-grow1">Answers</div>
+        </div>
+        <!-- JavaScript will generate rows -->
+    </div>
   </body>
 </html>
