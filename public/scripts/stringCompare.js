@@ -43,7 +43,10 @@ $(document).ready(function() {
     });
 
     $("#searchInput").on("input", function() {
-        evaluateQuery($("#searchInput").val());
+        if ($("#searchInput").val().length > 0)
+        {
+            evaluateQuery($("#searchInput").val());
+        }        
     });
 });
 
