@@ -7,6 +7,7 @@ var indexRouter = require('./routes/index');
 var questionsRouter = require('./routes/questions');
 var answersRouter = require('./routes/answers');
 var compareRouter = require('./routes/compare');
+var ratingRouter = require('./routes/rating');
 
 var app = express();
 
@@ -15,10 +16,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'node_modules/semantic-ui-rating')));
 
 app.use('/', indexRouter);
 app.use('/questions', questionsRouter);
 app.use('/answers', answersRouter);
 app.use('/compare', compareRouter);
+app.use('/rating', ratingRouter);
 
 module.exports = app;
