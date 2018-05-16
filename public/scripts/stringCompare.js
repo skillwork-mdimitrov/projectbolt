@@ -1,18 +1,24 @@
 // THIS NEEDS TO BE DELETED
 let autoCompleter;
+let queryTimeout = false;
+let questionSet = [];
 // ------------------------
 
-function evaluateQuery(searchQuery)
+function retrieveAndEvaluate(searchQuery)
 {
     sanitizedQuery = sanitize(searchQuery);
     var questionSimilarityMapping = new Map();
-    
+
     console.log("Sending request");
     $.getJSON( "questions/get-all-questions", function() {})
     .done(function(data) {
         console.log("Request complete");
         $.each( data, function( key, val ) {
-            mapSimilarities(val["Question"], searchQuery, sanitizedQuery, questionSimilarityMapping);
+            questionSet.push(val["Question"]);
+        });
+
+        $.each( questionSet, function( index, value ) {
+            mapSimilarities(value, searchQuery, sanitizedQuery, questionSimilarityMapping);
         });
 
         questionSimilarityMapping[Symbol.iterator] = function* () {
@@ -25,10 +31,40 @@ function evaluateQuery(searchQuery)
         }
         autoCompleter.list = optionsArray;
         autoCompleter.evaluate();
-        })
+    })
     .fail(function() {
           console.log( "error");
-    })    
+    })
+}
+
+function evaluateQuery(searchQuery)
+{
+    if (queryTimeout)
+    {
+        sanitizedQuery = sanitize(searchQuery);
+        var questionSimilarityMapping = new Map();
+
+        $.each( questionSet, function( index, value ) {
+            mapSimilarities(value, searchQuery, sanitizedQuery, questionSimilarityMapping);
+        });
+
+        questionSimilarityMapping[Symbol.iterator] = function* () {
+            yield* [...this.entries()].sort((a, b) =>  b[1] - a[1]);
+        }
+
+        var optionsArray = []
+        for (let [key, value] of questionSimilarityMapping) {
+            optionsArray.push(key);
+        }
+        autoCompleter.list = optionsArray;
+        autoCompleter.evaluate();
+    }
+    else
+    {
+        queryTimeout = true;
+        retrieveAndEvaluate(searchQuery);
+        setTimeout( function() { queryTimeout = false; }, 1000);
+    }
 }
 
 $(document).ready(function() {
