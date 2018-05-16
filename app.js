@@ -8,6 +8,7 @@ var questionsRouter = require('./routes/questions');
 var answersRouter = require('./routes/answers');
 var compareRouter = require('./routes/compare');
 var ratingRouter = require('./routes/rating');
+const addQuestionRouter = require('./routes/addQuestion');
 
 var app = express();
 
@@ -23,5 +24,6 @@ app.use('/questions', questionsRouter);
 app.use('/answers', answersRouter);
 app.use('/compare', compareRouter);
 app.use('/rating', ratingRouter);
+app.use('/add-question', addQuestionRouter);
 
 module.exports = app;
