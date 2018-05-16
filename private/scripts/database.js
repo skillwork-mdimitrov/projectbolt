@@ -51,7 +51,6 @@ function getJsonDataSet(query)
                     reject(reason);
                 });            
             }
-            // TODO connection.close() here?
         });
     }); 
 }

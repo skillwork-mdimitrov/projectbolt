@@ -10,10 +10,9 @@ router.get('/', function(req, res, next) {
 
 /* POST a question */
 router.post('/', function(req, res) {
-  let questionsTable = "questions";
   let question = req.body.question; // the one sent from the AJAX's body
 
-  database.runGenericQuery("INSERT INTO " + questionsTable + " (question) VALUES ('" + question + "')").then((resolve) => {
+  database.runGenericQuery("INSERT INTO Questions (Question) VALUES ('" + question + "')").then((resolve) => {
     res.send(resolve); // to display the successful operation to the client
   })
   .catch((reason) => {
