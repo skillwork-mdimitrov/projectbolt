@@ -1,55 +1,37 @@
 function loadAnswers()
 {
-    "use strict";
-    $.ajax({
-      type: 'GET',
-      url: 'fetchAllAnswers',
-      success: function(data){
-        // // the results from this request will be stored in the questions variable.
-        // // since the results coming from the AJAX request are as string, split by coma first and then store in array
-        // vq.questions = data.split(",");
-        // vq.outsideResolve(vq.questions);
-        $.each(data, function (index, value) {
+    console.log("Sending request");
+    $.getJSON( "rating/get-all-answers", function() {})
+    .done(function(data) {
+        console.log("Request complete");
+        $.each( data, function( key, val ) {
             $('#answerSelector').append($('<option>', { 
-                value: value["id"],
-                text : value["answer"] 
-            }));            
+                value: val["ID"],
+                text : val["Answer"] 
+            })); 
         });
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
-        console.log('jqXHR: ' + jqXHR);
-        console.log('textStatus: ' + textStatus);
-        console.log('errorThrown: ' + errorThrown);
-      }
-    }); 
+    })
+    .fail(function() {
+          console.log( "error");
+    }) 
 }
 
 function loadUsers()
 {
-    "use strict";
-    $.ajax({
-      type: 'GET',
-      url: 'fetchAllUsers',
-      success: function(data){
-        // // the results from this request will be stored in the questions variable.
-        // // since the results coming from the AJAX request are as string, split by coma first and then store in array
-        // vq.questions = data.split(",");
-        // vq.outsideResolve(vq.questions);
-        $.each(data, function (index, value) {
+    console.log("Sending request");
+    $.getJSON( "rating/get-all-users", function() {})
+    .done(function(data) {
+        console.log("Request complete");
+        $.each( data, function( key, val ) {
             $('#userSelector').append($('<option>', { 
-                value: value["id"],
-                text : value["firstname"] 
-            }));         
+                value: val["ID"],
+                text : val["FirstName"] 
+            }));  
         });
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
-        console.log('jqXHR: ' + jqXHR);
-        console.log('textStatus: ' + textStatus);
-        console.log('errorThrown: ' + errorThrown);
-      }
-    }); 
+    })
+    .fail(function() {
+          console.log( "error");
+    }) 
 }
 
 $(document).ready(function(){
@@ -74,42 +56,28 @@ $(document).ready(function(){
     });
 
     loadAnswers();
-    setTimeout(function() {
-        loadUsers();
-    }, 2000);    
-});
-
-$(".rating").change(function() {
-    alert( "Handler for .change() called." );
+    loadUsers();
 });
 
 function rateAnswer()
 {
     var answerID = $('#answerSelector').val();
     var userID = $('#userSelector').val();
-    var userName = $('#userSelector option:selected').text();
     var rating = $('#ratingSelector').rating('get rating');
 
     if (answerID !== null && userID !== null && rating > 0)
     {
-        "use strict";
-        $.ajax({
-            type: 'post',
-            data: {"answer" : answerID, "user": userID, "rating": rating},
-            url: 'request_writing_rating_todb',
-            success: function(data){
-                alert("Rating entered: " + userName + " rated " + rating);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
-                console.log('jqXHR: ' + jqXHR);
-                console.log('textStatus: ' + textStatus);
-                console.log('errorThrown: ' + errorThrown);
-            }
-        });
-        
+        console.log("Sending request");
+        $.get( "rating/insert-rating/"+answerID+"/"+userID+"/"+rating, function() {})
+        .done(function() {
+            console.log("Request complete");
+        })
+        .fail(function() {
+            console.log( "error");
+        }) 
+
         $('#answerSelector option:first').prop('selected',true);
         $('#userSelector option:first').prop('selected',true);
         $('#ratingSelector').rating('clear rating');
-    }    
+    }
 }

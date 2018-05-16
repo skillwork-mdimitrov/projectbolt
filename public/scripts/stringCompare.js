@@ -1,45 +1,74 @@
 // THIS NEEDS TO BE DELETED
-var query;
-var sanitizedQuery;
-var questionSimilarityMapping;
-var autoCompleter;
+let autoCompleter;
+let queryTimeout = false;
+let questionSet = [];
 // ------------------------
 
-function evaluateQuery(theQuery)
+function retrieveAndEvaluate(searchQuery)
 {
-    query = document.getElementById("query").value;
-    sanitizedQuery = sanitize(query);
-    var output = document.getElementById("output");
+    sanitizedQuery = sanitize(searchQuery);
+    var questionSimilarityMapping = new Map();
 
-    output.innerHTML = "";
-    questionSimilarityMapping = new Map();
-    theQuery.forEach(mapSimilarities);
+    console.log("Sending request");
+    $.getJSON( "questions/get-all-questions", function() {})
+    .done(function(data) {
+        console.log("Request complete");
+        $.each( data, function( key, val ) {
+            questionSet.push(val["Question"]);
+        });
 
-    questionSimilarityMapping[Symbol.iterator] = function* () {
-        yield* [...this.entries()].sort((a, b) =>  b[1] - a[1]);
-    }
+        $.each( questionSet, function( index, value ) {
+            mapSimilarities(value, searchQuery, sanitizedQuery, questionSimilarityMapping);
+        });
 
-    // for (let [key, value] of questionSimilarityMapping) {
-    //     var newRow = output.insertRow(0);
+        questionSimilarityMapping[Symbol.iterator] = function* () {
+            yield* [...this.entries()].sort((a, b) =>  b[1] - a[1]);
+        }
 
-    //     var question_cell = newRow.insertCell(0);
-    //     var similarityCell = newRow.insertCell(1);
-
-    //     question_cell.innerHTML = key;
-    //     similarityCell.innerHTML = value + "%";
-    // }
-
-    var optionsArray = []
-    for (let [key, value] of questionSimilarityMapping) {
-        optionsArray.push(key + " " + value + "%");
-    }
-    autoCompleter.list = optionsArray;
-    autoCompleter.evaluate();
+        var optionsArray = []
+        for (let [key, value] of questionSimilarityMapping) {
+            optionsArray.push(key);
+        }
+        autoCompleter.list = optionsArray;
+        autoCompleter.evaluate();
+    })
+    .fail(function() {
+          console.log( "error");
+    })
 }
 
-function initDropdown()
+function evaluateQuery(searchQuery)
 {
-    var input = document.getElementById("query");
+    if (queryTimeout)
+    {
+        sanitizedQuery = sanitize(searchQuery);
+        var questionSimilarityMapping = new Map();
+
+        $.each( questionSet, function( index, value ) {
+            mapSimilarities(value, searchQuery, sanitizedQuery, questionSimilarityMapping);
+        });
+
+        questionSimilarityMapping[Symbol.iterator] = function* () {
+            yield* [...this.entries()].sort((a, b) =>  b[1] - a[1]);
+        }
+
+        var optionsArray = []
+        for (let [key, value] of questionSimilarityMapping) {
+            optionsArray.push(key);
+        }
+        autoCompleter.list = optionsArray;
+        autoCompleter.evaluate();
+    }
+    else
+    {
+        queryTimeout = true;
+        retrieveAndEvaluate(searchQuery);
+        setTimeout( function() { queryTimeout = false; }, 1000);
+    }
+}
+
+$(document).ready(function() {
+    var input = document.getElementById("searchInput");
     autoCompleter = new Awesomplete(input, {
         minChars: 1,
         sort: false,
@@ -48,19 +77,26 @@ function initDropdown()
             return true;
         }
     });
-}
 
-function mapSimilarities(item)
+    $("#searchInput").on("input", function() {
+        if ($("#searchInput").val().length > 0)
+        {
+            evaluateQuery($("#searchInput").val());
+        }        
+    });
+});
+
+function mapSimilarities(question, originalQuery, sanitizedQuery, questionSimilarityMapping)
 {
-    questionSimilarityMapping.set(item, getSimilarity(item));  
+    questionSimilarityMapping.set(question, getSimilarity(question, originalQuery, sanitizedQuery));  
 }
 
-function getSimilarity(question)
+function getSimilarity(question, originalQuery, sanitizedQuery)
 {
     var similarity = 0;
     var sanitizedQuestion = sanitize(question);
 
-    if (query === question || sanitizedQuery === sanitizedQuestion)
+    if (originalQuery === question || sanitizedQuery === sanitizedQuestion)
     {
         similarity = 100;
     }
@@ -73,12 +109,12 @@ function getSimilarity(question)
         var wordPositionWeight = 0.15;
         var sentenceOccurenceWeight = 0.20;
 
-        similarity += getStringLengthSimilarity(sanitizedQuestion) * stringLengthWeight;
-        similarity += getCharacterOccurenceSimilarity(sanitizedQuestion) * characterOccurenceWeight;
-        similarity += getCharacterPositionSimilarity(sanitizedQuestion) * characterPositionWeight;
-        similarity += getWordOccurenceSimilarity(sanitizedQuestion) * wordOccurenceWeight;
-        similarity += getWordPositionSimilarity(sanitizedQuestion) * wordPositionWeight;
-        similarity += getSentenceOccurenceSimilarity(sanitizedQuestion) * sentenceOccurenceWeight;
+        similarity += getStringLengthSimilarity(sanitizedQuestion, sanitizedQuery) * stringLengthWeight;
+        similarity += getCharacterOccurenceSimilarity(sanitizedQuestion, sanitizedQuery) * characterOccurenceWeight;
+        similarity += getCharacterPositionSimilarity(sanitizedQuestion, sanitizedQuery) * characterPositionWeight;
+        similarity += getWordOccurenceSimilarity(sanitizedQuestion, sanitizedQuery) * wordOccurenceWeight;
+        similarity += getWordPositionSimilarity(sanitizedQuestion, sanitizedQuery) * wordPositionWeight;
+        similarity += getSentenceOccurenceSimilarity(sanitizedQuestion, sanitizedQuery) * sentenceOccurenceWeight;
     }
 
     return Math.round(similarity);
@@ -94,7 +130,7 @@ function sanitize(string)
     return sanitizedQuestion;
 }
 
-function getStringLengthSimilarity(question)
+function getStringLengthSimilarity(question, sanitizedQuery)
 {
     var similarity = 100;
 
@@ -114,7 +150,7 @@ function getStringLengthSimilarity(question)
     return similarity;
 }
 
-function getCharacterOccurenceSimilarity(question)
+function getCharacterOccurenceSimilarity(question, sanitizedQuery)
 {
     var similarity = 100;
 
@@ -161,7 +197,7 @@ function getCharacterOccurenceSimilarity(question)
     return similarity;
 }
 
-function getCharacterPositionSimilarity(question)
+function getCharacterPositionSimilarity(question, sanitizedQuery)
 {
     var similarity = 100;
 
@@ -177,7 +213,7 @@ function getCharacterPositionSimilarity(question)
     return similarity;
 }
 
-function getWordOccurenceSimilarity(question)
+function getWordOccurenceSimilarity(question, sanitizedQuery)
 {
     var similarity = 100;
 
@@ -227,7 +263,7 @@ function getWordOccurenceSimilarity(question)
     return similarity;
 }
 
-function getWordPositionSimilarity(question)
+function getWordPositionSimilarity(question, sanitizedQuery)
 {
     var similarity = 100;
 
@@ -246,7 +282,7 @@ function getWordPositionSimilarity(question)
     return similarity;
 }
 
-function getSentenceOccurenceSimilarity(question)
+function getSentenceOccurenceSimilarity(question, sanitizedQuery)
 {
     var similarity = 100;
 

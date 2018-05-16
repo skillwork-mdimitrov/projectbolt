@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <title>Add answer</title>
 </head>
 <body>
-QuestionID: <input type="number" id="questionIDBox"/> <br/> <br/>
-Answer: <input type="text" id="answerBox"/>
-<input type="button" id="answerButton" value="ADD"/>
+  <!-- Enter question ID fields -->
+  <label for="questionIDBox">Question ID:</label>
+  <input type="number" id="questionIDBox"><br><br>
 
+  <!-- Enter the answer for that question ID -->
+  <label for="answerBox">Answer:</label>
+  <input type="text" id="answerBox">
 
+  <!-- Submit answer -->
+  <input type="button" id="answerButton" value="Add Answer">
 
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
-<script src="scripts/addAnswer.js"></script>
+  <!-- SCRIPTS, loaded after the DOM -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
+  <script src="scripts/addAnswer.js"></script>
 </body>
 </html>
