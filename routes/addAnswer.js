@@ -3,16 +3,18 @@ const path = require('path');
 const router = express.Router();
 const database = require('../private/scripts/database');
 
-/* GET addQuestions.html page. */
+/* GET addAnswer.html page. */
 router.get('/', function(req, res, next) {
-  res.sendFile('addQuestion.html', { root: path.join(__dirname, '../public') });
+  res.sendFile('addAnswer.html', { root: path.join(__dirname, '../public') });
 });
 
-/* POST a question */
+/* POST an answer to a question */
 router.post('/', function(req, res) {
-  let question = req.body.question; // the one sent from the AJAX's body
+  let answer = req.body.answer;
+  let questionID = req.body.questionID;
 
-  database.runGenericQuery("INSERT INTO Questions (Question) VALUES ('" + question + "')").then((resolve) => {
+  database.runGenericQuery("INSERT INTO answers (answer, questionid) VALUES ('" + answer + "', '" + questionID + "')")
+  .then((resolve) => {
     res.send(resolve); // to display the successful operation to the client
   })
   .catch((reason) => {
