@@ -1,17 +1,25 @@
-// To be prettified
+/* addQuestion NAMESPACE
+ ============================================================== */
+const aq = function() {
+  "use strict";
+  let questionBox = $('#questionBox');
+  let submitQuestionBtn = $('#submitQuestionBtn');
 
-let questionButton = $('#SubmitToYourQuestion');
-let questionBox = $('#Questions1212');
+  // aq namespace will reveal the following properties
+  return {
+    questionBox: questionBox,
+    submitQuestionBtn: submitQuestionBtn
+  }
+}();
 
-function ajaxRequest(questionString){
+function submitQuestion(question) {
   "use strict";
   $.ajax({
     type: 'post',
-    data: {"question" : questionString, "type": "question"},
-    url: 'dynamic_request_writeToDB',
+    data: question,
+    url: 'add-question',
     success: function(data){
-      alert('Question added successfully');
-      console.log("data written");
+      alert(data);
     },
     error: function(jqXHR, textStatus, errorThrown) {
       alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
@@ -27,8 +35,12 @@ $(document).ready(function() {
   "use strict";
   /* ATTACH EVENT LISTENERS
     ============================================================== */
-  questionButton.on("click", function() {
-    // ajaxRequest(questionBox.val());
-    console.log("To be implemented");
+  aq.submitQuestionBtn.on("click", function() {
+    // JSON'ize the question
+    let questionJSON = {
+      question: aq.questionBox.val()
+    };
+    // Send the AJAX request
+    submitQuestion(questionJSON);
   });
 });

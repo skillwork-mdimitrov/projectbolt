@@ -23,13 +23,13 @@ function runGenericQuery(query)
                 request = new Request(query, function(err) {
                     if (err) {
                         console.log(err);
-                        reject(err);
+                        reject(new Error(err));
                     } else {
-                        resolve();
+                        resolve("Operation successful");
                     }
                     connection.close();
                 });        
-                connection.execSql(request);           
+                connection.execSql(request);
             }
         });
     });
@@ -51,6 +51,7 @@ function getJsonDataSet(query)
                     reject(reason);
                 });            
             }
+            // TODO connection.close() here?
         });
     }); 
 }
