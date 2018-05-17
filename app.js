@@ -30,5 +30,5 @@ app.use('/add-question', addQuestionRouter);
 app.use('/add-answer', addAnswerRouter);
 app.use('/login', loginRouter);
 
-
+// Make this script publicly available
 module.exports = app;
