@@ -3,11 +3,6 @@ const path = require('path');
 const router = express.Router();
 const database = require('../private/scripts/database');
 
-/* GET addQuestions.html page. */
-router.get('/', function(req, res, next) {
-  res.sendFile('addQuestion.html', { root: path.join(__dirname, '../public') });
-});
-
 /* POST a question */
 router.post('/', function(req, res) {
   let question = req.body.question; // the one sent from the AJAX's body

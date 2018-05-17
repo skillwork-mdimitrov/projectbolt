@@ -2,8 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Bolt</title>
     <link rel="icon" href="images/thunder.png"/>
+    <link rel="stylesheet" type="text/css" href="styles/viewQuestions.css">
+    <link rel="stylesheet" type="text/css" href="styles/searchStyle.css">
+    <link rel="stylesheet" type="text/css" href="styles/awesomplete.css" />
   </head>
   <body>
     <!-- Link to search and compare component -->
@@ -25,5 +29,32 @@
     <!-- Link to rate an answer -->
     <a href="rating">Rate an answer</a>
     - Rate an answer
+
+    <div id="questionsTable" class="Table">
+      <!-- Headings -->
+      <div class="Table-row Table-header">
+          <div class="Table-row-item u-Flex-grow9">Question</div>
+          <div class="Table-row-item u-Flex-grow1">User</div>
+          <div class="Table-row-item u-Flex-grow1">Answers</div>
+      </div>
+      <!-- JavaScript will generate rows -->
+    </div>
+    
+    <div class="searchContainer">
+      <div class="searchBar">
+        <label for="questionBox">Ask a question:</label>
+        <input type="text" name="question" placeholder="Enter your question here..." id="questionBox"><br><br>
+        <input type="submit" value="Submit" id="submitQuestionBtn">
+      </div>
+    </div>
+    
+
+    <!-- SCRIPTS, load after the DOM↓
+    ============================================================== -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="scripts/viewQuestions.js"></script>
+    <script src="scripts/addQuestion.js"></script>
+    <script src="scripts/awesomplete.js" async></script>
+    <script src="scripts/stringCompare.js"></script>
   </body>
 </html>

@@ -3,11 +3,6 @@ const path = require('path');
 const router = express.Router();
 const database = require('../private/scripts/database');
 
-/* GET addAnswer.html page. */
-router.get('/', function(req, res, next) {
-  res.sendFile('addAnswer.html', { root: path.join(__dirname, '../public') });
-});
-
 /* POST an answer to a question */
 router.post('/', function(req, res) {
   let answer = req.body.answer;

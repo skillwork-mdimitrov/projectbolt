@@ -1,7 +1,8 @@
 const stringCompare = function() {
+    let questionBox = $("#questionBox");
     let autoCompleter;
     let queryTimeout = false;
-    let questionSet = [];
+    let questionSet = [];    
 
     const retrieveAndEvaluate = function(searchQuery)
     {
@@ -293,6 +294,7 @@ const stringCompare = function() {
     }
 
     return {
+        questionBox: questionBox,
         retrieveAndEvaluate: retrieveAndEvaluate,
         evaluateQuery: evaluateQuery,
         mapSimilarities: mapSimilarities,
@@ -308,7 +310,7 @@ const stringCompare = function() {
 }();
 
 $(document).ready(function() {
-    var input = document.getElementById("searchInput");
+    var input = document.getElementById("questionBox");
     stringCompare.autoCompleter = new Awesomplete(input, {
         minChars: 1,
         sort: false,
@@ -318,10 +320,10 @@ $(document).ready(function() {
         }
     });
 
-    $("#searchInput").on("input", function() {
-        if ($("#searchInput").val().length > 0)
+    stringCompare.questionBox.on("input", function() {
+        if (stringCompare.questionBox.val().length > 0)
         {
-            stringCompare.evaluateQuery($("#searchInput").val());
+            stringCompare.evaluateQuery(stringCompare.questionBox.val());
         }        
     });
 });

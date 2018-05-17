@@ -3,11 +3,6 @@ var database = require('../private/scripts/database');
 var path = require('path');
 var router = express.Router();
 
-/* GET rating page. */
-router.get('/', function(req, res, next) {
-  res.sendFile('rating.html', { root: path.join(__dirname, '../public') });
-});
-
 /* GET all the answers */
 router.get('/get-all-answers', function(req, res, next) {
     database.getJsonDataSet("SELECT * FROM Answers").then((answers) => {
