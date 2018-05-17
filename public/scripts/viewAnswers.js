@@ -1,24 +1,30 @@
-function addToTable(answer) {
-    let answerText = answer[0];
+const viewAnswers = function() {
+    const addToTable = function(answer) {
+        let answerText = answer[0];
+    
+        let answersTable = document.getElementById("answersTable");
+    
+        // A row with a answer, user and answers
+        let tableRow = document.createElement("div");
+        tableRow.setAttribute("class", "Table-row");
+    
+        // The answer
+        let rowItemAnswer = document.createElement("div");
+        rowItemAnswer.setAttribute("class", "Table-row-item u-Flex-grow9");
+        rowItemAnswer.setAttribute("data-header", "Answer");
+        rowItemAnswer.textContent = answerText;
+    
+        // Append the answer, user and answer to that table row
+        tableRow.appendChild(rowItemAnswer);
+    
+        // Append the row to the table
+        answersTable.appendChild(tableRow);
+    }
 
-    let answersTable = document.getElementById("answersTable");
-
-    // A row with a answer, user and answers
-    let tableRow = document.createElement("div");
-    tableRow.setAttribute("class", "Table-row");
-
-    // The answer
-    let rowItemAnswer = document.createElement("div");
-    rowItemAnswer.setAttribute("class", "Table-row-item u-Flex-grow9");
-    rowItemAnswer.setAttribute("data-header", "Answer");
-    rowItemAnswer.textContent = answerText;
-
-    // Append the answer, user and answer to that table row
-    tableRow.appendChild(rowItemAnswer);
-
-    // Append the row to the table
-    answersTable.appendChild(tableRow);
-}
+    return {
+        addToTable: addToTable
+    }
+}();
 
 $(document).ready(function() {
     console.log("Sending request");
@@ -46,7 +52,7 @@ $(document).ready(function() {
                 }
                 else
                 {
-                    addToTable([val["Answer"]]);
+                    viewAnswers.addToTable([val["Answer"]]);
                 }            
               });
             })
