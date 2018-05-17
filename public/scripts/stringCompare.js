@@ -68,7 +68,11 @@ const stringCompare = function() {
 
     const mapSimilarities = function(question, originalQuery, sanitizedQuery, questionSimilarityMapping)
     {
-        questionSimilarityMapping.set(question, getSimilarity(question, originalQuery, sanitizedQuery));  
+        var questionSimilarity = getSimilarity(question, originalQuery, sanitizedQuery);
+        if (questionSimilarity > 25)
+        {
+            questionSimilarityMapping.set(question, questionSimilarity);  
+        }        
     }
 
     const getSimilarity = function(question, originalQuery, sanitizedQuery)
