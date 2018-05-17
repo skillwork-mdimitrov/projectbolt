@@ -36,6 +36,7 @@ const addAnswer = function() {
     fieldsValidation: fieldsValidation
   }
 }();
+//  ============================================================== */
 
 // When everything has loaded
 $(document).ready(function() {

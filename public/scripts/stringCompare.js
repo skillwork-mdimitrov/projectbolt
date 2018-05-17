@@ -1,3 +1,5 @@
+/* stringCompare NAMESPACE
+ ============================================================== */
 const stringCompare = function() {
     let questionBox = $("#questionBox");
     let autoCompleter;
@@ -308,6 +310,7 @@ const stringCompare = function() {
         getSentenceOccurenceSimilarity: getSentenceOccurenceSimilarity
     }
 }();
+//  ============================================================== */
 
 $(document).ready(function() {
     var input = document.getElementById("questionBox");

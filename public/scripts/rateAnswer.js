@@ -62,6 +62,7 @@ const rateAnswer = function() {
     rateAnswer: rateAnswer
   }
 }();
+//  ============================================================== */
 
 $(document).ready(function(){
     $('#answerSelector').change(function() {

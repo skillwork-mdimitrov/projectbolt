@@ -22,7 +22,7 @@ const login = function() {
           console.log('errorThrown: ' + errorThrown);
         }
       });
-    }
+    };
   // aq namespace will reveal the following properties
   return {
     usernameBox: usernameBox,
@@ -30,8 +30,7 @@ const login = function() {
     login: login
   }
 }();
-
-
+//  ============================================================== */
 
 // When everything has loaded
 $(document).ready(function() {

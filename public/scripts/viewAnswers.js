@@ -1,3 +1,5 @@
+/* viewAnswers NAMESPACE
+ ============================================================== */
 const viewAnswers = function() {
     const addToTable = function(answer) {
         let answerText = answer[0];
@@ -19,12 +21,13 @@ const viewAnswers = function() {
     
         // Append the row to the table
         answersTable.appendChild(tableRow);
-    }
+    };
 
     return {
         addToTable: addToTable
     }
 }();
+//  ============================================================== */
 
 $(document).ready(function() {
     console.log("Sending request");
