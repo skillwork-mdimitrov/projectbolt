@@ -11,6 +11,7 @@ var ratingRouter = require('./routes/rating');
 var addQuestionRouter = require('./routes/addQuestion');
 var addAnswerRouter = require('./routes/addAnswer');
 var loginRouter = require('./routes/login');
+var chatRouter = require('./routes/chat');
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use('/rating', ratingRouter);
 app.use('/add-question', addQuestionRouter);
 app.use('/add-answer', addAnswerRouter);
 app.use('/login', loginRouter);
+app.use('/chat', chatRouter);
 
 // Make this script publicly available
 module.exports = app;
