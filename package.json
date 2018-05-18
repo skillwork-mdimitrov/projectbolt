@@ -10,9 +10,7 @@
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "morgan": "~1.9.0",
-    "nodemon": "^1.17.4",
     "semantic-ui-rating": "^2.3.1",
-    "socketio": "^1.0.0",
     "tedious": "^2.3.1"
   }
 }

@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('./app');
 var debug = require('debug')('projectbolt:server');
 var http = require('http');
 
@@ -28,37 +28,6 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-
-/**
- * Create chat server.
- */
-chatServer = app.listen(3003)
-
-//socket.io instantiation
-const io = require("socket.io")(chatServer)
-
-//listen on every connection
-io.on('connection', (socket) => {
-	console.log('New user online')
-	
-	//default username
-	socket.username = "Anonymous"
-	
-	//listen to changeUsername
-	socket.on('changeUsername', (data) => {
-		socket.username = data.username
-	})
-	//listen on new_message
-    socket.on('new_message', (data) => {
-        //broadcast the new message
-        io.sockets.emit('new_message', {message : data.message, username : socket.username});
-	})
-	//listen on typing
-    socket.on('typing', (data) => {
-    	socket.broadcast.emit('typing', {username : socket.username})
-	})
-})
-
 
 /**
  * Normalize a port into a number, string, or false.
