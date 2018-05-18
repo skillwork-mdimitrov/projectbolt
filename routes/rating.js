@@ -3,20 +3,10 @@ var database = require('../private/scripts/database');
 var path = require('path');
 var router = express.Router();
 
-/* GET all the answers */
-router.get('/get-all-answers', function(req, res, next) {
-    database.getJsonDataSet("SELECT * FROM Answers").then((answers) => {
-        res.json(answers);
-    }).catch((reason) => {
-        console.log('Handle rejected promise ('+reason+') here.');
-        res.status(500).send('Something broke! ' + reason)
-    });  
-});
-
-/* GET all the users */
-router.get('/get-all-users', function(req, res, next) {
-    database.getJsonDataSet("SELECT * FROM Users").then((users) => {
-        res.json(users);
+/* GET all the ratings */
+router.get('/get-all-ratings/:answerID', function(req, res, next) {
+    database.getJsonDataSet("SELECT Rating FROM Ratings WHERE AnswerID = " + req.params["answerID"]).then((ratings) => {
+        res.json(ratings);
     }).catch((reason) => {
         console.log('Handle rejected promise ('+reason+') here.');
         res.status(500).send('Something broke! ' + reason)

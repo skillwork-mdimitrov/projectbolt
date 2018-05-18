@@ -43,15 +43,61 @@ const viewAnswers = function() {
         $.post( "rating/insert-rating", postData, function() {})
         .done(function() {
             console.log("Request complete");
+            updateRatings(ratingElement);            
         })
         .fail(function() {
             console.log( "error");
         });
     };
 
+    const updateAllRatings = function updateAllRatings()
+    {        
+        $('.ui.rating').each(function( index ) {
+            let answerID = $(this).attr("id");
+            let ratingElement = $(this);
+
+            $.getJSON( "rating/get-all-ratings/"+answerID, function() {})
+            .done(function(data) {
+                console.log("Request complete");
+                let totalRating = 0;
+                let ratingCount = data.length;
+                $.each( data, function( key, val ) {
+                    totalRating += val["Rating"];
+                });                 
+                averageRating = Math.ceil(totalRating / ratingCount);
+                ratingElement.rating('set rating', averageRating);
+            })
+            .fail(function() {
+                console.log( "error");
+            })             
+        });
+    };
+
+    const updateRatings = function updateRatings(ratingElement)
+    {      
+        let answerID = ratingElement.attr("id");
+
+        $.getJSON( "rating/get-all-ratings/"+answerID, function() {})
+        .done(function(data) {
+            console.log("Request complete");
+            let totalRating = 0;
+            let ratingCount = data.length;
+            $.each( data, function( key, val ) {
+                totalRating += val["Rating"];
+            });                 
+            averageRating = Math.ceil(totalRating / ratingCount);
+            ratingElement.rating('set rating', averageRating)
+        })
+        .fail(function() {
+                console.log( "error");
+        })             
+    };
+
     return {
         addToTable: addToTable,
-        rateAnswer: rateAnswer
+        rateAnswer: rateAnswer,
+        updateAllRatings: updateAllRatings,
+        updateRatings: updateRatings
     }
 }();
 //  ============================================================== */
@@ -91,9 +137,10 @@ $(document).ready(function() {
               });
 
               $('.ui.rating').rating({
-                initialRating: 0,
                 maxRating: 5
-              });
+              });           
+              
+              viewAnswers.updateAllRatings();
             })
         .fail(function() {
               console.log( "error");
