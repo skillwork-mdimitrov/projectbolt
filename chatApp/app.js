@@ -1,15 +1,16 @@
 const express = require('express')
 const app = express()
+var router = express.Router();
 
 //set the template engine ejs
-app.set('view engine', 'ejs')
+//app.set('view engine', 'ejs')
 
 //middlewares
 app.use(express.static('public'))
 
 //routes
-app.get('/', (req, res) => {
-	res.render('index')
+router.get('/', (req, res) => {
+	res.render('chat')
 })
 
 //Listen on port 3003
