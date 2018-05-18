@@ -4,6 +4,7 @@ const login = function() {
   "use strict";
   let usernameBox = $('#userNameBox');
   let loginBtn = $('#loginButton');
+  let passwordBox = $('#passwordBox');
 
   const login = function(userdata) {
       "use strict";
@@ -12,8 +13,8 @@ const login = function() {
         data: userdata,
         url: 'login',
         success: function(data){
-          localStorage.setItem("sessionID", data.sessionID);
-          alert("Welcome, " + userdata.username);
+          localStorage.setItem("sessionID", data.newSessionID);
+          alert("Welcome, " + userdata.username + ". Your session ID is : " + data.NewSessionID);
         },
         error: function(jqXHR, textStatus, errorThrown) {
           alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
@@ -27,6 +28,7 @@ const login = function() {
   return {
     usernameBox: usernameBox,
     loginBtn: loginBtn,
+    passwordBox: passwordBox,
     login: login
   }
 }();
@@ -39,7 +41,8 @@ $(document).ready(function() {
     ============================================================== */
   login.loginBtn.on("click", function() {
     let userdata = {
-      username : login.usernameBox.val()
+      username : login.usernameBox.val(),
+      password : login.passwordBox.val()
     };
     // Send the AJAX request
     login.login(userdata);
