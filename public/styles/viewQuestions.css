@@ -1,3 +1,5 @@
+/* Responsive Question/Answer table
+ ============================================================== */
 .Table {
   display: flex;
   flex-flow: column nowrap;
@@ -98,6 +100,77 @@
 
 .u-Flex-grow10 {
   flex-grow: 10;
+}
+
+/* Buttons
+ ============================================================== */
+/* Add your own answer button */
+span.addOwnAnswerBtn {
+  display: inline-block;
+  padding: 0.5em 3em;
+  border: 0.16em solid #DDDDDD;
+  margin: 0 0.3em 0.3em 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  color: #DDDDDD;
+  text-align: center;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+span.addOwnAnswerBtn:hover {
+  color: #BBBBBB;
+  border-color: #BBBBBB;
+}
+
+span.addOwnAnswerBtn:active {
+  color: #000000;
+  border-color: #000000;
+  filter: blur(0.5px);
+}
+
+@media all and (max-width: 30em) {
+  span.addOwnAnswerBtn {
+    display: block;
+    margin: 0.4em auto;
+  }
+}
+/* Submit your answer button */
+a.submitOwnAnswerBtn {
+  display: inline-block;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid #FFFFFF;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  color: #FFFFFF;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+a.submitOwnAnswerBtn:hover {
+  color: #000000;
+  background-color: #FFFFFF;
+}
+
+@media all and (max-width: 30em) {
+  a.submitOwnAnswerBtn {
+    display: block;
+    margin: 0.4em auto;
+  }
+}
+.addAnswerContainer {
+  display: none;
+  background-color: lightgray;
+}
+.addAnswerContainer .areaContainer {
+  display: flex;
 }
 
 /*# sourceMappingURL=viewQuestions.css.map */

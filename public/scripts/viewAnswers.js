@@ -50,8 +50,7 @@ const viewAnswers = function() {
         });
     };
 
-    const updateAllRatings = function updateAllRatings()
-    {        
+    const updateAllRatings = function updateAllRatings() {
         $('.ui.rating').each(function( index ) {
             let answerID = $(this).attr("id");
             let ratingElement = $(this);
@@ -73,8 +72,7 @@ const viewAnswers = function() {
         });
     };
 
-    const updateRatings = function updateRatings(ratingElement)
-    {      
+    const updateRatings = function updateRatings(ratingElement) {
         let answerID = ratingElement.attr("id");
 
         $.getJSON( "rating/get-all-ratings/"+answerID, function() {})
@@ -93,22 +91,54 @@ const viewAnswers = function() {
         })             
     };
 
+    // Add your answer to the currently selected question [No back-end logic yet]
+    const addOwnAnswer = function() {
+        // Will move the selectors here
+
+        const toggleContainer = function() {
+            $('#addAnswerContainer').toggle("slow");
+        };
+
+        const changeText = function() {
+            if( $('#addAnswerContainer').is(":hidden") ) {
+              $('#addOwnAnswerBtn').text("Hide adding answer");
+            }
+            else {
+              $('#addOwnAnswerBtn').text("Add your own answer" );
+            }
+        };
+
+        return {
+          toggleContainer: toggleContainer,
+          changeText: changeText
+        }
+    }();
+
     return {
         addToTable: addToTable,
         rateAnswer: rateAnswer,
         updateAllRatings: updateAllRatings,
-        updateRatings: updateRatings
+        updateRatings: updateRatings,
+        addOwnAnswer: addOwnAnswer
     }
 }();
 //  ============================================================== */
 
 $(document).ready(function() {
+    "use strict";
+    /* ATTACH EVENT LISTENERS
+    ============================================================== */
+    $('#addOwnAnswerBtn').on("click", function(){
+      viewAnswers.addOwnAnswer.changeText();
+      viewAnswers.addOwnAnswer.toggleContainer();
+    });
+
     console.log("Sending request");
     
     var urlParams = new URLSearchParams(window.location.search);
     var urlEntries = urlParams.entries();
     var questionID = "";
-    for(pair of urlEntries) { 
+    for(let pair of urlEntries) {
         if (pair[0] === "qid")
         {
             questionID = pair[1]; 

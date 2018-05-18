@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Questions</title>
+    <title>Answers</title>
 
     <link rel="icon" href="images/questionPerson.png"/>
     <link rel="stylesheet" type="text/css" href="styles/viewQuestions.css">
@@ -16,6 +16,15 @@
 
   <body>
     <h1 id="questionHeading"></h1>
+    <!-- Span because I don't want the button inherited properties -->
+    <span id="addOwnAnswerBtn" class="addOwnAnswerBtn">Add your own answer</span>
+
+    <div id="addAnswerContainer" class="addAnswerContainer">
+      <div class="areaContainer">
+        <textarea rows="4" cols="55" placeholder="Write your answer here..." class="addAnswerArea" id="addAnswerArea"></textarea>
+      </div>
+    </div>
+
     <div id="answersTable" class="Table">
         <!-- Headings -->
         <div class="Table-row Table-header">
