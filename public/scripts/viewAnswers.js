@@ -1,6 +1,11 @@
-/* viewAnswers NAMESPACE
+/* viewAnswers, also addAnswers NAMESPACE
  ============================================================== */
 const viewAnswers = function() {
+    // Since the scripts are loaded after the DOM in the HTML, this is possible
+    const addOwnAnswerBtn = $('#addOwnAnswerBtn');
+    const addAnswerContainer = $('#addAnswerContainer');
+    const addAnswerArea = $('#addAnswerArea');
+
     const addToTable = function(answer) {
         let answerText = answer[0];
         let answerID = answer[1];
@@ -93,18 +98,16 @@ const viewAnswers = function() {
 
     // Add your answer to the currently selected question [No back-end logic yet]
     const addOwnAnswer = function() {
-        // Will move the selectors here
-
         const toggleContainer = function() {
-            $('#addAnswerContainer').toggle("slow");
+          viewAnswers.addAnswerContainer.toggle("slow");
         };
 
         const changeText = function() {
-            if( $('#addAnswerContainer').is(":hidden") ) {
-              $('#addOwnAnswerBtn').text("Hide adding answer");
+            if( viewAnswers.addAnswerContainer.is(":hidden") ) {
+              viewAnswers.addOwnAnswerBtn.text("Hide adding answer");
             }
             else {
-              $('#addOwnAnswerBtn').text("Add your own answer" );
+              viewAnswers.addOwnAnswerBtn.text("Add your own answer" );
             }
         };
 
@@ -112,9 +115,16 @@ const viewAnswers = function() {
           toggleContainer: toggleContainer,
           changeText: changeText
         }
-    }();
+    }(); // Immediately invoked
 
+    // Made publicly available
     return {
+        // DOM elements
+        addOwnAnswerBtn: addOwnAnswerBtn,
+        addAnswerContainer: addAnswerContainer,
+        addAnswerArea: addAnswerArea,
+
+        // Functions
         addToTable: addToTable,
         rateAnswer: rateAnswer,
         updateAllRatings: updateAllRatings,
@@ -128,7 +138,7 @@ $(document).ready(function() {
     "use strict";
     /* ATTACH EVENT LISTENERS
     ============================================================== */
-    $('#addOwnAnswerBtn').on("click", function(){
+    viewAnswers.addOwnAnswerBtn.on("click", function(){
       viewAnswers.addOwnAnswer.changeText();
       viewAnswers.addOwnAnswer.toggleContainer();
     });
