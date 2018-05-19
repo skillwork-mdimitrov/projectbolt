@@ -12,9 +12,11 @@
 
   <body>
     <h1 id="questionHeading"></h1>
-    <!-- Span because I don't want the button inherited properties -->
-    <span id="addOwnAnswerBtn" class="addOwnAnswerBtn">Add your own answer</span>
 
+    <!-- Add own answer -->
+    <span id="addOwnAnswerBtn" class="addOwnAnswerBtn">Add your own answer</span><!-- Span for no button inherited properties -->
+    <button id="submitAnswerBtn" class="notDisplayed">Submit</button>
+    <button id="cancelAnswerBtn" class="notDisplayed">Cancel</button>
     <div id="addAnswerContainer" class="addAnswerContainer">
       <div class="areaContainer">
         <textarea rows="4" cols="55" placeholder="Write your answer here..." class="addAnswerArea" id="addAnswerArea"></textarea>

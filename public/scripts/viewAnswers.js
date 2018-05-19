@@ -1,10 +1,12 @@
 /* viewAnswers, also addAnswers NAMESPACE
  ============================================================== */
 const viewAnswers = function() {
-    // Since the scripts are loaded after the DOM in the HTML, this is possible
+    // DOM selectors
     const addOwnAnswerBtn = $('#addOwnAnswerBtn');
     const addAnswerContainer = $('#addAnswerContainer');
     const addAnswerArea = $('#addAnswerArea');
+    const submitAnswerBtn = $('#submitAnswerBtn');
+    const cancelAnswerBtn = $('#cancelAnswerBtn');
 
     const addToTable = function(answer) {
         let answerText = answer[0];
@@ -99,30 +101,36 @@ const viewAnswers = function() {
     // Add your answer to the currently selected question [No back-end logic yet]
     const addOwnAnswer = function() {
         const toggleContainer = function() {
-          viewAnswers.addAnswerContainer.toggle("slow");
+          addAnswerContainer.toggle("slow");
+        };
+
+        const toggleButtons = function() {
+          submitAnswerBtn.toggle("slow");
+          cancelAnswerBtn.toggle("slow");
         };
 
         const changeText = function() {
-            if( viewAnswers.addAnswerContainer.is(":hidden") ) {
-              viewAnswers.addOwnAnswerBtn.text("Hide adding answer");
+            if( addAnswerContainer.is(":hidden") ) {
+              addOwnAnswerBtn.text("Hide adding answer");
             }
             else {
-              viewAnswers.addOwnAnswerBtn.text("Add your own answer" );
+              addOwnAnswerBtn.text("Add your own answer" );
             }
         };
 
         return {
           toggleContainer: toggleContainer,
+          toggleButtons: toggleButtons,
           changeText: changeText
         }
     }(); // Immediately invoked
 
     // Made publicly available
     return {
-        // DOM elements
+        // DOM elements that need to be accessed outside the namespace
         addOwnAnswerBtn: addOwnAnswerBtn,
-        addAnswerContainer: addAnswerContainer,
-        addAnswerArea: addAnswerArea,
+        submitAnswerBtn: submitAnswerBtn,
+        cancelAnswerBtn: cancelAnswerBtn,
 
         // Functions
         addToTable: addToTable,
@@ -140,6 +148,20 @@ $(document).ready(function() {
     ============================================================== */
     viewAnswers.addOwnAnswerBtn.on("click", function(){
       viewAnswers.addOwnAnswer.changeText();
+      viewAnswers.addOwnAnswer.toggleButtons();
+      viewAnswers.addOwnAnswer.toggleContainer();
+    });
+
+    viewAnswers.submitAnswerBtn.on("click", function() {
+      console.log("Will send an AJAX request");
+      viewAnswers.addOwnAnswer.toggleButtons();
+      viewAnswers.addOwnAnswer.toggleContainer();
+      console.log("Will notify the user that operation was successful");
+    });
+
+    viewAnswers.cancelAnswerBtn.on("click", function() {
+      console.log("Will clear textarea contents");
+      viewAnswers.addOwnAnswer.toggleButtons();
       viewAnswers.addOwnAnswer.toggleContainer();
     });
 
