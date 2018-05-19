@@ -1,10 +1,12 @@
 /* viewAnswers, also addAnswers NAMESPACE
  ============================================================== */
 const viewAnswers = function() {
-    // Since the scripts are loaded after the DOM in the HTML, this is possible
+    // DOM selectors
     const addOwnAnswerBtn = $('#addOwnAnswerBtn');
     const addAnswerContainer = $('#addAnswerContainer');
     const addAnswerArea = $('#addAnswerArea');
+    const submitAnswerBtn = $('#submitAnswerBtn');
+    const cancelAnswerBtn = $('#cancelAnswerBtn');
 
     const addToTable = function(answer) {
         let answerText = answer[0];
@@ -96,32 +98,79 @@ const viewAnswers = function() {
         })             
     };
 
-    // Add your answer to the currently selected question [No back-end logic yet]
+    // UI section for posting answers
     const addOwnAnswer = function() {
         const toggleContainer = function() {
-          viewAnswers.addAnswerContainer.toggle("slow");
+          addAnswerContainer.toggle("slow");
+        };
+
+        const toggleButtons = function() {
+          submitAnswerBtn.toggle("slow");
+          cancelAnswerBtn.toggle("slow");
         };
 
         const changeText = function() {
-            if( viewAnswers.addAnswerContainer.is(":hidden") ) {
-              viewAnswers.addOwnAnswerBtn.text("Hide adding answer");
+            if( addAnswerContainer.is(":hidden") ) {
+              addOwnAnswerBtn.text("Hide adding answer");
             }
             else {
-              viewAnswers.addOwnAnswerBtn.text("Add your own answer" );
+              addOwnAnswerBtn.text("Add your own answer" );
             }
         };
 
         return {
           toggleContainer: toggleContainer,
+          toggleButtons: toggleButtons,
           changeText: changeText
         }
     }(); // Immediately invoked
 
+    // Grab the question id from the URL
+    const getQuestionID = function() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var urlEntries = urlParams.entries();
+      var questionID = "";
+
+      for(let pair of urlEntries) {
+        if (pair[0] === "qid")
+        {
+          questionID = pair[1];
+        }
+      }
+      return questionID;
+    };
+
+    // AJAX post answer
+    const postAnswer = function (bodyJSON){
+      "use strict";
+      $.ajax({
+        type: 'POST',
+        data: bodyJSON,
+        url: 'add-answer',
+        success: function(data){
+          alert('Answer added successfully for question ' + viewAnswers.getQuestionID());
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
+          console.log('jqXHR: ' + jqXHR);
+          console.log('textStatus: ' + textStatus);
+          console.log('errorThrown: ' + errorThrown);
+        }
+      });
+    };
+
+    const fieldNotEmpty = function(field) {
+      if(field.val().length > 0) {
+        return true;
+      }
+    };
+
     // Made publicly available
     return {
-        // DOM elements
+        // DOM elements that need to be accessed outside the namespace
         addOwnAnswerBtn: addOwnAnswerBtn,
-        addAnswerContainer: addAnswerContainer,
+        submitAnswerBtn: submitAnswerBtn,
+        cancelAnswerBtn: cancelAnswerBtn,
         addAnswerArea: addAnswerArea,
 
         // Functions
@@ -129,7 +178,10 @@ const viewAnswers = function() {
         rateAnswer: rateAnswer,
         updateAllRatings: updateAllRatings,
         updateRatings: updateRatings,
-        addOwnAnswer: addOwnAnswer
+        addOwnAnswer: addOwnAnswer,
+        getQuestionID: getQuestionID,
+        postAnswer: postAnswer,
+        fieldNotEmpty: fieldNotEmpty
     }
 }();
 //  ============================================================== */
@@ -140,21 +192,40 @@ $(document).ready(function() {
     ============================================================== */
     viewAnswers.addOwnAnswerBtn.on("click", function(){
       viewAnswers.addOwnAnswer.changeText();
+      viewAnswers.addOwnAnswer.toggleButtons();
       viewAnswers.addOwnAnswer.toggleContainer();
     });
 
+    viewAnswers.submitAnswerBtn.on("click", function() {
+      if(viewAnswers.fieldNotEmpty(viewAnswers.addAnswerArea)) {
+        // JSON'ize the questionID and answer
+        let bodyJSON = {
+          questionID: viewAnswers.getQuestionID(),
+          answer: viewAnswers.addAnswerArea.val()
+        };
+        // Send the AJAX request
+        viewAnswers.postAnswer(bodyJSON);
+        viewAnswers.addOwnAnswer.toggleButtons();
+        viewAnswers.addOwnAnswer.toggleContainer();
+        viewAnswers.addOwnAnswer.changeText();
+        viewAnswers.addAnswerArea.val(''); // Reset textarea
+      }
+      else {
+        alert("Please fill in an answer");
+      }
+    });
+
+    viewAnswers.cancelAnswerBtn.on("click", function() {
+      viewAnswers.addAnswerArea.val(''); // Reset textarea
+      viewAnswers.addOwnAnswer.toggleButtons();
+      viewAnswers.addOwnAnswer.toggleContainer();
+      viewAnswers.addOwnAnswer.changeText();
+    });
+
     console.log("Sending request");
-    
-    var urlParams = new URLSearchParams(window.location.search);
-    var urlEntries = urlParams.entries();
-    var questionID = "";
-    for(let pair of urlEntries) {
-        if (pair[0] === "qid")
-        {
-            questionID = pair[1]; 
-        }        
-    }
-    
+
+    let questionID = viewAnswers.getQuestionID();
+
     if (questionID.length > 0)
     {
         $.getJSON( "answers/"+questionID, function() {})

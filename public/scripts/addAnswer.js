@@ -1,3 +1,4 @@
+// FILE TO BE DELETED SOON + THE HTML
 /* addAnswer NAMESPACE
  ============================================================== */
 const addAnswer = function() {
