@@ -100,28 +100,32 @@ const viewAnswers = function() {
 
     // UI section for posting answers
     const addOwnAnswer = function() {
-        const toggleContainer = function() {
-          addAnswerContainer.toggle("slow");
-        };
+        const toggleContainer = () => new Promise(resolve =>
+          addAnswerContainer.toggle("slow", resolve)
+        );
 
-        const toggleButtons = function() {
+        const toggleButtons = () => new Promise(resolve => {
           submitAnswerBtn.toggle("slow");
-          cancelAnswerBtn.toggle("slow");
-        };
+          cancelAnswerBtn.toggle("slow", resolve);
+        });
 
         const changeText = function() {
-            if( addAnswerContainer.is(":hidden") ) {
-              addOwnAnswerBtn.text("Hide adding answer");
-            }
-            else {
-              addOwnAnswerBtn.text("Add your own answer" );
-            }
+          if( addAnswerContainer.is(":hidden") ) {
+            addOwnAnswerBtn.text("Add your own answer" );
+          }
+          else {
+            addOwnAnswerBtn.text("Hide adding answer");
+          }
+        };
+
+        const toggleUI = function() {
+          toggleContainer();
+          toggleButtons()
+              .then(changeText);
         };
 
         return {
-          toggleContainer: toggleContainer,
-          toggleButtons: toggleButtons,
-          changeText: changeText
+          toggleUI: toggleUI
         }
     }(); // Immediately invoked
 
@@ -191,9 +195,7 @@ $(document).ready(function() {
     /* ATTACH EVENT LISTENERS
     ============================================================== */
     viewAnswers.addOwnAnswerBtn.on("click", function(){
-      viewAnswers.addOwnAnswer.changeText();
-      viewAnswers.addOwnAnswer.toggleButtons();
-      viewAnswers.addOwnAnswer.toggleContainer();
+      viewAnswers.addOwnAnswer.toggleUI();
     });
 
     viewAnswers.submitAnswerBtn.on("click", function() {
@@ -205,9 +207,7 @@ $(document).ready(function() {
         };
         // Send the AJAX request
         viewAnswers.postAnswer(bodyJSON);
-        viewAnswers.addOwnAnswer.toggleButtons();
-        viewAnswers.addOwnAnswer.toggleContainer();
-        viewAnswers.addOwnAnswer.changeText();
+        viewAnswers.addOwnAnswer.toggleUI();
         viewAnswers.addAnswerArea.val(''); // Reset textarea
       }
       else {
@@ -217,9 +217,7 @@ $(document).ready(function() {
 
     viewAnswers.cancelAnswerBtn.on("click", function() {
       viewAnswers.addAnswerArea.val(''); // Reset textarea
-      viewAnswers.addOwnAnswer.toggleButtons();
-      viewAnswers.addOwnAnswer.toggleContainer();
-      viewAnswers.addOwnAnswer.changeText();
+      viewAnswers.addOwnAnswer.toggleUI();
     });
 
     console.log("Sending request");
