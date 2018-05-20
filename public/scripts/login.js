@@ -13,8 +13,8 @@ const login = function() {
         data: userdata,
         url: 'login',
         success: function(data){
-          localStorage.setItem("sessionID", data.newSessionID);
-          alert("Welcome, " + userdata.username + ". Your session ID is : " + data.NewSessionID);
+          localStorage.setItem("sessionID", data.sessionID);
+          alert("Welcome, " + userdata.username + ". Your session ID is : " + localStorage.getItem("sessionID"));
         },
         error: function(jqXHR, textStatus, errorThrown) {
           alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
