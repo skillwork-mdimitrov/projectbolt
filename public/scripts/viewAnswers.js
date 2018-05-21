@@ -7,8 +7,6 @@ const viewAnswers = function() {
     const addAnswerArea = $('#addAnswerArea');
     const submitAnswerBtn = $('#submitAnswerBtn');
     const cancelAnswerBtn = $('#cancelAnswerBtn');
-    let foldingHeader; // will be dynamically assigned value
-    let headerInfo; // will be dynamically assigned value
 
     const addToTable = function(answer) {
         let answerText = answer[0];
@@ -146,40 +144,6 @@ const viewAnswers = function() {
       return questionID;
     };
 
-    // [THIS WILL BE FURTHER ABSTRACTED AND PORTED TO A SEPARATE SCRIPT FOR EVERYBODY TO USE]
-    // GREEN or RED folding bar
-    const unfoldHeader = function(textToDisplay, green) {
-      // Create a folding header if it doesn't exists
-      if($("#foldingHeader").length === 0) {
-
-        // Created, append and select the folding header
-        $("body").prepend("<div id='foldingHeader' class='foldingHeader'></div>");
-        foldingHeader = $('#foldingHeader'); // select it
-
-        // Create, append and select the text in the folding header
-        foldingHeader.append("<p id='headerInfo' class='headerInfo'></p>");
-        headerInfo = $('#headerInfo'); // select it
-      }
-
-      // Check whether the method is expecting green or red coloured folding header
-      if(green === true) {
-        foldingHeader.css("background-color", "rgba(2, 237, 112, 0.7)") // green
-      }
-      else {
-        foldingHeader.css("background-color", "rgba(139, 0, 0, 0.7)") // red
-      }
-
-      // Unfold the header
-      foldingHeader.css("height", "50px");
-      // Write the folding header text
-      headerInfo.text(textToDisplay);
-
-      // Hide the header after 5 seconds
-      setTimeout(function() {
-        foldingHeader.css("height", "0");
-      }, 5000)
-    };
-
     // AJAX post answer
     const postAnswer = function (bodyJSON){
       "use strict";
@@ -188,7 +152,7 @@ const viewAnswers = function() {
         data: bodyJSON,
         url: 'add-answer',
         success: function(data){
-          unfoldHeader("Answer added successfully", true);
+          unfoldingHeader.unfoldHeader("Answer added successfully", "green");
         },
         error: function(jqXHR, textStatus, errorThrown) {
           alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
@@ -220,7 +184,6 @@ const viewAnswers = function() {
         updateRatings: updateRatings,
         addOwnAnswer: addOwnAnswer,
         getQuestionID: getQuestionID,
-        unfoldHeader: unfoldHeader,
         postAnswer: postAnswer,
         fieldNotEmpty: fieldNotEmpty
     }
@@ -248,7 +211,7 @@ $(document).ready(function() {
         viewAnswers.addAnswerArea.val(''); // Reset textarea
       }
       else {
-        viewAnswers.unfoldHeader("Please fill in an answer", false);
+        unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
       }
     });
 
