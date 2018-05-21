@@ -152,10 +152,10 @@ const viewAnswers = function() {
         data: bodyJSON,
         url: 'add-answer',
         success: function(data){
-          unfoldingHeader.unfoldHeader("Answer added successfully", "green");
+          unfoldingHeader.unfoldHeader("Answer added successfully", "green", false);
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
+          unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange", false);
           console.log('jqXHR: ' + jqXHR);
           console.log('textStatus: ' + textStatus);
           console.log('errorThrown: ' + errorThrown);

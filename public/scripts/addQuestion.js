@@ -11,10 +11,10 @@ const addQuestion = function() {
       data: question,
       url: 'add-question',
       success: function(data){
-        alert(data);
+        unfoldingHeader.unfoldHeader(data, "green", true);
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
+        unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange", true);
         console.log('jqXHR: ' + jqXHR);
         console.log('textStatus: ' + textStatus);
         console.log('errorThrown: ' + errorThrown);
