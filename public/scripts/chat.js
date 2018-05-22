@@ -62,7 +62,7 @@ $(document).ready(function() {
 	
 	//Emit a username
 	send_username.click(function(){
-		socket.emit('changeUsername', {username : username+"-"+usernameextra.val()})
+		socket.emit('changeUsername', {username : username+"@"+usernameextra.val()})
 	})
 	
 	//Emit typing
