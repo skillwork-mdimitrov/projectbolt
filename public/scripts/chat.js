@@ -25,6 +25,18 @@ $(document).ready(function() {
 		  })
 	});
 
+	$("#message").keyup(function(event) {
+		if (event.keyCode === 13) {
+			$("#send_message").click();
+		}
+	});
+	
+	$("#usernamenew").keyup(function(event) {
+		if (event.keyCode === 13) {
+			$("#send_username").click();
+		}
+	});
+	
 	//Get the username from the json data
 	function getUsername(data){
 		username = data[0].Username;
