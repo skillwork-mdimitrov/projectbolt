@@ -50,7 +50,7 @@ const viewAnswers = function() {
         $.post( "rating/insert-rating", postData, function() {})
         .done(function() {
             console.log("Request complete");
-            updateRatings(ratingElement);            
+            updateRatings(ratingElement);
         })
         .fail(function() {
             console.log( "error");
@@ -163,12 +163,6 @@ const viewAnswers = function() {
       });
     };
 
-    const fieldNotEmpty = function(field) {
-      if(field.val().length > 0) {
-        return true;
-      }
-    };
-
     // Made publicly available
     return {
         // DOM elements that need to be accessed outside the namespace
@@ -185,7 +179,6 @@ const viewAnswers = function() {
         addOwnAnswer: addOwnAnswer,
         getQuestionID: getQuestionID,
         postAnswer: postAnswer,
-        fieldNotEmpty: fieldNotEmpty
     }
 }();
 //  ============================================================== */
@@ -199,7 +192,7 @@ $(document).ready(function() {
     });
 
     viewAnswers.submitAnswerBtn.on("click", function() {
-      if(viewAnswers.fieldNotEmpty(viewAnswers.addAnswerArea)) {
+      if(global.fieldNotEmpty(viewAnswers.addAnswerArea)) {
         // JSON'ize the questionID and answer
         let bodyJSON = {
           questionID: viewAnswers.getQuestionID(),

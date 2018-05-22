@@ -48,22 +48,21 @@ $(document).ready(function() {
 	
 	// Emit message
 	send_message.click(function(){
-		if (message.val()=== null || message.val() === "")
-		{
+		if (global.fieldIsEmpty(message)) {
       unfoldingHeader.unfoldHeader("Please type something...^^", "orange");
 			return false;
 		}
 		socket.emit('new_message', {message : message.val()})
 	});
 
-	//Listen on new_message
+	// Listen on new_message
 	socket.on("new_message", (data) => {
 		feedback.html('');
 		message.val('');
 		chatroom.append("<p class='message'>" + data.username + ": " + data.message + "</p>")
 	});
 	
-	//Emit a username
+	// Emit a username
 	send_username.click(function(){
 		socket.emit('changeUsername', {username : username+"@"+usernameextra.val()})
 	});
@@ -72,7 +71,7 @@ $(document).ready(function() {
 	message.bind("keypress", () => {
 		socket.emit('typing')
 	});
-	//Listen on typing
+	// Listen on typing
 	socket.on('typing', (data) => {
 		feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>")
 	})
