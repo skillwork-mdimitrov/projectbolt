@@ -41,15 +41,37 @@ const login = function() {
 
 // When everything has loaded
 $(document).ready(function() {
-  "use strict";
-  /* ATTACH EVENT LISTENERS
-    ============================================================== */
-  login.loginBtn.on("click", function() {
-    let userdata = {
-      username : login.usernameBox.val(),
-      password : login.passwordBox.val()
-    };
-    // Send the AJAX request
-    login.login(userdata);
-  });
+  "use strict";  
+  let currentSessionID = sessionStorage.getItem('projectBoltSessionID');
+  console.log("Sending request");
+  $.getJSON("login/check-session/"+currentSessionID, function () {})
+  .done(function (data) {
+    console.log("Request complete");
+    if (data.sessionValid === true) {      
+      if(window.location.href.includes("localhost")) {
+        window.location.href = "http://localhost:3000";
+      }
+      else {
+        window.location.href = "https://projectboltrenew.azurewebsites.net";
+      }
+    }
+    else
+    {
+      document.getElementById("loader").style.display = "none";
+      document.getElementById("mainContent").style.display = "block";
+      /* ATTACH EVENT LISTENERS
+      ============================================================== */
+      login.loginBtn.on("click", function() {
+        let userdata = {
+          username : login.usernameBox.val(),
+          password : login.passwordBox.val()
+        };
+        // Send the AJAX request
+        login.login(userdata);
+      });
+    }
+  })
+  .fail(function () {
+    console.log("error");
+  })  
 });
