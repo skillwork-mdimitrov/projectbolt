@@ -18,13 +18,23 @@ const loginCheck = function() {
       else
       {
         $.holdReady(false);
-        window.location.href = "https://projectboltrenew.azurewebsites.net/login";
+        if(window.location.href.includes("localhost")) {
+          window.location.href = "http://localhost:3000/login";
+        }
+        else {
+          window.location.href = "https://projectboltrenew.azurewebsites.net/login";
+        }
       }
     })
     .fail(function () {
       console.log("error");
       $.holdReady(false);
-      window.location.href = "https://projectboltrenew.azurewebsites.net/login";
+      if(window.location.href.includes("localhost")) {
+        window.location.href = "http://localhost:3000/login";
+      }
+      else {
+        window.location.href = "https://projectboltrenew.azurewebsites.net/login";
+      }
     })
   };
 

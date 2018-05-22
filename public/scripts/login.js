@@ -14,10 +14,15 @@ const login = function() {
         url: 'login',
         success: function(data){
           sessionStorage.setItem("projectBoltSessionID", data.sessionID);
-          window.location.href = "https://projectboltrenew.azurewebsites.net";
+          if(window.location.href.includes("localhost")) {
+            window.location.href = "http://localhost:3000";
+          }
+          else {
+            window.location.href = "https://projectboltrenew.azurewebsites.net";
+          }
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
+          unfoldingHeader.unfoldHeader("Login failed", "red", false);
           console.log('jqXHR: ' + jqXHR);
           console.log('textStatus: ' + textStatus);
           console.log('errorThrown: ' + errorThrown);

@@ -1,0 +1,10 @@
+/* Global
+ ============================================================== */
+/* Browser reset */
+* {
+  margin: 0;
+}
+
+.mainContainer {
+  margin: 10px 10px 10px 10px;
+}
