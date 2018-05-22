@@ -93,7 +93,7 @@ router.get('/check-session/:sessionID', function(req, res, next) {
   res.send({'sessionValid': sessionValid});
 });
 
-/* GET everything from user from session */
+/* GET username from user from session */
 router.get('/get-username/:sessionID', function(req, res, next) {  
   let sessionID = req.params["sessionID"];
   let userID = serverLogin.sessionData[sessionID]["userID"];
