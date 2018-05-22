@@ -1,4 +1,4 @@
-$(function(){
+$(document).ready(function() {
 	//make connections
 	var socket = io();
 	//buttons and inputs
@@ -34,4 +34,4 @@ $(function(){
 	socket.on('typing', (data) => {
 		feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>")
 	})
-})
+});

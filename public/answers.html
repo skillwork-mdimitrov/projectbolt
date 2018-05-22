@@ -11,8 +11,9 @@
   </head>
 
   <body>
+    <div id="loader"></div>
     <!-- Holds everything -->
-    <div class="mainContainer">
+    <div class="mainContainer" style="display:none;" id="mainContent">
       <h1 id="questionHeading"></h1>
 
       <!-- Add own answer -->
@@ -39,6 +40,7 @@
     <!-- SCRIPTS, load after the DOM↓
     ============================================================== -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="scripts/loginCheck.js"></script>
     <script src="scripts/unfoldingHeader.js"></script> <!-- Collapsing header -->
     <script src="rating.min.js"></script>
     <script src="scripts/viewAnswers.js"></script>
