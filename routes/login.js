@@ -23,6 +23,10 @@ const serverLogin = function(){
     var utcA = Date.UTC(dateA.getFullYear(), dateA.getMonth(), dateA.getDate(), dateA.getHours(), dateA.getMinutes(), dateA.getSeconds());
     var utcB = Date.UTC(dateB.getFullYear(), dateB.getMonth(), dateB.getDate(), dateB.getHours(), dateB.getMinutes(), dateB.getSeconds());
     return Math.floor(utcB - utcA);
+  };
+
+  const getUserID = function(sessionID){
+    return sessionData[sessionID].userID;
   }
 
   const sessionValid = function(sessionID) {
@@ -50,7 +54,8 @@ const serverLogin = function(){
     sessionData: sessionData,
     hashingSalt: hashingSalt,
     createSession: createSession,
-    sessionValid: sessionValid
+    sessionValid: sessionValid,
+    getUserID: getUserID
   }
 }();
 
@@ -91,6 +96,12 @@ router.get('/check-session/:sessionID', function(req, res, next) {
   let sessionID = req.params["sessionID"];
   let sessionValid = serverLogin.sessionValid(sessionID);
   res.send({'sessionValid': sessionValid});
+});
+
+/* GET UserID */
+router.get('/get-userID/:sessionID', function(req, res, next) {
+  let sessionID = req.params["sessionID"];
+  res.send({'UserID': serverLogin.getUserID(sessionID)});
 });
 
 module.exports = router;

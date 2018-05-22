@@ -6,8 +6,8 @@ const database = require('../private/scripts/database');
 /* POST a question */
 router.post('/', function(req, res) {
   let question = req.body.question; // the one sent from the AJAX's body
-
-  database.runGenericQuery("INSERT INTO Questions (Question) VALUES ('" + question + "')").then((resolve) => {
+  let userID = req.body.userID;
+  database.runGenericQuery("INSERT INTO Questions (Question, UserID) VALUES ('" + question + "', '" + userID + "')").then((resolve) => {
     res.send(resolve); // to display the successful operation to the client
   })
   .catch((reason) => {
