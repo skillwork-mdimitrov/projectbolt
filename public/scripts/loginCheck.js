@@ -1,3 +1,5 @@
+$.holdReady(true);
+
 const loginCheck = function() {
   let currentSessionID;
 
@@ -33,7 +35,4 @@ const loginCheck = function() {
 }();
 //  ============================================================== */
 
-$(document).ready(function() {
-  $.holdReady(true);
-  loginCheck.checkLogin();
-});
+loginCheck.checkLogin();
