@@ -14,7 +14,7 @@ const login = function() {
         url: 'login',
         success: function(data){
           sessionStorage.setItem("projectBoltSessionID", data.sessionID);
-          // window.location.href = "https://projectboltrenew.azurewebsites.net";
+          window.location.href = "https://projectboltrenew.azurewebsites.net";
         },
         error: function(jqXHR, textStatus, errorThrown) {
           alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
