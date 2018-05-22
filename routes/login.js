@@ -98,7 +98,7 @@ router.get('/get-username/:sessionID', function(req, res, next) {
   let sessionID = req.params["sessionID"];
   let userID = serverLogin.sessionData[sessionID]["userID"];
 
-  database.getJsonDataSet("SELECT * FROM Users WHERE ID = " + userID).then((user) => {
+  database.getJsonDataSet("SELECT Username FROM Users WHERE ID = " + userID).then((user) => {
     res.send(user);
   }).catch(
    (reason) => {
