@@ -42,14 +42,13 @@ $(document).ready(function() {
     "use strict";
     $.ajax({
       type: 'get',
-      data: {'SessionID': localStorage.getItem('projectBoltSessionID')},
-      url: 'login//get-userID/',
+      url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
       success: function (data) {
 
         // JSON'ize the question
         let questionJSON = {
           question: addQuestion.questionBox.val(),
-          userID: data.UserID
+          userID: data.userID
         };
         // Send the AJAX request
         addQuestion.submitQuestion(questionJSON);

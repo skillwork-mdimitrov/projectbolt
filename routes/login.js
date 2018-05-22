@@ -87,7 +87,7 @@ router.post('/', function(req, res) {
 });
 
 /* GET session check */
-router.get('/check-session/:sessionID', function(req, res, next) {  
+router.get('/check-session/:sessionID', function(req, res, next) {
   let sessionID = req.params["sessionID"];
   let sessionValid = serverLogin.sessionValid(sessionID);
   res.send({'sessionValid': sessionValid});
@@ -105,6 +105,13 @@ router.get('/get-username/:sessionID', function(req, res, next) {
         console.log('Handle rejected promise ('+reason+') here.');
         res.status(500).send('Something broke! ' + reason)
   });  
+});
+
+/* GET userID from user from session */
+router.get('/get-userID/:sessionID', function(req, res, next) {
+  let sessionID = req.params["sessionID"];
+  console.log(sessionID);
+  res.send({'userID': serverLogin.sessionData[sessionID]["userID"]});
 });
 
 module.exports = router;
