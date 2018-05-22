@@ -4,12 +4,28 @@ $(document).ready(function() {
 	//buttons and inputs
 	var message = $("#message")
 	//var username = $("#username")
-	var username = sessionStorage.getItem('projectBoltSessionID')
+	var username
 	var send_message = $("#send_message")
 	var send_username = $("#send_username")
 	var chatroom = $("#chatroom")
 	var feedback = $("#feedback")
-
+	
+	getUsername();
+	
+	getUsername(function())
+	{
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+    			if (this.readyState == 4 && this.status == 200) {
+        			var myObj = JSON.parse(this.responseText);
+        			document.getElementById("demo").innerHTML = myObj.name;
+			}
+		};
+		xmlhttp.open("GET", "https://projectboltrenew.azurewebsites.net/login/get-username/0", true);
+		xmlhttp.send();
+		socket.emit('changeUsername', {username : username.val()})
+	}
+	
 	//Emit message
 	send_message.click(function(){
 		socket.emit('new_message', {message : message.val()})

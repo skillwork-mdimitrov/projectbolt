@@ -23,10 +23,6 @@ const serverLogin = function(){
     var utcA = Date.UTC(dateA.getFullYear(), dateA.getMonth(), dateA.getDate(), dateA.getHours(), dateA.getMinutes(), dateA.getSeconds());
     var utcB = Date.UTC(dateB.getFullYear(), dateB.getMonth(), dateB.getDate(), dateB.getHours(), dateB.getMinutes(), dateB.getSeconds());
     return Math.floor(utcB - utcA);
-  };
-
-  const getUserID = function(sessionID){
-    return sessionData[sessionID].userID;
   }
 
   const sessionValid = function(sessionID) {
@@ -54,8 +50,7 @@ const serverLogin = function(){
     sessionData: sessionData,
     hashingSalt: hashingSalt,
     createSession: createSession,
-    sessionValid: sessionValid,
-    getUserID: getUserID
+    sessionValid: sessionValid
   }
 }();
 
@@ -98,10 +93,18 @@ router.get('/check-session/:sessionID', function(req, res, next) {
   res.send({'sessionValid': sessionValid});
 });
 
-/* GET UserID */
-router.get('/get-userID/:sessionID', function(req, res, next) {
+/* GET everything from user from session */
+router.get('/get-username/:sessionID', function(req, res, next) {  
   let sessionID = req.params["sessionID"];
-  res.send({'UserID': serverLogin.getUserID(sessionID)});
+  let userID = serverLogin.sessionData[sessionID]["userID"];
+
+  database.getJsonDataSet("SELECT Username FROM Users WHERE ID = " + userID).then((user) => {
+    res.send(user);
+  }).catch(
+   (reason) => {
+        console.log('Handle rejected promise ('+reason+') here.');
+        res.status(500).send('Something broke! ' + reason)
+  });  
 });
 
 module.exports = router;
