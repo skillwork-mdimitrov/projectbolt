@@ -47,7 +47,7 @@ $(document).ready(function() {
 	send_message.click(function(){
 		if (message.val()==null || message.val()=="")
 		{
-			alert("Please type something...^^");
+      unfoldingHeader.unfoldHeader("Please type something...^^", "orange", true);
 			return false;
 		}
 		socket.emit('new_message', {message : message.val()})
