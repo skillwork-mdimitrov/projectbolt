@@ -17,7 +17,6 @@ const loginCheck = function() {
       }
       else
       {
-        $.holdReady(false);
         if(window.location.href.includes("localhost")) {
           window.location.href = "http://localhost:3000/login";
         }
@@ -28,7 +27,6 @@ const loginCheck = function() {
     })
     .fail(function () {
       console.log("error");
-      $.holdReady(false);
       if(window.location.href.includes("localhost")) {
         window.location.href = "http://localhost:3000/login";
       }
