@@ -50,7 +50,7 @@ $(document).ready(function() {
 	send_message.click(function(){
 		if (message.val()=== null || message.val() === "")
 		{
-      unfoldingHeader.unfoldHeader("Please type something...^^", "orange", true);
+      unfoldingHeader.unfoldHeader("Please type something...^^", "orange");
 			return false;
 		}
 		socket.emit('new_message', {message : message.val()})

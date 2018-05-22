@@ -22,7 +22,7 @@ const login = function() {
           }
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          unfoldingHeader.unfoldHeader("Login failed", "red", false);
+          unfoldingHeader.unfoldHeader("Login failed", "red");
           console.log('jqXHR: ' + jqXHR);
           console.log('textStatus: ' + textStatus);
           console.log('errorThrown: ' + errorThrown);

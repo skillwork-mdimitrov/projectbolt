@@ -11,10 +11,10 @@ const addQuestion = function() {
       data: question,
       url: 'add-question',
       success: function(data){
-        unfoldingHeader.unfoldHeader(data, "green", true);
+        unfoldingHeader.unfoldHeader(data, "green");
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange", true);
+        unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
         console.log('jqXHR: ' + jqXHR);
         console.log('textStatus: ' + textStatus);
         console.log('errorThrown: ' + errorThrown);
@@ -55,7 +55,7 @@ $(document).ready(function() {
         addQuestion.submitQuestion(questionJSON);
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange", true);
+        unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
         console.log('jqXHR: ' + jqXHR);
         console.log('textStatus: ' + textStatus);
         console.log('errorThrown: ' + errorThrown);
