@@ -33,6 +33,11 @@ $(document).ready(function() {
 	
 	//Emit message
 	send_message.click(function(){
+		if (message.val()==null || message.val()=="")
+		{
+			alert("Please type something...^^");
+			return false;
+		}
 		socket.emit('new_message', {message : message.val()})
 	})
 
