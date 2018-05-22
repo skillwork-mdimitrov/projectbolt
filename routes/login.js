@@ -93,4 +93,18 @@ router.get('/check-session/:sessionID', function(req, res, next) {
   res.send({'sessionValid': sessionValid});
 });
 
+/* GET everything from user from session */
+router.get('/get-username/:sessionID', function(req, res, next) {  
+  let sessionID = req.params["sessionID"];
+  let userID = serverLogin.sessionData[sessionID]["userID"];
+
+  database.getJsonDataSet("SELECT * FROM Users WHERE ID = " + userID).then((user) => {
+    res.send(user);
+  }).catch(
+   (reason) => {
+        console.log('Handle rejected promise ('+reason+') here.');
+        res.status(500).send('Something broke! ' + reason)
+  });  
+});
+
 module.exports = router;
