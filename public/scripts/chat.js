@@ -3,27 +3,32 @@ $(document).ready(function() {
 	var socket = io();
 	//buttons and inputs
 	var message = $("#message")
-	//var username = $("#username")
+	//var username = $("#usernamenew")
 	var username
+	var usernameextra = $("#usernamenew")
 	var send_message = $("#send_message")
 	var send_username = $("#send_username")
 	var chatroom = $("#chatroom")
 	var feedback = $("#feedback")
+	var sessionid = sessionStorage.getItem("projectBoltSessionID");
 	
-	getUsername();
-	
-	getUsername(function())
-	{
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function() {
-    			if (this.readyState == 4 && this.status == 200) {
-        			var myObj = JSON.parse(this.responseText);
-        			document.getElementById("demo").innerHTML = myObj.name;
-			}
-		};
-		xmlhttp.open("GET", "https://projectboltrenew.azurewebsites.net/login/get-username/0", true);
-		xmlhttp.send();
-		socket.emit('changeUsername', {username : username.val()})
+	//inital change of useranme towards active session
+	$(document).ready(function () {
+		console.log("Started fetching username json");
+		$.getJSON("login/get-username/"+sessionid, function () {})
+		  .done(function (data) {
+			console.log("Recieved user json");
+			getUsername(data);
+		  })
+		  .fail(function () {
+			console.log("error");
+		  })
+	});
+
+	//Get the username from the json data
+	function getUsername(data){
+		username = data[0].Username;
+		socket.emit('changeUsername', {username : data[0].Username})
 	}
 	
 	//Emit message
@@ -40,7 +45,7 @@ $(document).ready(function() {
 	
 	//Emit a username
 	send_username.click(function(){
-		socket.emit('changeUsername', {username : username.val()})
+		socket.emit('changeUsername', {username : username+"-"+usernameextra.val()})
 	})
 	
 	//Emit typing
