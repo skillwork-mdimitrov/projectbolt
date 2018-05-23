@@ -1,59 +1,8 @@
 const express = require('express');
 const path = require('path');
-const bcrypt = require('bcrypt');
 const router = express.Router();
 const database = require('../private/scripts/database');
-
-const serverLogin = function(){
-  let sessionData = {};
-  let nextSessionID = 0;
-  // 15 minute session duration
-  let sessionTimeout = 900000;
-  let hashingSalt = "$2b$10$HsyAVPkQft2HZybIRduZUO";
-
-  const createSession = function(userID) {
-    let currentDateTime = new Date();
-    let currentSessionID = nextSessionID;
-    sessionData[currentSessionID] = {'created': currentDateTime, 'userID': userID};
-    nextSessionID++;
-    return currentSessionID;
-  };
-
-  const getTimeDifference = function(dateA, dateB) {
-    var utcA = Date.UTC(dateA.getFullYear(), dateA.getMonth(), dateA.getDate(), dateA.getHours(), dateA.getMinutes(), dateA.getSeconds());
-    var utcB = Date.UTC(dateB.getFullYear(), dateB.getMonth(), dateB.getDate(), dateB.getHours(), dateB.getMinutes(), dateB.getSeconds());
-    return Math.floor(utcB - utcA);
-  }
-
-  const sessionValid = function(sessionID) {
-    if (sessionData[sessionID] !== undefined)
-    {
-      let sessionCreatedDateTime = sessionData[sessionID]['created'];
-      let currentDateTime = new Date();
-      let dateTimeDifference = getTimeDifference(sessionCreatedDateTime, currentDateTime);
-      if (dateTimeDifference > sessionTimeout)
-      {
-        return false;
-      }
-      else
-      {
-        return true;
-      }
-    }
-    else
-    {
-      return false;
-    }
-  }
-
-  return{
-    sessionData: sessionData,
-    hashingSalt: hashingSalt,
-    createSession: createSession,
-    sessionValid: sessionValid
-  }
-}();
-
+const login = require('../private/scripts/login');
 
 /* GET login.html page. */
 router.get('/', function(req, res, next) {  
@@ -62,56 +11,75 @@ router.get('/', function(req, res, next) {
 
 /* Login */
 router.post('/', function(req, res) {
-  let username = req.body.username; // the one sent from the AJAX's body
+  let username = req.body.username; // credentials sent from client AJAX
   let password = req.body.password;
   let query = "SELECT ID, password FROM Users WHERE Username= '" + username + "'";
 
   database.getJsonDataSet(query).then((queryResults) => {
     let storedPassword = queryResults[0].password;
     let storedUserID = queryResults[0].ID;
-    bcrypt.hash(password, serverLogin.hashingSalt, function(err, hash) {
-      if (hash === storedPassword) {
-        var newSessionID = serverLogin.createSession(storedUserID);
+
+    login.getHash(password).then((hashedPassword) => {
+      // Check if passwords match, hash of -1 means hashing failed
+      if (hashedPassword !== -1 && hashedPassword === storedPassword) {
+        var newSessionID = login.createSession(storedUserID);
         res.send({'sessionID': newSessionID});  
       }
       else
       {
-        res.status(500).send('Invalid password')  
+        res.status(500).send('Authentication failure');  
       }
-    }); 
-  }).catch(
-      (reason) => {
-        console.log('Handle rejected promise ('+reason+') here.');
-        res.status(500).send('Something broke! ' + reason)
-      });
+    }).catch((reason) => {
+      console.log('Handle rejected promise ('+reason+') here.');
+      res.status(500).send('Something broke! ' + reason);
+    });
+  }).catch((reason) => {
+      console.log('Handle rejected promise ('+reason+') here.');
+      res.status(500).send('Something broke! ' + reason);
+  }); 
 });
 
 /* GET session check */
 router.get('/check-session/:sessionID', function(req, res, next) {
   let sessionID = req.params["sessionID"];
-  let sessionValid = serverLogin.sessionValid(sessionID);
+  let sessionValid = login.sessionValid(sessionID);
+
   res.send({'sessionValid': sessionValid});
 });
 
-/* GET username from user from session */
+/* GET username from session */
 router.get('/get-username/:sessionID', function(req, res, next) {  
   let sessionID = req.params["sessionID"];
-  let userID = serverLogin.sessionData[sessionID]["userID"];
-
-  database.getJsonDataSet("SELECT Username FROM Users WHERE ID = " + userID).then((user) => {
-    res.send(user);
-  }).catch(
-   (reason) => {
-        console.log('Handle rejected promise ('+reason+') here.');
-        res.status(500).send('Something broke! ' + reason)
-  });  
+  let sessionData = login.getSessionData(sessionID);
+  
+  // Check if the session exists
+  if (sessionData === undefined) {
+    res.status(500).send('Session not found');
+  }
+  else {
+    let userID = sessionData["userID"];
+    database.getJsonDataSet("SELECT Username FROM Users WHERE ID = " + userID).then((user) => {
+      res.send(user);
+    }).catch(
+    (reason) => {
+      console.log('Handle rejected promise ('+reason+') here.');
+      res.status(500).send('Something broke! ' + reason)
+    });
+  }    
 });
 
-/* GET userID from user from session */
+/* GET userID from session */
 router.get('/get-userID/:sessionID', function(req, res, next) {
   let sessionID = req.params["sessionID"];
-  console.log(sessionID);
-  res.send({'userID': serverLogin.sessionData[sessionID]["userID"]});
+  let sessionData = login.getSessionData(sessionID);
+
+  // Check if the session exists
+  if (sessionData === undefined) {
+    res.status(500).send('Session not found');
+  }
+  else {
+    res.send({'userID': sessionData["userID"]});
+  }  
 });
 
 module.exports = router;
