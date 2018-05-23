@@ -73,11 +73,7 @@ function getQueryResult(connection, query) {
         request.on('row', function(columns) {
             var row = {}; 
             columns.forEach(function(column) {
-                if (column.value === null) {
-                    console.log('NULL');
-                } else {          
-                    row[column.metadata.colName] = column.value;
-                }
+                row[column.metadata.colName] = column.value;
             });
             result.push(row);
         });
