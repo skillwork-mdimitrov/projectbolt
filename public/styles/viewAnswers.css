@@ -29,6 +29,10 @@
   font-size: 1rem;
   margin: 0.5rem;
   line-height: 1.5;
+
+  /* Animations */
+  opacity: 0; /* Initially opaque, so when opacity is changed in the JS, the transition will trigger */
+  transition: 0.4s opacity ease-in;
 }
 
 .Table-header {
