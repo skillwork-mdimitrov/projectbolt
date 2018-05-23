@@ -40,21 +40,34 @@ const viewAnswers = function() {
 
     const rateAnswer = function rateAnswer(ratingElement) {
         let answerID = ratingElement.attr("id");
-        let postData = {
-            "answerID": answerID,
-            "userID": 1,
-            "rating": $('#'+answerID).rating('get rating')
-        };        
+        let rating = $('#'+answerID).rating('get rating');
+        let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
-        console.log("Sending request");
-        $.post( "rating/insert-rating", postData, function() {})
-        .done(function() {
-            console.log("Request complete");
-            updateRatings(ratingElement);
+        console.log("Sending user-id request");
+        $.getJSON("login/get-userID/"+sessionID, function () {})
+        .done(function (data) {
+          console.log("Request complete");
+          userID = data['userID'];
+
+          let ratingData = {
+            "answerID": answerID,
+            "userID": userID,
+            "rating": rating
+          };        
+
+          console.log("Sending insert rating request");
+          $.post( "rating/insert-rating", ratingData, function() {})
+          .done(function() {
+              console.log("Request complete");
+              updateRatings(ratingElement);
+          })
+          .fail(function() {
+              console.log( "error");
+          });
         })
-        .fail(function() {
-            console.log( "error");
-        });
+        .fail(function () {
+          console.log("error");
+        })
     };
 
     const updateAllRatings = function updateAllRatings() {
