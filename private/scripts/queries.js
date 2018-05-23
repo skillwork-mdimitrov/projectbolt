@@ -2,12 +2,20 @@ function getRatingsByAnswerIdQuery(answerID) {
     return "SELECT Rating FROM Ratings WHERE AnswerID = " + answerID;
 }
 
+function getRatingByAnswerIdAndUserIdQuery(answerID, userID) {
+    return "SELECT Rating FROM Ratings WHERE AnswerID = " + answerID + " AND UserID = " + userID;
+}
+
 function getInsertRatingQuery(answerID, userID, rating) {
     return "INSERT INTO Ratings (AnswerID, UserID, Rating) VALUES (" 
                                                                 + answerID + ", " 
                                                                 + userID + ", " 
                                                                 + rating 
                                                                 + ")";
+}
+
+function getUpdateRatingQuery(answerID, userID, rating) {
+    return "UPDATE Ratings SET Rating = " + rating + " WHERE AnswerID = " + answerID + " AND UserID = " + userID;
 }
 
 function getAllQuestionsQuery() {
@@ -39,7 +47,9 @@ function getUsernameByIdQuery(userID) {
 }
 
 exports.getRatingsByAnswerIdQuery = getRatingsByAnswerIdQuery;
+exports.getRatingByAnswerIdAndUserIdQuery = getRatingByAnswerIdAndUserIdQuery;
 exports.getInsertRatingQuery = getInsertRatingQuery;
+exports.getUpdateRatingQuery = getUpdateRatingQuery;
 
 exports.getAllQuestionsQuery = getAllQuestionsQuery;
 exports.getQuestionTextByIdQuery = getQuestionTextByIdQuery;

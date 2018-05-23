@@ -123,15 +123,35 @@ const viewAnswers = function() {
             "rating": rating
           };
 
-          console.log("Sending insert rating request");
-          $.post( "rating/insert-rating", ratingData, function() {})
-          .done(function() {
-              console.log("Request complete");
-              updateRatings(ratingElement);
+          console.log("Sending rating exists request");          
+          $.getJSON("rating/get-rating-answer-user/"+answerID+"/"+userID, function () {})
+          .done(function (data) {
+            console.log("Request complete");
+            console.log("Sending insert rating request");
+            if (data.length > 0) {
+              $.post("rating/update-rating", ratingData, function() {})
+              .done(function() {
+                  console.log("Request complete");
+                  updateRatings(ratingElement);
+              })
+              .fail(function() {
+                  console.log( "error");
+              });
+            }
+            else {
+              $.post("rating/insert-rating", ratingData, function() {})
+              .done(function() {
+                  console.log("Request complete");
+                  updateRatings(ratingElement);
+              })
+              .fail(function() {
+                  console.log( "error");
+              });
+            }
           })
-          .fail(function() {
-              console.log( "error");
-          });
+          .fail(function () {
+            console.log("error");
+          })
         })
         .fail(function () {
           console.log("error");

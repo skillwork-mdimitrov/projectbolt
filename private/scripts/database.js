@@ -92,6 +92,16 @@ function getRatingsByAnswerId(answerID) {
     });
 }
 
+function getRatingByAnswerIdAndUserId(answerID, userID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getRatingByAnswerIdAndUserIdQuery(answerID, userID)).then((rating) => {
+            resolve(rating);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });
+}
+
 function insertRating(answerID, userID, rating) {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getInsertRatingQuery(answerID, userID, rating)).then(() => {
@@ -100,6 +110,16 @@ function insertRating(answerID, userID, rating) {
             reject(reason);
         }); 
     });
+}
+
+function updateRating(answerID, userID, rating) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getUpdateRatingQuery(answerID, userID, rating)).then(() => {
+            resolve();
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });   
 }
 
 function getAllQuestions() {
@@ -176,7 +196,9 @@ exports.runGenericQuery = runGenericQuery;
 exports.getJsonDataSet = getJsonDataSet;
 
 exports.getRatingsByAnswerId = getRatingsByAnswerId;
+exports.getRatingByAnswerIdAndUserId = getRatingByAnswerIdAndUserId;
 exports.insertRating = insertRating;
+exports.updateRating = updateRating;
 
 exports.getAllQuestions = getAllQuestions;
 exports.getQuestionTextById = getQuestionTextById;

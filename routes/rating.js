@@ -13,10 +13,30 @@ router.get('/get-all-ratings/:answerID', function(req, res, next) {
     });  
 });
 
+/* GET the rating regarding a specific answer and user combination */
+router.get('/get-rating-answer-user/:answerID/:userID', function(req, res, next) {
+    database.getRatingByAnswerIdAndUserId(req.params["answerID"], req.params["userID"]).then((rating) => {
+        res.json(rating);
+    }).catch((reason) => {
+        console.log('Handle rejected promise ('+reason+') here.');
+        res.status(500).send('Something broke! ' + reason)
+    });  
+});
+
 /* Insert a rating */
 router.post('/insert-rating', function(req, res, next) {    
     database.insertRating(req.body.answerID, req.body.userID, req.body.rating).then(() => {
         res.status(200).send("Insert succesful");
+    }).catch((reason) => {
+        console.log('Handle rejected promise ('+reason+') here.');
+        res.status(500).send('Something broke! ' + reason)
+    }); 
+});
+
+/* Update a rating */
+router.post('/update-rating', function(req, res, next) {    
+    database.updateRating(req.body.answerID, req.body.userID, req.body.rating).then(() => {
+        res.status(200).send("Update succesful");
     }).catch((reason) => {
         console.log('Handle rejected promise ('+reason+') here.');
         res.status(500).send('Something broke! ' + reason)
