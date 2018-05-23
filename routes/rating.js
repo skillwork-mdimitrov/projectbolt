@@ -5,7 +5,7 @@ var router = express.Router();
 
 /* GET all the ratings */
 router.get('/get-all-ratings/:answerID', function(req, res, next) {
-    database.getJsonDataSet("SELECT Rating FROM Ratings WHERE AnswerID = " + req.params["answerID"]).then((ratings) => {
+    database.getAllRatings(req.params["answerID"]).then((ratings) => {
         res.json(ratings);
     }).catch((reason) => {
         console.log('Handle rejected promise ('+reason+') here.');
@@ -15,11 +15,7 @@ router.get('/get-all-ratings/:answerID', function(req, res, next) {
 
 /* Insert a rating */
 router.post('/insert-rating', function(req, res, next) {    
-    database.runGenericQuery("INSERT INTO Ratings (AnswerID, UserID, Rating) VALUES (" 
-                                                                + req.body.answerID + ", " 
-                                                                + req.body.userID + ", " 
-                                                                + req.body.rating 
-                                                                + ")").then(() => {
+    database.insertRating(req.body.answerID, req.body.userID, req.body.rating).then(() => {
         res.status(200).send("Insert succesful");
     }).catch((reason) => {
         console.log('Handle rejected promise ('+reason+') here.');

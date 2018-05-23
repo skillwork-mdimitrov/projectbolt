@@ -1,5 +1,6 @@
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
+var queries = require('./queries');
 
 var config = {
     userName: 'pbadmin',
@@ -85,5 +86,28 @@ function getQueryResult(connection, query) {
     });  
 }
 
+function getAllRatings(answerID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getAllRatingsQuery(answerID)).then((ratings) => {
+            resolve(ratings);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });
+}
+
+function insertRating(answerID, userID, rating) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getInsertRatingQuery(answerID, userID, rating)).then(() => {
+            resolve();
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });
+}
+
 exports.runGenericQuery = runGenericQuery;
 exports.getJsonDataSet = getJsonDataSet;
+
+exports.getAllRatings = getAllRatings;
+exports.insertRating = insertRating;
