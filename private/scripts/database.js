@@ -106,8 +106,31 @@ function insertRating(answerID, userID, rating) {
     });
 }
 
+function getAllQuestions() {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getAllQuestionsQuery()).then((questions) => {
+            resolve(questions);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });   
+}
+
+function insertQuestion(question, userID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getInsertQuestionQuery(question, userID)).then(() => {
+            resolve();
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });   
+}
+
 exports.runGenericQuery = runGenericQuery;
 exports.getJsonDataSet = getJsonDataSet;
 
 exports.getAllRatings = getAllRatings;
 exports.insertRating = insertRating;
+
+exports.getAllQuestions = getAllQuestions;
+exports.insertQuestion = insertQuestion;

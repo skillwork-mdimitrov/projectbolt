@@ -7,8 +7,8 @@ const database = require('../private/scripts/database');
 router.post('/', function(req, res) {
   let question = req.body.question; // the one sent from the AJAX's body
   let userID = req.body.userID;
-  database.runGenericQuery("INSERT INTO Questions (Question, UserID) VALUES ('" + question + "', '" + userID + "')").then((resolve) => {
-    res.send(resolve); // to display the successful operation to the client
+  database.insertQuestion(question, userID).then(() => {
+    res.send(); // to display the successful operation to the client
   })
   .catch((reason) => {
     console.log('Handle rejected promise ('+reason+') here.');
