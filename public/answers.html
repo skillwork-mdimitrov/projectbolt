@@ -13,7 +13,7 @@
   <body>
     <div id="loader"></div>
     <!-- Holds everything -->
-    <div class="mainContainer" style="display:none;" id="mainContent">
+    <div class="mainContainer" style="display:none;" id="mainContainer">
       <h1 id="questionHeading"></h1>
 
       <!-- Add own answer -->
@@ -26,15 +26,9 @@
         </div>
       </div>
 
-      <!-- Answers table -->
-      <div id="answersTable" class="Table">
-          <!-- Headings -->
-          <div class="Table-row Table-header">
-              <div class="Table-row-item u-Flex-grow9">Answer</div>
-              <div class="Table-row-item u-Flex-grow1">Rating</div>
-          </div>
-          <!-- JavaScript will generate rows -->
-      </div>
+      <!-- JavaScript will generate the answers table here -->
+      <!-- JavaScript will generate answers and fill them in the answers table -->
+
     </div> <!-- Close main container -->
 
     <!-- SCRIPTS, load after the DOM↓
@@ -45,5 +39,6 @@
     <script src="scripts/global.js"></script> <!-- Reusable functions -->
     <script src="rating.min.js"></script>
     <script src="scripts/viewAnswers.js"></script>
+  </body>
   </body>
 </html>

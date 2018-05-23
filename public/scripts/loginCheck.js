@@ -12,7 +12,7 @@ const loginCheck = function() {
       console.log("Request complete");
       if (data.sessionValid === true) {
         document.getElementById("loader").style.display = "none";
-        document.getElementById("mainContent").style.display = "block";
+        document.getElementById("mainContainer").style.display = "block";
         $.holdReady(false);
       }
       else
