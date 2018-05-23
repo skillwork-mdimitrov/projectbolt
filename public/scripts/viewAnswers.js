@@ -8,34 +8,102 @@ const viewAnswers = function() {
     const submitAnswerBtn = $('#submitAnswerBtn');
     const cancelAnswerBtn = $('#cancelAnswerBtn');
 
+    /* Outside promise for resolving or rejecting answers arrival
+    ============================================================== */
+    var resolveAnswersArrived;
+    var rejectAnswersArrived;
+    var answersArrived = new Promise(function(resolve, reject) {
+      resolveAnswersArrived = resolve;
+      rejectAnswersArrived = reject;
+    });
+    // ============================================================== */
+
+    // Since the new implementation calls addToTable many times, having a separate table instantiation is necessary
+    const mkAnswersTableSkeleton = function(callback) {
+      /* CREATES
+      ============================================================== */
+
+      // The answers table that will hold every row
+      const answersTable = document.createElement("div");
+      answersTable.setAttribute("id", "answersTable");
+      answersTable.setAttribute("class", "Table");
+
+      // Table headers
+      const tableHeader = document.createElement("div");
+      tableHeader.setAttribute("class", "Table-row Table-header");
+
+      // Answers column
+      const answersColumn = document.createElement("div");
+      answersColumn.setAttribute("class", "Table-row-item u-Flex-grow9");
+      answersColumn.textContent = "Answer";
+
+      // Ratings column
+      const ratingsColumn = document.createElement("div");
+      ratingsColumn.setAttribute("class", "Table-row-item u-Flex-grow1");
+      ratingsColumn.textContent = "Rating";
+
+      /* APPENDS
+      ============================================================== */
+
+      // Append the answer and rating columns to the table header
+      tableHeader.appendChild(answersColumn);
+      tableHeader.appendChild(ratingsColumn);
+
+      // Append that table header to the answers table
+      answersTable.appendChild(tableHeader);
+
+      // Append that answers table to the main container
+      document.getElementById("mainContainer").appendChild(answersTable);
+
+      return true;
+    };
+
     const addToTable = function(answer) {
         let answerText = answer[0];
         let answerID = answer[1];
-    
-        let answersTable = document.getElementById("answersTable");
-    
+
+        // Select the table to append rows to
+        const answersTable = document.getElementById("answersTable");
+
+        /* CREATES
+        ============================================================== */
+
         // A row with a answer, user and answers
-        let tableRow = document.createElement("div");
+        const tableRow = document.createElement("div");
         tableRow.setAttribute("class", "Table-row");
-    
+
         // The answer
-        let rowItemAnswer = document.createElement("div");
+        const rowItemAnswer = document.createElement("div");
         rowItemAnswer.setAttribute("class", "Table-row-item u-Flex-grow9");
         rowItemAnswer.setAttribute("data-header", "Answer");
         rowItemAnswer.textContent = answerText;
 
         // The rating
-        let rowItemRating = document.createElement("div");
+        const rowItemRating = document.createElement("div");
         rowItemRating.setAttribute("class", "star ui rating Table-row-item u-Flex-grow1");
         rowItemRating.setAttribute("data-header", "Rating");
         rowItemRating.setAttribute("id", answerID);
-    
-        // Append the answer, user and answer to that table row
+
+        /* APPENDS
+        ============================================================== */
+
+        // Append the answer, user and rating to that table row
         tableRow.appendChild(rowItemAnswer);
+        // Here is where the user will be appended
         tableRow.appendChild(rowItemRating);
-    
+
         // Append the row to the table
         answersTable.appendChild(tableRow);
+
+        return true;
+    };
+
+    // Remove the answers table from the DOM
+    const rmAnswersTable = function() {
+      const answersTable = document.getElementById("answersTable");
+      answersTable.parentNode.removeChild(answersTable);
+
+      return true;
     };
 
     const rateAnswer = function rateAnswer(ratingElement) {
@@ -53,7 +121,7 @@ const viewAnswers = function() {
             "answerID": answerID,
             "userID": userID,
             "rating": rating
-          };        
+          };
 
           console.log("Sending insert rating request");
           $.post( "rating/insert-rating", ratingData, function() {})
@@ -82,13 +150,13 @@ const viewAnswers = function() {
                 let ratingCount = data.length;
                 $.each( data, function( key, val ) {
                     totalRating += val["Rating"];
-                });                 
+                });
                 averageRating = Math.ceil(totalRating / ratingCount);
                 ratingElement.rating('set rating', averageRating);
             })
             .fail(function() {
                 console.log( "error");
-            })             
+            })
         });
     };
 
@@ -102,13 +170,13 @@ const viewAnswers = function() {
             let ratingCount = data.length;
             $.each( data, function( key, val ) {
                 totalRating += val["Rating"];
-            });                 
+            });
             averageRating = Math.ceil(totalRating / ratingCount);
             ratingElement.rating('set rating', averageRating)
         })
         .fail(function() {
-                console.log( "error");
-        })             
+            console.log( "error");
+        })
     };
 
     // UI section for posting answers
@@ -165,7 +233,7 @@ const viewAnswers = function() {
         data: bodyJSON,
         url: 'add-answer',
         success: function(data){
-          unfoldingHeader.unfoldHeader("Answer added successfully", "green");
+          console.log("Answer added successfully");
         },
         error: function(jqXHR, textStatus, errorThrown) {
           unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
@@ -173,6 +241,53 @@ const viewAnswers = function() {
           console.log('textStatus: ' + textStatus);
           console.log('errorThrown: ' + errorThrown);
         }
+      });
+    };
+
+    // AJAX get all answers request + not only
+    const getAnswers = function() {
+      let questionID = getQuestionID();
+
+      if (questionID.length > 0) {
+        $.getJSON( "answers/"+questionID, function() {})
+          .done(function(data) {
+            console.log("Request complete");
+            $.each( data, function( key, val ) {
+              // First element contains the question text
+              if (key === 0) {
+                document.getElementById("questionHeading").textContent = val["Question"];
+              }
+              else {
+                viewAnswers.addToTable([val["Answer"], val["ID"]]);
+              }
+            });
+
+            $('.ui.rating').on("click", function(){
+              viewAnswers.rateAnswer($(this));
+            });
+
+            $('.ui.rating').rating({
+              maxRating: 5
+            });
+
+            viewAnswers.updateAllRatings();
+            viewAnswers.resolveAnswersArrived(); // All answers arrived, resolve the promise
+          })
+          .fail(function() {
+            unfoldingHeader.unfoldHeader("Error", "orange");
+          })
+      }
+
+    };
+
+    const resetAnswersPromise = function() {
+      // Reset the promise, because once it's fulfilled it can't be reused
+      viewAnswers.resolveAnswersArrived = "";
+      viewAnswers.rejectAnswersArrived = "";
+
+      viewAnswers.answersArrived = new Promise(function(resolve, reject) {
+        viewAnswers.resolveAnswersArrived = resolve;
+        viewAnswers.rejectAnswersArrived = reject;
       });
     };
 
@@ -184,14 +299,23 @@ const viewAnswers = function() {
         cancelAnswerBtn: cancelAnswerBtn,
         addAnswerArea: addAnswerArea,
 
+        // Outside promise for answers arrival
+        answersArrived: answersArrived,
+        resolveAnswersArrived: resolveAnswersArrived,
+        rejectAnswersArrived: rejectAnswersArrived,
+        resetAnswersPromise: resetAnswersPromise,
+
         // Functions
+        mkAnswersTableSkeleton: mkAnswersTableSkeleton,
         addToTable: addToTable,
+        rmAnswersTable: rmAnswersTable,
         rateAnswer: rateAnswer,
         updateAllRatings: updateAllRatings,
         updateRatings: updateRatings,
         addOwnAnswer: addOwnAnswer,
         getQuestionID: getQuestionID,
         postAnswer: postAnswer,
+        getAnswers: getAnswers
     }
 }();
 //  ============================================================== */
@@ -215,6 +339,18 @@ $(document).ready(function() {
         viewAnswers.postAnswer(bodyJSON);
         viewAnswers.addOwnAnswer.toggleUI();
         viewAnswers.addAnswerArea.val(''); // Reset textarea
+
+        /* RE-FETCH all the answers
+        ============================================================== */
+        viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
+        viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
+        viewAnswers.getAnswers(); // Populate the answers table again (with the new answers)
+
+        // Animate-in the newly arrived answers
+        viewAnswers.answersArrived.then(function() {
+          document.getElementById("answersTable").style.opacity = "1";
+          viewAnswers.resetAnswersPromise();
+        })
       }
       else {
         unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
@@ -226,39 +362,13 @@ $(document).ready(function() {
       viewAnswers.addOwnAnswer.toggleUI();
     });
 
-    console.log("Sending request");
+    console.log("Sending get answers request");
+    viewAnswers.mkAnswersTableSkeleton(); // Create the answers table skeleton
+    viewAnswers.getAnswers(); // Populate the answers table
 
-    let questionID = viewAnswers.getQuestionID();
-
-    if (questionID.length > 0)
-    {
-        $.getJSON( "answers/"+questionID, function() {})
-        .done(function(data) {
-              console.log("Request complete");
-              $.each( data, function( key, val ) {
-                // First element contains the question text
-                if (key === 0)
-                {
-                    document.getElementById("questionHeading").textContent = val["Question"];
-                }
-                else
-                {
-                    viewAnswers.addToTable([val["Answer"], val["ID"]]);
-                }            
-              });
-
-              $('.ui.rating').on("click", function(){
-                viewAnswers.rateAnswer($(this));
-              });
-
-              $('.ui.rating').rating({
-                maxRating: 5
-              });           
-              
-              viewAnswers.updateAllRatings();
-            })
-        .fail(function() {
-              console.log( "error");
-        }) 
-    }
+    // Animate-in the newly arrived answers
+    viewAnswers.answersArrived.then(function() {
+      document.getElementById("answersTable").style.opacity = "1";
+      viewAnswers.resetAnswersPromise();
+    });
 });
