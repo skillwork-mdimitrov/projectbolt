@@ -5,7 +5,7 @@ var router = express.Router();
 
 /* GET all the ratings */
 router.get('/get-all-ratings/:answerID', function(req, res, next) {
-    database.getAllRatings(req.params["answerID"]).then((ratings) => {
+    database.getRatingsByAnswerId(req.params["answerID"]).then((ratings) => {
         res.json(ratings);
     }).catch((reason) => {
         console.log('Handle rejected promise ('+reason+') here.');

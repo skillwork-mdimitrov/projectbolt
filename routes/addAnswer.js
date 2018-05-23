@@ -8,9 +8,8 @@ router.post('/', function(req, res) {
   let answer = req.body.answer;
   let questionID = req.body.questionID;
 
-  database.runGenericQuery("INSERT INTO answers (answer, questionid) VALUES ('" + answer + "', '" + questionID + "')")
-  .then((resolve) => {
-    res.send(resolve); // to display the successful operation to the client
+  database.insertAnswer(answer, questionID).then(() => {
+    res.status(200).send("Insert succesful");
   })
   .catch((reason) => {
     console.log('Handle rejected promise ('+reason+') here.');

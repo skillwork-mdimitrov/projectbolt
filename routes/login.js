@@ -13,11 +13,10 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res) {
   let username = req.body.username; // credentials sent from client AJAX
   let password = req.body.password;
-  let query = "SELECT ID, password FROM Users WHERE Username= '" + username + "'";
 
-  database.getJsonDataSet(query).then((queryResults) => {
-    let storedPassword = queryResults[0].password;
-    let storedUserID = queryResults[0].ID;
+  database.getIdPasswordByUsername(username).then((userData) => {
+    let storedPassword = userData[0].password;
+    let storedUserID = userData[0].ID;
 
     login.getHash(password).then((hashedPassword) => {
       // Check if passwords match, hash of -1 means hashing failed
@@ -57,9 +56,8 @@ router.get('/get-username/:sessionID', function(req, res, next) {
     res.status(500).send('Session not found');
   }
   else {
-    let userID = sessionData["userID"];
-    database.getJsonDataSet("SELECT Username FROM Users WHERE ID = " + userID).then((user) => {
-      res.send(user);
+    database.getUsernameById(sessionData["userID"]).then((username) => {
+      res.send(username);
     }).catch(
     (reason) => {
       console.log('Handle rejected promise ('+reason+') here.');

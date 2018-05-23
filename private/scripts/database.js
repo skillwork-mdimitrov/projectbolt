@@ -86,9 +86,9 @@ function getQueryResult(connection, query) {
     });  
 }
 
-function getAllRatings(answerID) {
+function getRatingsByAnswerId(answerID) {
     return new Promise((resolve, reject) => {
-        getJsonDataSet(queries.getAllRatingsQuery(answerID)).then((ratings) => {
+        getJsonDataSet(queries.getRatingsByAnswerIdQuery(answerID)).then((ratings) => {
             resolve(ratings);
         }).catch((reason) => {
             reject(reason);
@@ -116,6 +116,16 @@ function getAllQuestions() {
     });   
 }
 
+function getQuestionTextById(questionID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getQuestionTextByIdQuery(questionID)).then((questionText) => {
+            resolve(questionText);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    }); 
+}
+
 function insertQuestion(question, userID) {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getInsertQuestionQuery(question, userID)).then(() => {
@@ -126,11 +136,58 @@ function insertQuestion(question, userID) {
     });   
 }
 
+function getAnswersByQuestionId(questionID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getAnswersByQuestionIdQuery(questionID)).then((answers) => {
+            resolve(answers);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });   
+}
+
+function insertAnswer(answer, questionID) { 
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getInsertAnswerQuery(answer, questionID)).then(() => {
+            resolve();
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });
+}
+
+function getIdPasswordByUsername(username) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getIdPasswordByUsernameQuery(username)).then((userData) => {
+            resolve(userData);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });  
+}
+
+function getUsernameById(userID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getUsernameByIdQuery(userID)).then((username) => {
+            resolve(username);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });  
+}
+
 exports.runGenericQuery = runGenericQuery;
 exports.getJsonDataSet = getJsonDataSet;
 
-exports.getAllRatings = getAllRatings;
+exports.getRatingsByAnswerId = getRatingsByAnswerId;
 exports.insertRating = insertRating;
 
 exports.getAllQuestions = getAllQuestions;
+exports.getQuestionTextById = getQuestionTextById;
 exports.insertQuestion = insertQuestion;
+
+exports.getAnswersByQuestionId = getAnswersByQuestionId;
+exports.insertAnswer = insertAnswer;
+
+exports.getIdPasswordByUsername = getIdPasswordByUsername;
+exports.getUsernameById = getUsernameById;
