@@ -365,10 +365,13 @@ $(document).ready(function() {
         viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
         viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
         viewAnswers.getAnswers(); // Populate the answers table again (with the new answers)
+        document.getElementById("answersTable").style.display = "none";
+        document.getElementById("loader").style.display = "block";
 
         // Animate-in the newly arrived answers
         viewAnswers.answersArrived.then(function() {
-          document.getElementById("answersTable").style.opacity = "1";
+          document.getElementById("answersTable").style.display = "block";
+          document.getElementById("loader").style.display = "none";
           viewAnswers.resetAnswersPromise();
         })
       }
