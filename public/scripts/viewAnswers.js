@@ -349,36 +349,53 @@ $(document).ready(function() {
     });
 
     viewAnswers.submitAnswerBtn.on("click", function() {
-      if(global.fieldNotEmpty(viewAnswers.addAnswerArea)) {
-        // JSON'ize the questionID and answer
-        let bodyJSON = {
-          questionID: viewAnswers.getQuestionID(),
-          answer: viewAnswers.addAnswerArea.val()
-        };
-        // Send the AJAX request
-        viewAnswers.postAnswer(bodyJSON);
-        viewAnswers.addOwnAnswer.toggleUI();
-        viewAnswers.addAnswerArea.val(''); // Reset textarea
+      $.ajax({
+        type: 'get',
+        url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
+        success: function (data) {
 
-        /* RE-FETCH all the answers
-        ============================================================== */
-        viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
-        viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
-        viewAnswers.getAnswers(); // Populate the answers table again (with the new answers)
-        document.getElementById("answersTable").style.visibility = "hidden";
-        document.getElementById("loader").style.display = "block";
+          if(global.fieldNotEmpty(viewAnswers.addAnswerArea)) {
 
-        // Animate-in the newly arrived answers
-        viewAnswers.answersArrived.then(function() {
-          document.getElementById("loader").style.display = "none";
-          document.getElementById("answersTable").style.visibility = "visible";
-          document.getElementById("answersTable").style.opacity = "1";
-          viewAnswers.resetAnswersPromise();
-        })
-      }
-      else {
-        unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
-      }
+            // JSON'ize the question
+            let bodyJSON = {
+              questionID: viewAnswers.getQuestionID(),
+              answer: viewAnswers.addAnswerArea.val(),
+              userID: data.userID
+            };
+
+            // Send the AJAX request
+            viewAnswers.postAnswer(bodyJSON);
+            viewAnswers.addOwnAnswer.toggleUI();
+            viewAnswers.addAnswerArea.val(''); // Reset textarea
+
+            /* RE-FETCH all the answers
+            ============================================================== */
+            viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
+            viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
+            viewAnswers.getAnswers(); // Populate the answers table again (with the new answers)
+            document.getElementById("answersTable").style.visibility = "hidden";
+            document.getElementById("loader").style.display = "block";
+
+            // Animate-in the newly arrived answers
+            viewAnswers.answersArrived.then(function() {
+              document.getElementById("loader").style.display = "none";
+              document.getElementById("answersTable").style.visibility = "visible";
+              document.getElementById("answersTable").style.opacity = "1";
+              viewAnswers.resetAnswersPromise();
+            })
+          }
+          else {
+            unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
+          console.log('jqXHR: ' + jqXHR);
+          console.log('textStatus: ' + textStatus);
+          console.log('errorThrown: ' + errorThrown);
+        }
+      });
+
     });
 
     viewAnswers.cancelAnswerBtn.on("click", function() {

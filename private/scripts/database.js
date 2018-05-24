@@ -162,9 +162,9 @@ function getAnswersByQuestionId(questionID) {
     });   
 }
 
-function insertAnswer(answer, questionID) { 
+function insertAnswer(answer, questionID, userID) {
     return new Promise((resolve, reject) => {
-        getJsonDataSet(queries.getInsertAnswerQuery(answer, questionID)).then(() => {
+        getJsonDataSet(queries.getInsertAnswerQuery(answer, questionID, userID)).then(() => {
             resolve();
         }).catch((reason) => {
             reject(reason);

@@ -7,8 +7,9 @@ const database = require('../private/scripts/database');
 router.post('/', function(req, res) {
   let answer = req.body.answer;
   let questionID = req.body.questionID;
+  let userID = req.body.userID;
 
-  database.insertAnswer(answer, questionID).then(() => {
+  database.insertAnswer(answer, questionID, userID).then(() => {
     res.status(200).send("Insert succesful");
   })
   .catch((reason) => {

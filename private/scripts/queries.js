@@ -34,8 +34,8 @@ function getAnswersByQuestionIdQuery(questionID) {
     return "SELECT * FROM Answers WHERE QuestionID in (" + questionID + ")";
 }
 
-function getInsertAnswerQuery(answer, questionID) {
-    return "INSERT INTO answers (answer, questionid) VALUES ('" + answer + "', '" + questionID + "')";
+function getInsertAnswerQuery(answer, questionID, userID) {
+    return "INSERT INTO answers (answer, questionid, userid) VALUES ('" + answer + "', '" + questionID + "', '" + userID + "')";
 }
 
 function getIdPasswordByUsernameQuery(username) {

@@ -45,18 +45,35 @@ $(document).ready(function() {
   /* ATTACH EVENT LISTENERS
     ============================================================== */
   addAnswer.answerButton.on("click", function() {
-    if(addAnswer.fieldsValidation()) {
-      // JSON'ize the answer and questionID
-      let bodyJSON = {
-        questionID: addAnswer.questionIDBox.val(),
-        answer: addAnswer.answerBox.val()
-      };
 
-      // Send the AJAX request
-      addAnswer.postAnswer(bodyJSON);
-    }
-    else {
-      alert('Please write an answer and question id in the appropriate fields')
-    }
+    //Get UserID
+    "use strict";
+    $.ajax({
+      type: 'get',
+      url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
+      success: function (data) {
+
+        if(addAnswer.fieldsValidation()) {
+          // JSON'ize the question
+          let bodyJSON = {
+            questionID: addAnswer.questionIDBox.val(),
+            answer: addAnswer.answerBox.val(),
+            userID: data.userID
+          };
+
+          // Send the AJAX request
+          addAnswer.postAnswer(bodyJSON);
+        }
+        else {
+          alert('Please write an answer and question id in the appropriate fields')
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
+        console.log('jqXHR: ' + jqXHR);
+        console.log('textStatus: ' + textStatus);
+        console.log('errorThrown: ' + errorThrown);
+      }
+    });
   });
 });
