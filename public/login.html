@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="styles/login.css">
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="shortcut icon" href="images/thunder.png"> <!-- Won't work with .ico -->
+
+  <!-- First eliminate browser inconsistencies -->
+  <link rel="stylesheet" type="text/css" href="styles/normalize.css">
+
+  <!-- Then load your styles, potentially overriding  properties, where necessary -->
+  <link rel="stylesheet" type="text/css" href="styles/login.css">
 </head>
 <body>
-<div id="loader"></div>
-<div class="mainContainer" style="display:none;" id="mainContent">
+
+  <div id="loader"></div> <!-- Spinning loader -->
+
+  <!-- mainContainer, holds the content of the page -->
+  <div class="mainContainer" style="display:none;" id="mainContainer">
+
     Username: <input type="text" id="userNameBox">
     Password: <input type="password" id="passwordBox">
     <input type="button" id="loginButton" value="Login">
-</div>
 
-<!-- SCRIPTS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
-<script src="scripts/unfoldingHeader.js"></script>
-<script src="scripts/login.js"></script>
+  </div> <!-- Close mainContainer -->
+
+  <!-- SCRIPTS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
+  <script src="scripts/unfoldingHeader.js"></script>
+  <script src="scripts/login.js"></script>
 
 </body>
 </html>

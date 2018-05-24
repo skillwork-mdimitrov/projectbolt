@@ -58,7 +58,7 @@ $(document).ready(function() {
     else
     {
       document.getElementById("loader").style.display = "none";
-      document.getElementById("mainContent").style.display = "block";
+      document.getElementById("mainContainer").style.display = "block";
       /* ATTACH EVENT LISTENERS
       ============================================================== */
       login.loginBtn.on("click", function() {
