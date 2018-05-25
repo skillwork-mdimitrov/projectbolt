@@ -2,8 +2,120 @@
  ============================================================== */
 /* Global
  ============================================================== */
+.u-Flex-grow1 {
+  flex-grow: 1;
+}
+
+.u-Flex-grow2 {
+  flex-grow: 2;
+}
+
+.u-Flex-grow3 {
+  flex-grow: 3;
+}
+
+.u-Flex-grow4 {
+  flex-grow: 4;
+}
+
+.u-Flex-grow5 {
+  flex-grow: 5;
+}
+
+.u-Flex-grow6 {
+  flex-grow: 6;
+}
+
+.u-Flex-grow7 {
+  flex-grow: 7;
+}
+
+.u-Flex-grow8 {
+  flex-grow: 8;
+}
+
+.u-Flex-grow9 {
+  flex-grow: 9;
+}
+
+.u-Flex-grow10 {
+  flex-grow: 10;
+}
+
+h1 {
+  font-family: "Barlow", sans-serif;
+}
+
+body {
+  background-color: #19354E;
+}
+
+/* Content container
+ ============================================================== */
 .mainContainer {
-  margin: 10px 10px 10px 10px;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+.mainContainer .loginContainer {
+  display: flex;
+  justify-content: center;
+  width: 30%;
+  height: 85%;
+  background-color: #E5E9F2;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+@media screen and (max-width: 750px) {
+  .mainContainer .loginContainer {
+    width: 35%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .mainContainer .loginContainer {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 400px) {
+  .mainContainer .loginContainer {
+    width: 70%;
+    min-width: 250px;
+  }
+}
+.mainContainer .loginContainer .logoContainer {
+  display: flex;
+  width: 80%;
+  height: 20%;
+}
+.mainContainer .loginContainer .logoContainer .thunderLogoContainer {
+  width: 33%;
+}
+.mainContainer .loginContainer .logoContainer .thunderLogoContainer .thunderLogo {
+  width: 100%;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+@media screen and (max-width: 750px) {
+  .mainContainer .loginContainer .logoContainer .thunderLogoContainer .thunderLogo {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .mainContainer .loginContainer .logoContainer .thunderLogoContainer .thunderLogo {
+    width: 90%;
+  }
+}
+@media screen and (max-width: 400px) {
+  .mainContainer .loginContainer .logoContainer .thunderLogoContainer .thunderLogo {
+    width: 80%;
+  }
+}
+.mainContainer .loginContainer .logoContainer .boltAppContainer {
+  display: flex;
+  align-items: center;
 }
 
 /*# sourceMappingURL=login.css.map */

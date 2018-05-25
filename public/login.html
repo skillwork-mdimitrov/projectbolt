@@ -2,25 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Match screen's width in device-independent pixels -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login</title>
-  <link rel="shortcut icon" href="images/thunder.png"> <!-- Won't work with .ico -->
-
-  <!-- First eliminate browser inconsistencies -->
+  <link rel="shortcut icon" href="images/thunder.png">
+  <!-- Firstly, eliminate browser inconsistencies -->
   <link rel="stylesheet" type="text/css" href="styles/normalize.css">
-
   <!-- Then load your styles, potentially overriding  properties, where necessary -->
   <link rel="stylesheet" type="text/css" href="styles/login.css">
+  <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet"> <!-- Google font -->
 </head>
 <body>
 
   <div id="loader"></div> <!-- Spinning loader -->
 
-  <!-- mainContainer, holds the content of the page -->
-  <div class="mainContainer" style="display:none;" id="mainContainer">
+  <!--Username: <input type="text" id="userNameBox">-->
+  <!--Password: <input type="password" id="passwordBox">-->
+  <!--<input type="button" id="loginButton" value="Login">-->
 
-    Username: <input type="text" id="userNameBox">
-    Password: <input type="password" id="passwordBox">
-    <input type="button" id="loginButton" value="Login">
+  <!-- mainContainer, holds the content of the page -->
+  <div class="mainContainer" id="mainContainer"> <!-- Loader's display none scrapped for now as it interferes with css design -->
+
+    <div class="loginContainer">
+      <div class="logoContainer">
+        <div class="thunderLogoContainer">
+          <img src="images/thunder.png" alt="Thunder bolt" class="thunderLogo">
+        </div>
+        <div class="boltAppContainer">
+          <h1>Bolt app</h1>
+        </div>
+      </div>
+
+    </div>
 
   </div> <!-- Close mainContainer -->
 

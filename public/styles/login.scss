@@ -1,11 +1,100 @@
 /* CHANGES ONLY ACCEPTED IN THE .SCSS NOT .CSS
  ============================================================== */
+// any-hover instead of hover
 
 /* Global
  ============================================================== */
+$break-smallest: 400px;
+$break-small: 500px;
+$break-large: 750px;
+$break-largest: 1000px;
 
+// generate Flexbox grow-rate utility classes
+@for $i from 1 through 10 {
+  .u-Flex-grow#{$i} {
+    flex-grow: $i;
+  }
+}
+
+h1 {
+  font-family: 'Barlow', sans-serif;
+}
+
+body {
+  background-color: #19354E; // dark blue?
+}
+
+/* Content container
+ ============================================================== */
 .mainContainer {
-  margin: 10px 10px 10px 10px;
+  display: flex;
+  height: 100vh; // 100% of the view-port
+  justify-content: center;
+  align-items: center;
+
+  .loginContainer {
+    display: flex;
+    justify-content: center;
+    width: 30%;
+    height: 85%;
+    background-color: #E5E9F2; // light gray
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+
+    // Media queries
+    @media screen and (max-width: $break-large) {
+      width: 35%;
+    }
+
+    @media screen and (max-width: $break-small) {
+      width: 50%;
+    }
+
+    @media screen and (max-width: $break-smallest) {
+      width: 70%;
+      min-width: 250px;
+    }
+
+    .logoContainer {
+      display: flex;
+      width: 80%;
+      height: 20%;
+
+      .thunderLogoContainer {
+        width: 33%;
+
+        .thunderLogo {
+          width: 100%;
+
+          // vertically center the image [display:flex alternative]
+          position: relative;
+          top: 50%;
+          transform: translateY(-50%);
+
+          // Media queries
+          @media screen and (max-width: $break-large) {
+            width: 100%;
+          }
+
+          @media screen and (max-width: $break-small) {
+            width: 90%;
+          }
+
+          @media screen and (max-width: $break-smallest) {
+            width: 80%;
+          }
+        }
+      }
+
+      .boltAppContainer {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+
 }
 
 
