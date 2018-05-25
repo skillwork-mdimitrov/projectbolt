@@ -9,7 +9,7 @@ const addQuestion = function() {
     $.ajax({
       type: 'post',
       data: question,
-      url: 'add-question',
+      url: 'questions/add-question',
       success: function(data){
         unfoldingHeader.unfoldHeader(data, "green");
       },
