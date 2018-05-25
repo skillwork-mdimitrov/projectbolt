@@ -106,99 +106,6 @@ const viewAnswers = function() {
       return true;
     };
 
-    const rateAnswer = function rateAnswer(ratingElement) {
-        let answerID = ratingElement.attr("id");
-        let rating = $('#'+answerID).rating('get rating');
-        let sessionID = sessionStorage.getItem('projectBoltSessionID');
-
-        console.log("Sending user-id request");
-        $.getJSON("login/get-userID/"+sessionID, function () {})
-        .done(function (data) {
-          console.log("Request complete");
-          userID = data['userID'];
-
-          let ratingData = {
-            "answerID": answerID,
-            "userID": userID,
-            "rating": rating
-          };
-
-          console.log("Sending rating exists request");          
-          $.getJSON("rating/get-rating-answer-user/"+answerID+"/"+userID, function () {})
-          .done(function (data) {
-            console.log("Request complete");
-            console.log("Sending insert rating request");
-            if (data.length > 0) {
-              $.post("rating/update-rating", ratingData, function() {})
-              .done(function() {
-                  console.log("Request complete");
-                  updateRatings(ratingElement);
-              })
-              .fail(function() {
-                  console.log( "error");
-              });
-            }
-            else {
-              $.post("rating/insert-rating", ratingData, function() {})
-              .done(function() {
-                  console.log("Request complete");
-                  updateRatings(ratingElement);
-              })
-              .fail(function() {
-                  console.log( "error");
-              });
-            }
-          })
-          .fail(function () {
-            console.log("error");
-          })
-        })
-        .fail(function () {
-          console.log("error");
-        })
-    };
-
-    const updateAllRatings = function updateAllRatings() {
-        $('.ui.rating').each(function( index ) {
-            let answerID = $(this).attr("id");
-            let ratingElement = $(this);
-
-            $.getJSON( "rating/get-all-ratings/"+answerID, function() {})
-            .done(function(data) {
-                console.log("Request complete");
-                let totalRating = 0;
-                let ratingCount = data.length;
-                $.each( data, function( key, val ) {
-                    totalRating += val["Rating"];
-                });
-                averageRating = Math.ceil(totalRating / ratingCount);
-                ratingElement.rating('set rating', averageRating);
-            })
-            .fail(function() {
-                console.log( "error");
-            })
-        });
-    };
-
-    const updateRatings = function updateRatings(ratingElement) {
-        let answerID = ratingElement.attr("id");
-
-        $.getJSON( "rating/get-all-ratings/"+answerID, function() {})
-        .done(function(data) {
-            console.log("Request complete");
-            let totalRating = 0;
-            let ratingCount = data.length;
-            $.each( data, function( key, val ) {
-                totalRating += val["Rating"];
-            });
-            averageRating = Math.ceil(totalRating / ratingCount);
-            ratingElement.rating('set rating', averageRating)
-        })
-        .fail(function() {
-            console.log( "error");
-        })
-    };
-
     // UI section for posting answers
     const addOwnAnswer = function() {
         const toggleContainer = () => new Promise(resolve =>
@@ -283,14 +190,14 @@ const viewAnswers = function() {
             });
 
             $('.ui.rating').on("click", function(){
-              viewAnswers.rateAnswer($(this));
+              addRating.rateAnswer($(this));
             });
 
             $('.ui.rating').rating({
               maxRating: 5
             });
 
-            viewAnswers.updateAllRatings();
+            viewRatings.updateAllRatings();
             viewAnswers.resolveAnswersArrived(); // All answers arrived, resolve the promise
           })
           .fail(function() {
@@ -329,9 +236,6 @@ const viewAnswers = function() {
         mkAnswersTableSkeleton: mkAnswersTableSkeleton,
         addToTable: addToTable,
         rmAnswersTable: rmAnswersTable,
-        rateAnswer: rateAnswer,
-        updateAllRatings: updateAllRatings,
-        updateRatings: updateRatings,
         addOwnAnswer: addOwnAnswer,
         getQuestionID: getQuestionID,
         postAnswer: postAnswer,
