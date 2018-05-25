@@ -26,6 +26,7 @@ function sessionValid(sessionID) {
             return false;
         }
         else {
+            sessionData[sessionID]['created'] = currentDateTime;
             return true;
         }
     }
