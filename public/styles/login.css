@@ -44,6 +44,7 @@
 
 h1 {
   font-family: "Barlow", sans-serif;
+  font-size: 2.6em;
 }
 
 body {
@@ -63,10 +64,10 @@ body {
   justify-content: center;
   width: 30%;
   height: 85%;
-  background-color: #E5E9F2;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
+  background-color: #E5E9F2;
 }
 @media screen and (max-width: 750px) {
   .mainContainer .loginContainer {
@@ -84,36 +85,36 @@ body {
     min-width: 250px;
   }
 }
-.mainContainer .loginContainer .logoContainer {
+.mainContainer .loginContainer .headContainer {
   display: flex;
+  justify-content: center;
   width: 80%;
   height: 20%;
 }
-.mainContainer .loginContainer .logoContainer .thunderLogoContainer {
-  width: 33%;
+.mainContainer .loginContainer .headContainer .thunderLogoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
 }
-.mainContainer .loginContainer .logoContainer .thunderLogoContainer .thunderLogo {
-  width: 100%;
+.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer {
   position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+  width: 70%;
+  padding-top: 70%;
 }
-@media screen and (max-width: 750px) {
-  .mainContainer .loginContainer .logoContainer .thunderLogoContainer .thunderLogo {
-    width: 100%;
-  }
+.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer .circle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  border-radius: 50%;
+  background-color: #19354E;
 }
-@media screen and (max-width: 500px) {
-  .mainContainer .loginContainer .logoContainer .thunderLogoContainer .thunderLogo {
-    width: 90%;
-  }
+.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer .circle .thunderLogo {
+  width: 100%;
 }
-@media screen and (max-width: 400px) {
-  .mainContainer .loginContainer .logoContainer .thunderLogoContainer .thunderLogo {
-    width: 80%;
-  }
-}
-.mainContainer .loginContainer .logoContainer .boltAppContainer {
+.mainContainer .loginContainer .headContainer .boltAppContainer {
   display: flex;
   align-items: center;
 }

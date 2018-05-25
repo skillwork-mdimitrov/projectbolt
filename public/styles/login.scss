@@ -1,13 +1,20 @@
 /* CHANGES ONLY ACCEPTED IN THE .SCSS NOT .CSS
  ============================================================== */
 // any-hover instead of hover
+// display should be first properties
+// background-colors should be last properties
 
 /* Global
  ============================================================== */
+
+// Breakpoints
 $break-smallest: 400px;
 $break-small: 500px;
 $break-large: 750px;
 $break-largest: 1000px;
+
+// Colours
+$darkBlue: #19354E;
 
 // generate Flexbox grow-rate utility classes
 @for $i from 1 through 10 {
@@ -18,10 +25,11 @@ $break-largest: 1000px;
 
 h1 {
   font-family: 'Barlow', sans-serif;
+  font-size: 2.6em; // check later
 }
 
 body {
-  background-color: #19354E; // dark blue?
+  background-color: $darkBlue;
 }
 
 /* Content container
@@ -37,10 +45,11 @@ body {
     justify-content: center;
     width: 30%;
     height: 85%;
-    background-color: #E5E9F2; // light gray
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+
+    background-color: #E5E9F2; // light gray
 
     // Media queries
     @media screen and (max-width: $break-large) {
@@ -56,33 +65,44 @@ body {
       min-width: 250px;
     }
 
-    .logoContainer {
+    .headContainer {
       display: flex;
+      justify-content: center;
       width: 80%;
       height: 20%;
 
+      //background-color: blue;
+
       .thunderLogoContainer {
-        width: 33%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 20%;
 
-        .thunderLogo {
-          width: 100%;
+        //background-color: green;
 
-          // vertically center the image [display:flex alternative]
-          position: relative;
-          top: 50%;
-          transform: translateY(-50%);
+        .circleContainer {
+          $circleContainerWidth: 70%;
 
-          // Media queries
-          @media screen and (max-width: $break-large) {
-            width: 100%;
-          }
+          position: relative; // so the absolutely position .circle is relative to this
+          width: $circleContainerWidth;
+          padding-top: $circleContainerWidth;
 
-          @media screen and (max-width: $break-small) {
-            width: 90%;
-          }
+          //background-color: brown;
 
-          @media screen and (max-width: $break-smallest) {
-            width: 80%;
+          .circle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            border-radius: 50%;
+
+            background-color: $darkBlue;
+
+            .thunderLogo {
+              width: 100%;
+            }
           }
         }
       }
@@ -90,6 +110,8 @@ body {
       .boltAppContainer {
         display: flex;
         align-items: center;
+
+        //background-color: yellow;
       }
     }
   }
