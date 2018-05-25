@@ -6,7 +6,6 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var questionsRouter = require('./routes/questions');
 var answersRouter = require('./routes/answers');
-var compareRouter = require('./routes/compare');
 var ratingRouter = require('./routes/rating');
 var loginRouter = require('./routes/login');
 var chatRouter = require('./routes/chat');
@@ -23,7 +22,6 @@ app.use(express.static(path.join(__dirname, 'node_modules/semantic-ui-rating')))
 app.use('/', indexRouter);
 app.use('/questions', questionsRouter);
 app.use('/answers', answersRouter);
-app.use('/compare', compareRouter);
 app.use('/rating', ratingRouter);
 app.use('/login', loginRouter);
 app.use('/chat', chatRouter);
