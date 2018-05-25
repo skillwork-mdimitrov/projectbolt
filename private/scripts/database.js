@@ -1,6 +1,7 @@
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
 var queries = require('./queries');
+var TYPES = require('tedious').TYPES;
 
 var config = {
     userName: 'pbadmin',
@@ -21,7 +22,7 @@ function runGenericQuery(query)
                 console.log(err);
                 reject(err);
             } else {
-                request = new Request(query, function(err) {
+                request = new Request(query.query, function(err) {
                     if (err) {
                         console.log(err);
                         reject(new Error(err));
@@ -29,7 +30,12 @@ function runGenericQuery(query)
                         resolve("Operation successful");
                     }
                     connection.close();
-                });        
+                });      
+                
+                query.params.forEach(function(param) {
+                    request.addParameter(param.paramName, param.paramType, param.paramValue);
+                });
+
                 connection.execSql(request);
             }
         });
@@ -60,7 +66,7 @@ function getQueryResult(connection, query) {
     return new Promise((resolve, reject) => {
         var result = [];
 
-        request = new Request(query, function(err, rowCount) {
+        request = new Request(query.query, function(err, rowCount) {
             if (err) {
                 console.log(err);
                 reject(err);
@@ -68,6 +74,10 @@ function getQueryResult(connection, query) {
                 resolve(result);
             }
             connection.close();
+        });
+
+        query.params.forEach(function(param) {
+            request.addParameter(param.paramName, param.paramType, param.paramValue);
         });
 
         request.on('row', function(columns) {
@@ -104,7 +114,7 @@ function getRatingByAnswerIdAndUserId(answerID, userID) {
 
 function insertRating(answerID, userID, rating) {
     return new Promise((resolve, reject) => {
-        getJsonDataSet(queries.getInsertRatingQuery(answerID, userID, rating)).then(() => {
+        runGenericQuery(queries.getInsertRatingQuery(answerID, userID, rating)).then(() => {
             resolve();
         }).catch((reason) => {
             reject(reason);
@@ -114,7 +124,7 @@ function insertRating(answerID, userID, rating) {
 
 function updateRating(answerID, userID, rating) {
     return new Promise((resolve, reject) => {
-        getJsonDataSet(queries.getUpdateRatingQuery(answerID, userID, rating)).then(() => {
+        runGenericQuery(queries.getUpdateRatingQuery(answerID, userID, rating)).then(() => {
             resolve();
         }).catch((reason) => {
             reject(reason);
@@ -144,7 +154,7 @@ function getQuestionTextById(questionID) {
 
 function insertQuestion(question, userID) {
     return new Promise((resolve, reject) => {
-        getJsonDataSet(queries.getInsertQuestionQuery(question, userID)).then(() => {
+        runGenericQuery(queries.getInsertQuestionQuery(question, userID)).then(() => {
             resolve();
         }).catch((reason) => {
             reject(reason);
@@ -164,7 +174,7 @@ function getAnswersByQuestionId(questionID) {
 
 function insertAnswer(answer, questionID, userID) {
     return new Promise((resolve, reject) => {
-        getJsonDataSet(queries.getInsertAnswerQuery(answer, questionID, userID)).then(() => {
+        runGenericQuery(queries.getInsertAnswerQuery(answer, questionID, userID)).then(() => {
             resolve();
         }).catch((reason) => {
             reject(reason);
