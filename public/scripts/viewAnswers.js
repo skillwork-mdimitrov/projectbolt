@@ -251,7 +251,7 @@ const viewAnswers = function() {
       $.ajax({
         type: 'POST',
         data: bodyJSON,
-        url: 'add-answer',
+        url: 'answers/add-answer',
         success: function(data){
           console.log("Answer added successfully");
         },
