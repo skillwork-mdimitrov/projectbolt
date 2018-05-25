@@ -212,6 +212,16 @@ function getUsernameById(userID) {
     });  
 }
 
+function getUserRoleById(userID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getUserRoleByIdQuery(userID)).then((userRole) => {
+            resolve(userRole);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });  
+}
+
 function banUser(userID) {
     return new Promise((resolve, reject) => {
         runGenericQuery(queries.getBanUserQuery(userID)).then(() => {
@@ -250,5 +260,6 @@ exports.insertAnswer = insertAnswer;
 exports.getUsernamesBannedStatus = getUsernamesBannedStatus;
 exports.getIdPasswordByUsername = getIdPasswordByUsername;
 exports.getUsernameById = getUsernameById;
+exports.getUserRoleById = getUserRoleById;
 exports.banUser = banUser;
 exports.unbanUser = unbanUser;

@@ -81,5 +81,23 @@ const admin = function () {
 }();
 
 $(document).ready(function () {
-    admin.loadUsers();
+    var sessionID = sessionStorage.getItem("projectBoltSessionID");
+
+    $.getJSON("login/get-user-role/"+sessionID, function () {})
+    .done(function (data) {
+        console.log("Request complete");
+        var userRole = data[0].RoleID;
+
+        if (userRole === 3) {
+            admin.loadUsers();
+        }
+        else {
+            global.redirect("");
+        }
+    })
+    .fail(function () {
+        console.log("error");
+    })
+
+    
 });
