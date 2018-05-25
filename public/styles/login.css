@@ -2,6 +2,15 @@
  ============================================================== */
 /* Global
  ============================================================== */
+h1 {
+  font-family: "Barlow", sans-serif;
+  font-size: 2.6em;
+}
+
+body {
+  background-color: #19354E;
+}
+
 .u-Flex-grow1 {
   flex-grow: 1;
 }
@@ -42,15 +51,6 @@
   flex-grow: 10;
 }
 
-h1 {
-  font-family: "Barlow", sans-serif;
-  font-size: 2.6em;
-}
-
-body {
-  background-color: #19354E;
-}
-
 /* Content container
  ============================================================== */
 .mainContainer {
@@ -61,7 +61,8 @@ body {
 }
 .mainContainer .loginContainer {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   width: 30%;
   height: 85%;
   -webkit-border-radius: 3px;
@@ -105,8 +106,8 @@ body {
 .mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer .circle {
   position: absolute;
   top: 0;
-  bottom: 0;
   right: 0;
+  bottom: 0;
   left: 0;
   border-radius: 50%;
   background-color: #19354E;
@@ -117,6 +118,22 @@ body {
 .mainContainer .loginContainer .headContainer .boltAppContainer {
   display: flex;
   align-items: center;
+}
+.mainContainer .credentialsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 50%;
+}
+.mainContainer .credentialsContainer .fillInContainer {
+  display: flex;
+  justify-content: center;
+}
+.mainContainer .credentialsContainer .fillInContainer .fillIn-Text {
+  font-family: "Barlow", sans-serif;
+  font-size: 1em;
+  display: inline-block;
+  color: #8190A5;
 }
 
 /*# sourceMappingURL=login.css.map */

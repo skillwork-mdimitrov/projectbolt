@@ -1,8 +1,8 @@
 /* CHANGES ONLY ACCEPTED IN THE .SCSS NOT .CSS
  ============================================================== */
 // any-hover instead of hover
-// display should be first properties
-// background-colors should be last properties
+// display should be first property
+// background-colors should be last property
 
 /* Global
  ============================================================== */
@@ -15,12 +15,20 @@ $break-largest: 1000px;
 
 // Colours
 $darkBlue: #19354E;
+$grey: #8190A5;
 
-// generate Flexbox grow-rate utility classes
-@for $i from 1 through 10 {
-  .u-Flex-grow#{$i} {
-    flex-grow: $i;
-  }
+  // Mixins
+@mixin absoluteZero {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+@mixin barlowFont($fontSize) {
+  font-family: 'Barlow', sans-serif;
+  font-size: $fontSize;
 }
 
 h1 {
@@ -32,6 +40,14 @@ body {
   background-color: $darkBlue;
 }
 
+// generate Flexbox grow-rate utility classes
+@for $i from 1 through 10 {
+  .u-Flex-grow#{$i} {
+    flex-grow: $i;
+  }
+}
+// ============================================================ */
+
 /* Content container
  ============================================================== */
 .mainContainer {
@@ -42,7 +58,8 @@ body {
 
   .loginContainer {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     width: 30%;
     height: 85%;
     -webkit-border-radius: 3px;
@@ -91,11 +108,7 @@ body {
           //background-color: brown;
 
           .circle {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            left: 0;
+            @include absoluteZero;
             border-radius: 50%;
 
             background-color: $darkBlue;
@@ -116,7 +129,27 @@ body {
     }
   }
 
+  .credentialsContainer {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    height: 50%;
 
+    //background-color: purple;
+
+    .fillInContainer {
+      display: flex;
+      justify-content: center;
+
+      .fillIn-Text {
+        @include barlowFont(1em);
+        display: inline-block;
+        color: $grey;
+
+        //background-color: aqua;
+      }
+    }
+  }
 }
 
 
