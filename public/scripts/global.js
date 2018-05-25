@@ -35,10 +35,20 @@ const global = function() {
     }
   };
 
-return {
-  fieldNotEmpty: fieldNotEmpty,
-  fieldIsEmpty: fieldIsEmpty,
-  rmElemFromArray: rmElemFromArray
-}
+  const redirect = function redirect(route) {
+    if(window.location.href.includes("localhost")) {
+      window.location.href = "http://localhost:3000/"+route;
+    }
+    else {
+      window.location.href = "https://projectboltrenew.azurewebsites.net/"+route;
+    }
+  };
+
+  return {
+    fieldNotEmpty: fieldNotEmpty,
+    fieldIsEmpty: fieldIsEmpty,
+    rmElemFromArray: rmElemFromArray,
+    redirect: redirect
+  }
 }();
 //  ============================================================== */

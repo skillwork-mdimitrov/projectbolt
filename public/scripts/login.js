@@ -14,12 +14,7 @@ const login = function() {
         url: 'login',
         success: function(data){
           sessionStorage.setItem("projectBoltSessionID", data.sessionID);
-          if(window.location.href.includes("localhost")) {
-            window.location.href = "http://localhost:3000";
-          }
-          else {
-            window.location.href = "https://projectboltrenew.azurewebsites.net";
-          }
+          global.redirect("");
         },
         error: function(jqXHR, textStatus, errorThrown) {
           unfoldingHeader.unfoldHeader("Login failed", "red");
@@ -48,12 +43,7 @@ $(document).ready(function() {
   .done(function (data) {
     console.log("Request complete");
     if (data.sessionValid === true) {      
-      if(window.location.href.includes("localhost")) {
-        window.location.href = "http://localhost:3000";
-      }
-      else {
-        window.location.href = "https://projectboltrenew.azurewebsites.net";
-      }
+      global.redirect("");
     }
     else
     {

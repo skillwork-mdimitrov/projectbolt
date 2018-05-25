@@ -17,22 +17,12 @@ const loginCheck = function() {
       }
       else
       {
-        if(window.location.href.includes("localhost")) {
-          window.location.href = "http://localhost:3000/login";
-        }
-        else {
-          window.location.href = "https://projectboltrenew.azurewebsites.net/login";
-        }
+        global.redirect("login");
       }
     })
     .fail(function () {
       console.log("error");
-      if(window.location.href.includes("localhost")) {
-        window.location.href = "http://localhost:3000/login";
-      }
-      else {
-        window.location.href = "https://projectboltrenew.azurewebsites.net/login";
-      }
+      global.redirect("login");
     })
   };
 
