@@ -6,9 +6,10 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var questionsRouter = require('./routes/questions');
 var answersRouter = require('./routes/answers');
-var ratingRouter = require('./routes/rating');
+var ratingRouter = require('./routes/ratings');
 var loginRouter = require('./routes/login');
 var chatRouter = require('./routes/chat');
+var adminRouter = require('./routes/admin');
 
 var app = express();
 
@@ -25,6 +26,7 @@ app.use('/answers', answersRouter);
 app.use('/rating', ratingRouter);
 app.use('/login', loginRouter);
 app.use('/chat', chatRouter);
+app.use('/admin', adminRouter);
 
 // Make this script publicly available
 module.exports = app;

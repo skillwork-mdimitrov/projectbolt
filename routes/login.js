@@ -66,6 +66,26 @@ router.get('/get-username/:sessionID', function(req, res, next) {
   }    
 });
 
+/* GET user role from session */
+router.get('/get-user-role/:sessionID', function(req, res, next) {  
+  let sessionID = req.params["sessionID"];
+  let sessionData = login.getSessionData(sessionID);
+  
+  // Check if the session exists
+  if (sessionData === undefined) {
+    res.status(500).send('Session not found');
+  }
+  else {
+    database.getUserRoleById(sessionData["userID"]).then((userRole) => {
+      res.send(userRole);
+    }).catch(
+    (reason) => {
+      console.log('Handle rejected promise ('+reason+') here.');
+      res.status(500).send('Something broke! ' + reason)
+    });
+  }    
+});
+
 /* GET userID from session */
 router.get('/get-userID/:sessionID', function(req, res, next) {
   let sessionID = req.params["sessionID"];
@@ -78,6 +98,39 @@ router.get('/get-userID/:sessionID', function(req, res, next) {
   else {
     res.send({'userID': sessionData["userID"]});
   }  
+});
+
+/* GET id, username and ban status from all users */
+router.get('/get-usernames-status', function(req, res, next) {
+  database.getUsernamesBannedStatus().then((users) => {
+    res.json(users);
+  }).catch(
+   (reason) => {
+    console.log('Handle rejected promise ('+reason+') here.');
+    res.status(500).send('Something broke! ' + reason)
+  });  
+});
+
+/* Ban a user */
+router.post('/ban-user', function(req, res, next) {
+  database.banUser(req.body.userID).then(() => {
+    res.status(200).send("Ban succesful");
+  }).catch(
+   (reason) => {
+    console.log('Handle rejected promise ('+reason+') here.');
+    res.status(500).send('Something broke! ' + reason)
+  });  
+});
+
+/* Unban a user */
+router.post('/unban-user', function(req, res, next) {
+  database.unbanUser(req.body.userID).then(() => {
+    res.status(200).send("Ban succesful");
+  }).catch(
+   (reason) => {
+    console.log('Handle rejected promise ('+reason+') here.');
+    res.status(500).send('Something broke! ' + reason)
+  });  
 });
 
 module.exports = router;
