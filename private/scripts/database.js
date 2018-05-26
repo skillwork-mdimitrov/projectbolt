@@ -222,6 +222,16 @@ function getUserRoleById(userID) {
     });  
 }
 
+function getUserBannedStatusById(userID) {
+  return new Promise((resolve, reject) => {
+    getJsonDataSet(queries.getUserBannedStatusByIdQuery(userID)).then((banned) => {
+      resolve(banned);
+    }).catch((reason) => {
+      reject(reason);
+    });
+  });
+}
+
 function banUser(userID) {
     return new Promise((resolve, reject) => {
         runGenericQuery(queries.getBanUserQuery(userID)).then(() => {
@@ -261,5 +271,6 @@ exports.getUsernamesBannedStatus = getUsernamesBannedStatus;
 exports.getIdPasswordByUsername = getIdPasswordByUsername;
 exports.getUsernameById = getUsernameById;
 exports.getUserRoleById = getUserRoleById;
+exports.getUserBannedStatusById = getUserBannedStatusById;
 exports.banUser = banUser;
 exports.unbanUser = unbanUser;

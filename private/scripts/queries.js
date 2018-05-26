@@ -108,6 +108,14 @@ function getUserRoleByIdQuery(userID) {
     return {query: query, params: params};
 }
 
+function getUserBannedStatusByIdQuery(userID) {
+  var query = "SELECT Banned FROM Users WHERE ID = @userID";
+  var params = [
+    {paramName: "userID", paramType: TYPES.Int, paramValue: userID}
+  ]
+  return {query: query, params: params};
+}
+
 function getBanUserQuery(userID) {
     var query = "UPDATE Users SET Banned = 1 WHERE ID = @userID";
     var params = [
@@ -140,5 +148,6 @@ exports.getUsernamesBannedStatusQuery = getUsernamesBannedStatusQuery;
 exports.getIdPasswordByUsernameQuery = getIdPasswordByUsernameQuery;
 exports.getUsernameByIdQuery = getUsernameByIdQuery;
 exports.getUserRoleByIdQuery = getUserRoleByIdQuery;
+exports.getUserBannedStatusByIdQuery = getUserBannedStatusByIdQuery;
 exports.getBanUserQuery = getBanUserQuery;
 exports.getUnbanUserQuery = getUnbanUserQuery;
