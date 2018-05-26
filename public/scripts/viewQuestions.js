@@ -55,7 +55,7 @@ $(document).ready(function () {
   .done(function (data) {
     console.log("Request complete");
     $.each(data, function (key, val) {
-      viewQuestions.addToTable([val["Question"], "Hank", val["ID"]]);
+      viewQuestions.addToTable([val["Question"], val["Username"], val["ID"]]);
     });
   })
   .fail(function () {

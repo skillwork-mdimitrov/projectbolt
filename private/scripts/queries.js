@@ -38,7 +38,7 @@ function getUpdateRatingQuery(answerID, userID, rating) {
 }
 
 function getAllQuestionsQuery() {
-    var query = "SELECT * FROM Questions";
+    var query = "SELECT * FROM Questions INNER JOIN Users ON Questions.UserID=Users.ID";
     var params = []
     return {query: query, params: params};
 }
@@ -61,7 +61,7 @@ function getInsertQuestionQuery(question, userID) {
 }
 
 function getAnswersByQuestionIdQuery(questionID) {
-    var query = "SELECT * FROM Answers WHERE QuestionID in ( @questionID )";
+    var query = "SELECT * FROM Answers INNER JOIN Users ON Answers.UserID=Users.ID WHERE QuestionID in ( @questionID )";
     var params = [
         {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID}
     ]
