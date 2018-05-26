@@ -38,7 +38,7 @@ function getUpdateRatingQuery(answerID, userID, rating) {
 }
 
 function getAllQuestionsQuery() {
-    var query = "SELECT * FROM Questions";
+    var query = "SELECT * FROM Questions INNER JOIN Users ON Questions.UserID=Users.ID";
     var params = []
     return {query: query, params: params};
 }
