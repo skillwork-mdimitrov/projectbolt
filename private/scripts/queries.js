@@ -61,7 +61,7 @@ function getInsertQuestionQuery(question, userID) {
 }
 
 function getAnswersByQuestionIdQuery(questionID) {
-    var query = "SELECT * FROM Answers WHERE QuestionID in ( @questionID )";
+    var query = "SELECT * FROM Answers INNER JOIN Users ON Answers.UserID=Users.ID WHERE QuestionID in ( @questionID )";
     var params = [
         {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID}
     ]
