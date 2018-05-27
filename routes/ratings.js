@@ -3,9 +3,9 @@ var database = require('../private/scripts/database');
 var path = require('path');
 var router = express.Router();
 
-/* GET all the ratings */
+/* GET all the ratings that are not from banned users*/
 router.get('/get-all-ratings/:answerID', function(req, res, next) {
-    database.getRatingsByAnswerId(req.params["answerID"]).then((ratings) => {
+    database.getNonBannedRatingsByAnswerId(req.params["answerID"]).then((ratings) => {
         res.json(ratings);
     }).catch((reason) => {
         console.log('Handle rejected promise ('+reason+') here.');

@@ -102,6 +102,16 @@ function getRatingsByAnswerId(answerID) {
     });
 }
 
+function getNonBannedRatingsByAnswerId(answerID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getNonBannedRatingsByAnswerIdQuery(answerID)).then((ratings) => {
+            resolve(ratings);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });
+}
+
 function getRatingByAnswerIdAndUserId(answerID, userID) {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getRatingByAnswerIdAndUserIdQuery(answerID, userID)).then((rating) => {
@@ -266,6 +276,7 @@ exports.runGenericQuery = runGenericQuery;
 exports.getJsonDataSet = getJsonDataSet;
 
 exports.getRatingsByAnswerId = getRatingsByAnswerId;
+exports.getNonBannedRatingsByAnswerId = getNonBannedRatingsByAnswerId;
 exports.getRatingByAnswerIdAndUserId = getRatingByAnswerIdAndUserId;
 exports.insertRating = insertRating;
 exports.updateRating = updateRating;
