@@ -1,41 +1,44 @@
 $.holdReady(true);
 
 const loginCheck = function() {
-  let currentSessionID;
-  let isBanned;
-
   const checkLogin = function() {
-    currentSessionID = sessionStorage.getItem('projectBoltSessionID');
-    loginCheck.checkBannedState().then(function(){
-      console.log("Sending request");
-      $.getJSON("login/check-session/"+currentSessionID, function () {})
-          .done(function (data) {
-            console.log("Request complete");
-            console.log("Checking banned status be4 redirecting" + loginCheck.isBanned);
-            if (data.sessionValid === true && loginCheck.isBanned === false) {
-
-              document.getElementById("loader").style.display = "none";
-              document.getElementById("mainContainer").style.display = "block";
-              $.holdReady(false);
-            }
-            else
-            {
-              sessionStorage.clear();
-              global.redirect("login");
-            }
-          })
-          .fail(function () {
-            console.log("error");
+    let currentSessionID = sessionStorage.getItem('projectBoltSessionID');
+    console.log("Sending request");
+    $.getJSON("login/check-session/"+currentSessionID, function () {})
+    .done(function (data) {
+      console.log("Request complete");
+      console.log("Checking banned status");
+      if (data.sessionValid) {
+        getBannedState().then(function(banned){
+          if (!banned) {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("mainContainer").style.display = "block";
+            $.holdReady(false);
+          }
+          else
+          {
+            sessionStorage.removeItem("projectBoltSessionID");
             global.redirect("login");
-          })
+          }  
+        })
+        .catch((reason) => {
+          sessionStorage.removeItem("projectBoltSessionID");
+          global.redirect("login"); 
+        });
+      }
+      else
+      {
+        sessionStorage.removeItem("projectBoltSessionID");
+        global.redirect("login");
+      }        
     })
-      .catch(
-          console.log("checkBannedState promise got rejected")
-      );
-
+    .fail(function () {
+      sessionStorage.removeItem("projectBoltSessionID");
+      global.redirect("login");
+    })    
   };
 
-  const checkBannedState = function() {
+  const getBannedState = function() {
     //get userID
     return new Promise(function(resolve, reject) {
       $.ajax({
@@ -47,8 +50,7 @@ const loginCheck = function() {
             type: 'get',
             url: 'login/get-banned-status/'+data["userID"],
             success: function (data) {
-              loginCheck.isBanned = data[0].Banned;
-              resolve();
+              resolve(data[0].Banned);
             },
             error: function (jqXHR, textStatus, errorThrown) {
               unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
@@ -72,14 +74,10 @@ const loginCheck = function() {
 
   // loginCheck namespace will reveal the following properties
   return {
-    checkLogin: checkLogin,
-    checkBannedState: checkBannedState,
-    isBanned: isBanned
+    checkLogin: checkLogin
   }
 }();
 //  ============================================================== */
 
-
-  loginCheck.checkLogin();
-  console.log("Login Check is being called");
-
+console.log("Checking for valid login");
+loginCheck.checkLogin();  
