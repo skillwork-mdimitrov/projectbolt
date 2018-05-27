@@ -17,7 +17,24 @@ $break-largest: 1000px;
 $darkBlue: #19354E;
 $grey: #8190A5;
 
-  // Mixins
+/* Mixins
+ ============================================================== */
+/// Mixin to prefix a property
+/// @author Hugo Giraudel
+/// @param {String} $property - Property name
+/// @param {*} $value - Property value
+/// @param {List} $prefixes (()) - List of prefixes to print
+@mixin prefix($property, $value, $prefixes: ()) {
+  @each $prefix in $prefixes {
+    #{'-' + $prefix + '-' + $property}: $value;
+  }
+
+  // Output standard non-prefixed declaration
+  #{$property}: $value;
+}
+
+// Example: @include prefix(transform, rotate(45deg), webkit ms);
+
 @mixin absoluteZero {
   position: absolute;
   top: 0;
@@ -31,9 +48,25 @@ $grey: #8190A5;
   font-size: $fontSize;
 }
 
+// Reusable
+.fieldBox {
+  @include barlowFont(1em);
+  width: 100%;
+  border: 2px solid $grey;
+  @include prefix(border-radius, 6px, webkit moz);
+  padding: 8px;
+  outline: none;
+  @include prefix(box-sizing, border-box, webkit moz);
+  @include prefix(transition, .3s time, webkit moz ms o);
+
+  &:focus {
+    border-color: $darkBlue;
+    @include prefix(box-shadow, 0 0 8px 0 $darkBlue, webkit moz);
+  }
+}
+
 h1 {
-  font-family: 'Barlow', sans-serif;
-  font-size: 2.6em; // check later
+  @include barlowFont(2.6em);
 }
 
 body {
@@ -62,15 +95,14 @@ body {
     flex-direction: column;
     width: 30%;
     height: 85%;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
+    @include prefix(border-radius, 3px, webkit moz);
 
     background-color: #E5E9F2; // light gray
 
     // Media queries
     @media screen and (max-width: $break-large) {
       width: 35%;
+      font-size: 14px;
     }
 
     @media screen and (max-width: $break-small) {
@@ -80,6 +112,10 @@ body {
     @media screen and (max-width: $break-smallest) {
       width: 70%;
       min-width: 250px;
+    }
+
+    @media screen and (width: 1024px) {
+      font-size: 21px;
     }
 
     .headContainer {
@@ -133,22 +169,85 @@ body {
     display: flex;
     flex-direction: column;
     width: 80%;
-    height: 50%;
+    height: 60%;
 
     //background-color: purple;
 
     .fillInContainer {
       display: flex;
       justify-content: center;
+      //height: 20%;
+
+      //background-color: aqua;
 
       .fillIn-Text {
         @include barlowFont(1em);
-        display: inline-block;
         color: $grey;
-
-        //background-color: aqua;
       }
     }
+
+    .inputsContainer {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      height: 80%;
+      margin-top: 10px;
+
+      //background-color: maroon;
+
+      .fieldContainer {
+        display: flex;
+        width: 90%;
+        height: 18%;
+        justify-content: center;
+        margin-bottom: 10px;
+
+        //background-color: greenyellow;
+
+        // Field box is in Global
+      }
+
+      .submitContainer {
+        position: relative;
+        height: 64%;
+        width: 90%;
+
+        //background-color: deeppink;
+
+        .cloudContainer {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 70%;
+
+          .thunderingCloud {
+            width: 15%;
+          }
+        }
+
+        .submitButtonContainer {
+          display: flex;
+          height: 28.13%;
+          align-self: flex-end;
+          justify-content: center;
+          align-items: center;
+          color: white;
+          cursor: pointer;
+
+          background-color: $darkBlue;
+        }
+      }
+    }
+  }
+
+  .actionsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 20%;
+    @include barlowFont(0.7rem);
+    color: #3498db;
   }
 }
 
