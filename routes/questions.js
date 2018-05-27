@@ -5,7 +5,7 @@ var router = express.Router();
 
 /* GET a promise */
 router.get('/get-all-questions', function(req, res, next) {
-  database.getAllQuestions().then((questions) => {
+  database.getAllNonBannedQuestions().then((questions) => {
     res.json(questions);
   }).catch(
    (reason) => {

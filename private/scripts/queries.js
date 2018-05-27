@@ -43,6 +43,15 @@ function getAllQuestionsQuery() {
     return {query: query, params: params};
 }
 
+function getAllNonBannedQuestionsQuery() {
+    var query = `SELECT Questions.ID, Questions.Question, Questions.UserID, Users.Username 
+                FROM Questions 
+                INNER JOIN Users ON Questions.UserID=Users.ID 
+                WHERE Users.Banned = 0`;
+    var params = []
+    return {query: query, params: params};
+}
+
 function getQuestionTextByIdQuery(questionID) {
     var query = "SELECT Question FROM Questions WHERE ID in ( @questionID )";
     var params = [
@@ -138,6 +147,7 @@ exports.getInsertRatingQuery = getInsertRatingQuery;
 exports.getUpdateRatingQuery = getUpdateRatingQuery;
 
 exports.getAllQuestionsQuery = getAllQuestionsQuery;
+exports.getAllNonBannedQuestionsQuery = getAllNonBannedQuestionsQuery;
 exports.getQuestionTextByIdQuery = getQuestionTextByIdQuery;
 exports.getInsertQuestionQuery = getInsertQuestionQuery;
 
