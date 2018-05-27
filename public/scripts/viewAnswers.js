@@ -37,6 +37,11 @@ const viewAnswers = function() {
       answersColumn.setAttribute("class", "Table-row-item u-Flex-grow9");
       answersColumn.textContent = "Answer";
 
+      // User column
+      const userColumn = document.createElement("div");
+      userColumn.setAttribute("class", "Table-row-item u-Flex-grow1");
+      userColumn.textContent = "User";
+
       // Ratings column
       const ratingsColumn = document.createElement("div");
       ratingsColumn.setAttribute("class", "Table-row-item u-Flex-grow1");
@@ -47,7 +52,9 @@ const viewAnswers = function() {
 
       // Append the answer and rating columns to the table header
       tableHeader.appendChild(answersColumn);
+      tableHeader.appendChild(userColumn);
       tableHeader.appendChild(ratingsColumn);
+
 
       // Append that table header to the answers table
       answersTable.appendChild(tableHeader);
@@ -61,6 +68,7 @@ const viewAnswers = function() {
     const addToTable = function(answer) {
         let answerText = answer[0];
         let answerID = answer[1];
+        let username = answer[2];
 
         // Select the table to append rows to
         const answersTable = document.getElementById("answersTable");
@@ -78,18 +86,26 @@ const viewAnswers = function() {
         rowItemAnswer.setAttribute("data-header", "Answer");
         rowItemAnswer.textContent = answerText;
 
+        // The user
+        const rowUser = document.createElement("div");
+        rowUser.setAttribute("class", "Table-row-item u-Flex-grow1");
+        rowUser.setAttribute("data-header", "User");
+        rowUser.textContent = username;
+
         // The rating
         const rowItemRating = document.createElement("div");
         rowItemRating.setAttribute("class", "star ui rating Table-row-item u-Flex-grow1");
         rowItemRating.setAttribute("data-header", "Rating");
         rowItemRating.setAttribute("id", answerID);
 
+
+
         /* APPENDS
         ============================================================== */
 
         // Append the answer, user and rating to that table row
         tableRow.appendChild(rowItemAnswer);
-        // Here is where the user will be appended
+        tableRow.appendChild(rowUser);
         tableRow.appendChild(rowItemRating);
 
         // Append the row to the table
@@ -185,7 +201,7 @@ const viewAnswers = function() {
                 document.getElementById("questionHeading").textContent = val["Question"];
               }
               else {
-                viewAnswers.addToTable([val["Answer"], val["ID"]]);
+                viewAnswers.addToTable([val["Answer"], val["ID"], val["Username"]]);
               }
             });
 

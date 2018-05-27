@@ -38,7 +38,16 @@ function getUpdateRatingQuery(answerID, userID, rating) {
 }
 
 function getAllQuestionsQuery() {
-    var query = "SELECT * FROM Questions";
+    var query = "SELECT * FROM Questions INNER JOIN Users ON Questions.UserID=Users.ID";
+    var params = []
+    return {query: query, params: params};
+}
+
+function getAllNonBannedQuestionsQuery() {
+    var query = `SELECT Questions.ID, Questions.Question, Questions.UserID, Users.Username 
+                FROM Questions 
+                INNER JOIN Users ON Questions.UserID=Users.ID 
+                WHERE Users.Banned = 0`;
     var params = []
     return {query: query, params: params};
 }
@@ -61,7 +70,7 @@ function getInsertQuestionQuery(question, userID) {
 }
 
 function getAnswersByQuestionIdQuery(questionID) {
-    var query = "SELECT * FROM Answers WHERE QuestionID in ( @questionID )";
+    var query = "SELECT * FROM Answers INNER JOIN Users ON Answers.UserID=Users.ID WHERE QuestionID in ( @questionID )";
     var params = [
         {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID}
     ]
@@ -108,6 +117,14 @@ function getUserRoleByIdQuery(userID) {
     return {query: query, params: params};
 }
 
+function getUserBannedStatusByIdQuery(userID) {
+  var query = "SELECT Banned FROM Users WHERE ID = @userID";
+  var params = [
+    {paramName: "userID", paramType: TYPES.Int, paramValue: userID}
+  ]
+  return {query: query, params: params};
+}
+
 function getBanUserQuery(userID) {
     var query = "UPDATE Users SET Banned = 1 WHERE ID = @userID";
     var params = [
@@ -130,6 +147,7 @@ exports.getInsertRatingQuery = getInsertRatingQuery;
 exports.getUpdateRatingQuery = getUpdateRatingQuery;
 
 exports.getAllQuestionsQuery = getAllQuestionsQuery;
+exports.getAllNonBannedQuestionsQuery = getAllNonBannedQuestionsQuery;
 exports.getQuestionTextByIdQuery = getQuestionTextByIdQuery;
 exports.getInsertQuestionQuery = getInsertQuestionQuery;
 
@@ -140,5 +158,6 @@ exports.getUsernamesBannedStatusQuery = getUsernamesBannedStatusQuery;
 exports.getIdPasswordByUsernameQuery = getIdPasswordByUsernameQuery;
 exports.getUsernameByIdQuery = getUsernameByIdQuery;
 exports.getUserRoleByIdQuery = getUserRoleByIdQuery;
+exports.getUserBannedStatusByIdQuery = getUserBannedStatusByIdQuery;
 exports.getBanUserQuery = getBanUserQuery;
 exports.getUnbanUserQuery = getUnbanUserQuery;

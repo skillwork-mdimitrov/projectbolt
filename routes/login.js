@@ -133,4 +133,15 @@ router.post('/unban-user', function(req, res, next) {
   });  
 });
 
+/* Get user's banned status from userID */
+router.get('/get-banned-status/:userID', function(req, res, next) {
+  database.getUserBannedStatusById(req.params["userID"]).then((bannedStatus) => {
+    res.send(bannedStatus);
+    }).catch(
+      (reason) => {
+        console.log('Handle rejected promise ('+reason+') here.');
+        res.status(500).send('Something broke! ' + reason)
+      });
+});
+
 module.exports = router;

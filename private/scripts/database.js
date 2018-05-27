@@ -142,6 +142,16 @@ function getAllQuestions() {
     });   
 }
 
+function getAllNonBannedQuestions() {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getAllNonBannedQuestionsQuery()).then((questions) => {
+            resolve(questions);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });   
+}
+
 function getQuestionTextById(questionID) {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getQuestionTextByIdQuery(questionID)).then((questionText) => {
@@ -222,6 +232,16 @@ function getUserRoleById(userID) {
     });  
 }
 
+function getUserBannedStatusById(userID) {
+  return new Promise((resolve, reject) => {
+    getJsonDataSet(queries.getUserBannedStatusByIdQuery(userID)).then((banned) => {
+      resolve(banned);
+    }).catch((reason) => {
+      reject(reason);
+    });
+  });
+}
+
 function banUser(userID) {
     return new Promise((resolve, reject) => {
         runGenericQuery(queries.getBanUserQuery(userID)).then(() => {
@@ -251,6 +271,7 @@ exports.insertRating = insertRating;
 exports.updateRating = updateRating;
 
 exports.getAllQuestions = getAllQuestions;
+exports.getAllNonBannedQuestions = getAllNonBannedQuestions;
 exports.getQuestionTextById = getQuestionTextById;
 exports.insertQuestion = insertQuestion;
 
@@ -261,5 +282,6 @@ exports.getUsernamesBannedStatus = getUsernamesBannedStatus;
 exports.getIdPasswordByUsername = getIdPasswordByUsername;
 exports.getUsernameById = getUsernameById;
 exports.getUserRoleById = getUserRoleById;
+exports.getUserBannedStatusById = getUserBannedStatusById;
 exports.banUser = banUser;
 exports.unbanUser = unbanUser;
