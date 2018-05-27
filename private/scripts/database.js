@@ -192,6 +192,16 @@ function getAnswersByQuestionId(questionID) {
     });   
 }
 
+function getNonBannedAnswersByQuestionId(questionID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getNonBannedAnswersByQuestionIdQuery(questionID)).then((answers) => {
+            resolve(answers);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });   
+}
+
 function insertAnswer(answer, questionID, userID) {
     return new Promise((resolve, reject) => {
         runGenericQuery(queries.getInsertAnswerQuery(answer, questionID, userID)).then(() => {
@@ -287,6 +297,7 @@ exports.getQuestionTextById = getQuestionTextById;
 exports.insertQuestion = insertQuestion;
 
 exports.getAnswersByQuestionId = getAnswersByQuestionId;
+exports.getNonBannedAnswersByQuestionId = getNonBannedAnswersByQuestionId;
 exports.insertAnswer = insertAnswer;
 
 exports.getUsernamesBannedStatus = getUsernamesBannedStatus;

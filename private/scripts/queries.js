@@ -91,6 +91,17 @@ function getAnswersByQuestionIdQuery(questionID) {
     return {query: query, params: params};
 }
 
+function getNonBannedAnswersByQuestionIdQuery(questionID) {
+    var query = `SELECT Answers.ID, Answers.Answer, Users.Username 
+                FROM Answers 
+                INNER JOIN Users ON Answers.UserID=Users.ID 
+                WHERE QuestionID in ( @questionID ) AND Users.Banned = 0`;
+    var params = [
+        {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID}
+    ]
+    return {query: query, params: params};
+}
+
 function getInsertAnswerQuery(answer, questionID, userID) {
     var query = "INSERT INTO answers (answer, questionid, userid) VALUES ( @answer , @questionID , @userID )";
     var params = [
@@ -167,6 +178,7 @@ exports.getQuestionTextByIdQuery = getQuestionTextByIdQuery;
 exports.getInsertQuestionQuery = getInsertQuestionQuery;
 
 exports.getAnswersByQuestionIdQuery = getAnswersByQuestionIdQuery;
+exports.getNonBannedAnswersByQuestionIdQuery = getNonBannedAnswersByQuestionIdQuery;
 exports.getInsertAnswerQuery = getInsertAnswerQuery;
 
 exports.getUsernamesBannedStatusQuery = getUsernamesBannedStatusQuery;

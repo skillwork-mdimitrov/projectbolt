@@ -10,7 +10,7 @@ router.get('/:questionID', function(req, res, next) {
   if (!isNaN(questionID))
   {
     database.getQuestionTextById(questionID).then((questionText) => {
-      database.getAnswersByQuestionId(questionID).then((answers) => {
+      database.getNonBannedAnswersByQuestionId(questionID).then((answers) => {
         res.json(questionText.concat(answers));
       }).catch((reason) => {
         console.log('Handle rejected promise ('+reason+') here.');
