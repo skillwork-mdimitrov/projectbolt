@@ -44,11 +44,17 @@ const global = function() {
     }
   };
 
+  const logout = function logout() { 
+    sessionStorage.removeItem("projectBoltSessionID");
+    window.location.reload();
+  };
+
   return {
     fieldNotEmpty: fieldNotEmpty,
     fieldIsEmpty: fieldIsEmpty,
     rmElemFromArray: rmElemFromArray,
-    redirect: redirect
+    redirect: redirect,
+    logout: logout
   }
 }();
 //  ============================================================== */
