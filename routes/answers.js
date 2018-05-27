@@ -35,7 +35,7 @@ router.post('/add-answer', function(req, res) {
   let userID = req.body.userID;
 
   database.insertAnswer(answer, questionID, userID).then(() => {
-    res.status(200).send("Insert succesful");
+    res.status(200).send("Insert successful");
   })
   .catch((reason) => {
     console.log('Handle rejected promise ('+reason+') here.');

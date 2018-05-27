@@ -16,7 +16,36 @@ const unfoldingHeader = function () {
   ** unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
   ** unfoldingHeader.unfoldHeader("Warning, password too short", "orange");
  ============================================================== */
-  const unfoldHeader = function(textToDisplay, color) {
+  const unfoldHeader = function(textToDisplay, color, fixedToViewPort) {
+    // If 3rd parameter is passed, position is expected to be relative to the view port
+    const isFixed = function() {
+      // No 3rd parameter is passed, the position won't be fixed the the viewport
+      const undefinedCheck = typeof fixedToViewPort;
+      if(undefinedCheck === "undefined") {
+        return false;
+      }
+      else {
+        switch (fixedToViewPort) {
+          case false:
+            return false;
+            /* Weird 3rd parameter passed, the position won't be fixed the the viewport
+             ============================================================== */
+          case undefined:
+            return false;
+          case null:
+            return false;
+            // ============================================================== */
+
+            /* True passed or any non falsy parameter, folding header will be fixed to the viewport
+           ============================================================== */
+          case true:
+            return true;
+          default:
+            return true;
+        }
+      }
+    };
+
     // Create a folding header if it doesn't exists
     if($("#foldingHeader").length === 0) {
       /* Create, style and append the folding header
@@ -51,8 +80,14 @@ const unfoldingHeader = function () {
     const foldingHeader = $('#foldingHeader'); // it's now created, select it
     const headerInfo = $('#headerInfo'); // it's now created, select it
 
-    // If user have scrolled, bind the collapsing bar to the viewport, else it will push content down
-    if(window.scrollY !== 0) {
+    if(isFixed() === false) {
+      // If user have scrolled, bind the collapsing bar to the viewport, else it will push content down
+      if(window.scrollY !== 0) {
+        foldingHeader.css("position", "fixed");
+      }
+    }
+    // Collapsing header won't decide by itself but it will always be fixed to the viewport
+    else {
       foldingHeader.css("position", "fixed");
     }
 
