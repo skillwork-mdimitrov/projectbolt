@@ -102,6 +102,16 @@ function getRatingsByAnswerId(answerID) {
     });
 }
 
+function getNonBannedRatingsByAnswerId(answerID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getNonBannedRatingsByAnswerIdQuery(answerID)).then((ratings) => {
+            resolve(ratings);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });
+}
+
 function getRatingByAnswerIdAndUserId(answerID, userID) {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getRatingByAnswerIdAndUserIdQuery(answerID, userID)).then((rating) => {
@@ -175,6 +185,16 @@ function insertQuestion(question, userID) {
 function getAnswersByQuestionId(questionID) {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getAnswersByQuestionIdQuery(questionID)).then((answers) => {
+            resolve(answers);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });   
+}
+
+function getNonBannedAnswersByQuestionId(questionID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getNonBannedAnswersByQuestionIdQuery(questionID)).then((answers) => {
             resolve(answers);
         }).catch((reason) => {
             reject(reason);
@@ -266,6 +286,7 @@ exports.runGenericQuery = runGenericQuery;
 exports.getJsonDataSet = getJsonDataSet;
 
 exports.getRatingsByAnswerId = getRatingsByAnswerId;
+exports.getNonBannedRatingsByAnswerId = getNonBannedRatingsByAnswerId;
 exports.getRatingByAnswerIdAndUserId = getRatingByAnswerIdAndUserId;
 exports.insertRating = insertRating;
 exports.updateRating = updateRating;
@@ -276,6 +297,7 @@ exports.getQuestionTextById = getQuestionTextById;
 exports.insertQuestion = insertQuestion;
 
 exports.getAnswersByQuestionId = getAnswersByQuestionId;
+exports.getNonBannedAnswersByQuestionId = getNonBannedAnswersByQuestionId;
 exports.insertAnswer = insertAnswer;
 
 exports.getUsernamesBannedStatus = getUsernamesBannedStatus;

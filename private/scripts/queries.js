@@ -8,6 +8,17 @@ function getRatingsByAnswerIdQuery(answerID) {
     return {query: query, params: params};
 }
 
+function getNonBannedRatingsByAnswerIdQuery(answerID) {
+    var query  = `SELECT Ratings.Rating 
+                FROM Ratings 
+                INNER JOIN Users ON Ratings.UserID=Users.ID 
+                WHERE AnswerID = @answerID AND Users.Banned = 0`;
+    var params = [
+        {paramName: "answerID", paramType: TYPES.Int, paramValue: answerID}
+    ]
+    return {query: query, params: params};
+}
+
 function getRatingByAnswerIdAndUserIdQuery(answerID, userID) {
     var query = "SELECT Rating FROM Ratings WHERE AnswerID = @answerID AND UserID = @userID";
     var params = [
@@ -70,7 +81,21 @@ function getInsertQuestionQuery(question, userID) {
 }
 
 function getAnswersByQuestionIdQuery(questionID) {
-    var query = "SELECT * FROM Answers INNER JOIN Users ON Answers.UserID=Users.ID WHERE QuestionID in ( @questionID )";
+    var query = `SELECT Answers.ID, Answers.Answer, Users.Username 
+                FROM Answers 
+                INNER JOIN Users ON Answers.UserID=Users.ID 
+                WHERE QuestionID in ( @questionID )`;
+    var params = [
+        {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID}
+    ]
+    return {query: query, params: params};
+}
+
+function getNonBannedAnswersByQuestionIdQuery(questionID) {
+    var query = `SELECT Answers.ID, Answers.Answer, Users.Username 
+                FROM Answers 
+                INNER JOIN Users ON Answers.UserID=Users.ID 
+                WHERE QuestionID in ( @questionID ) AND Users.Banned = 0`;
     var params = [
         {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID}
     ]
@@ -142,6 +167,7 @@ function getUnbanUserQuery(userID) {
 }
 
 exports.getRatingsByAnswerIdQuery = getRatingsByAnswerIdQuery;
+exports.getNonBannedRatingsByAnswerIdQuery = getNonBannedRatingsByAnswerIdQuery;
 exports.getRatingByAnswerIdAndUserIdQuery = getRatingByAnswerIdAndUserIdQuery;
 exports.getInsertRatingQuery = getInsertRatingQuery;
 exports.getUpdateRatingQuery = getUpdateRatingQuery;
@@ -152,6 +178,7 @@ exports.getQuestionTextByIdQuery = getQuestionTextByIdQuery;
 exports.getInsertQuestionQuery = getInsertQuestionQuery;
 
 exports.getAnswersByQuestionIdQuery = getAnswersByQuestionIdQuery;
+exports.getNonBannedAnswersByQuestionIdQuery = getNonBannedAnswersByQuestionIdQuery;
 exports.getInsertAnswerQuery = getInsertAnswerQuery;
 
 exports.getUsernamesBannedStatusQuery = getUsernamesBannedStatusQuery;

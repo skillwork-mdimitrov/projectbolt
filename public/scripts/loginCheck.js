@@ -7,8 +7,8 @@ const loginCheck = function() {
     $.getJSON("login/check-session/"+currentSessionID, function () {})
     .done(function (data) {
       console.log("Request complete");
-      console.log("Checking banned status");
       if (data.sessionValid) {
+        console.log("Checking banned status");
         getBannedState().then(function(banned){
           if (!banned) {
             document.getElementById("loader").style.display = "none";
