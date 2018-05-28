@@ -5,11 +5,12 @@ const addQuestion = function() {
   const questionBox = $('#questionBox');
   const submitQuestionBtn = $('#submitQuestionBtn');
   const submitQuestion = function(question) {
+    let sessionID = sessionStorage.getItem('projectBoltSessionID');
     "use strict";
     $.ajax({
       type: 'post',
       data: question,
-      url: 'questions/add-question',
+      url: 'questions/add-question/'+sessionID,
       success: function(data){
         unfoldingHeader.unfoldHeader(data, "green");
       },
