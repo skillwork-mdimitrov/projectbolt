@@ -1,3 +1,5 @@
+// BEWARE, chat.js doesn't use module pattern, global scope is polluted
+
 $(document).ready(function() {
 	// Make connections
 	const socket = io();

@@ -61,12 +61,26 @@ const global = function() {
     window.location.reload();
   };
 
+  /* Console.log an AJAX request error
+   * functionName example: logout.name
+   * jqXHR examplse: $.ajax( . . . error(function(jqXHR)); $.getJSON().fail(function(jqXHR)
+   * DRAWBACKS: The exact line from where the error got logged will be lost, but it is known that logAJAXErr logged it */
+  const logAJAXErr = function(functionName, jqXHR) {
+    console.log(`${logAJAXErr.name} reporting: 
+                  ${functionName} AJAX request failed. Details: ↓
+                  Status: ${jqXHR.status}
+                  Error thrown: ${jqXHR.statusText}
+                  responseText: ↓
+                  ${jqXHR.responseText}`);
+  };
+
   return {
     fieldNotEmpty: fieldNotEmpty,
     fieldIsEmpty: fieldIsEmpty,
     rmElemFromArray: rmElemFromArray,
     redirect: redirect,
-    logout: logout
+    logout: logout,
+    logAJAXErr: logAJAXErr
   }
 }();
 //  ============================================================== */

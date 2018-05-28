@@ -80,13 +80,13 @@ const unfoldingHeader = function () {
     const foldingHeader = $('#foldingHeader'); // it's now created, select it
     const headerInfo = $('#headerInfo'); // it's now created, select it
 
+    // If the 3rd parameter is omitted or false, unfoldingHeader will decide if to push content down or not
     if(isFixed() === false) {
-      // If user have scrolled, bind the collapsing bar to the viewport, else it will push content down
       if(window.scrollY !== 0) {
         foldingHeader.css("position", "fixed");
       }
     }
-    // Collapsing header won't decide by itself but it will always be fixed to the viewport
+    // Else true, collapsing header won't decide by itself but it will always be fixed to the viewport
     else {
       foldingHeader.css("position", "fixed");
     }
