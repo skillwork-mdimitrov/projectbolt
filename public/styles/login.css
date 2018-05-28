@@ -1,0 +1,231 @@
+/* CHANGES ONLY ACCEPTED IN THE .SCSS NOT .CSS
+ ============================================================== */
+/* Global
+ ============================================================== */
+/* Mixins
+ ============================================================== */
+.fieldBox {
+  font-family: "Barlow", sans-serif;
+  font-size: 1em;
+  width: 100%;
+  border: 2px solid #8190A5;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  padding: 8px;
+  outline: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: 0.3s time;
+  -moz-transition: 0.3s time;
+  -ms-transition: 0.3s time;
+  -o-transition: 0.3s time;
+  transition: 0.3s time;
+}
+.fieldBox:focus {
+  border-color: #19354E;
+  -webkit-box-shadow: 0 0 8px 0 #19354E;
+  -moz-box-shadow: 0 0 8px 0 #19354E;
+  box-shadow: 0 0 8px 0 #19354E;
+}
+
+h1 {
+  font-family: "Barlow", sans-serif;
+  font-size: 2.6em;
+}
+
+body {
+  background-color: #19354E;
+}
+
+.u-Flex-grow1 {
+  flex-grow: 1;
+}
+
+.u-Flex-grow2 {
+  flex-grow: 2;
+}
+
+.u-Flex-grow3 {
+  flex-grow: 3;
+}
+
+.u-Flex-grow4 {
+  flex-grow: 4;
+}
+
+.u-Flex-grow5 {
+  flex-grow: 5;
+}
+
+.u-Flex-grow6 {
+  flex-grow: 6;
+}
+
+.u-Flex-grow7 {
+  flex-grow: 7;
+}
+
+.u-Flex-grow8 {
+  flex-grow: 8;
+}
+
+.u-Flex-grow9 {
+  flex-grow: 9;
+}
+
+.u-Flex-grow10 {
+  flex-grow: 10;
+}
+
+/* Content container
+ ============================================================== */
+.mainContainer {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+.mainContainer .loginContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 30%;
+  height: 85%;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #E5E9F2;
+  /* Media queries
+  ============================================================== */
+  /* Targeted queries
+  ============================================================== */
+}
+@media screen and (max-width: 750px) {
+  .mainContainer .loginContainer {
+    width: 35%;
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .mainContainer .loginContainer {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 400px) {
+  .mainContainer .loginContainer {
+    width: 70%;
+    min-width: 250px;
+  }
+}
+@media screen and (width: 1024px) {
+  .mainContainer .loginContainer {
+    font-size: 21px;
+  }
+}
+@media screen and (width: 1366px) and (height: 768px) {
+  .mainContainer .loginContainer {
+    font-size: 22px;
+  }
+}
+.mainContainer .loginContainer .headContainer {
+  display: flex;
+  justify-content: center;
+  width: 80%;
+  height: 20%;
+}
+.mainContainer .loginContainer .headContainer .thunderLogoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10.5%;
+  margin-right: 10px;
+  margin-top: 1px;
+}
+.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+}
+.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer .circle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 50%;
+  background-color: #19354E;
+}
+.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer .circle .thunderLogo {
+  width: 100%;
+}
+.mainContainer .loginContainer .headContainer .boltAppContainer {
+  display: flex;
+  align-items: center;
+}
+.mainContainer .credentialsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 60%;
+}
+.mainContainer .credentialsContainer .fillInContainer {
+  display: flex;
+  justify-content: center;
+}
+.mainContainer .credentialsContainer .fillInContainer .fillIn-Text {
+  font-family: "Barlow", sans-serif;
+  font-size: 1em;
+  color: #8190A5;
+}
+.mainContainer .credentialsContainer .inputsContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 80%;
+  margin-top: 10px;
+}
+.mainContainer .credentialsContainer .inputsContainer .fieldContainer {
+  display: flex;
+  width: 90%;
+  height: 18%;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.mainContainer .credentialsContainer .inputsContainer .submitContainer {
+  position: relative;
+  height: 64%;
+  width: 90%;
+}
+.mainContainer .credentialsContainer .inputsContainer .submitContainer .cloudContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+}
+.mainContainer .credentialsContainer .inputsContainer .submitContainer .cloudContainer .thunderingCloud {
+  width: 15%;
+}
+.mainContainer .credentialsContainer .inputsContainer .submitContainer .submitButtonContainer {
+  display: flex;
+  height: 28.13%;
+  align-self: flex-end;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  background-color: #19354E;
+}
+.mainContainer .actionsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 20%;
+  font-family: "Barlow", sans-serif;
+  font-size: 0.7em;
+  color: #3498db;
+}
+
+/*# sourceMappingURL=login.css.map */

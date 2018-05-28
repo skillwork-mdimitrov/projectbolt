@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Answers</title>
+
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="styles/viewAnswers.css">
+    <link rel="stylesheet" type="text/css" href="rating.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/loader.css" />
+  </head>
+
+  <body>
+    <div id="loader"></div>
+    <!-- Holds everything -->
+    <div class="mainContainer" style="display:none;" id="mainContainer">
+      <h1 id="questionHeading"></h1>
+
+      <!-- Add own answer -->
+      <span id="addOwnAnswerBtn" class="addOwnAnswerBtn">Add your own answer</span><!-- Span for no button inherited properties -->
+      <button id="submitAnswerBtn" class="notDisplayed">Submit</button>
+      <button id="cancelAnswerBtn" class="notDisplayed">Cancel</button>
+      <div id="addAnswerContainer" class="addAnswerContainer notDisplayed">
+        <div class="areaContainer">
+          <textarea rows="4" cols="55" placeholder="Write your answer here..." class="addAnswerArea" id="addAnswerArea"></textarea>
+        </div>
+      </div>
+
+      <!-- JavaScript will generate the answers table here -->
+      <!-- JavaScript will generate answers and fill them in the answers table -->
+
+    </div> <!-- Close main container -->
+
+    <!-- SCRIPTS, load after the DOM↓
+    ============================================================== -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
+    <script src="scripts/global.js"></script> <!-- Reusable functions -->
+    <script src="scripts/loginCheck.js"></script>
+    <script src="scripts/unfoldingHeader.js"></script> <!-- Collapsing header -->
+    <script src="rating.min.js"></script>    
+    <script src="scripts/viewAnswers.js"></script>
+    <script src="scripts/viewRatings.js"></script>
+    <script src="scripts/addRating.js"></script>
+  </body>
+  </body>
+</html>

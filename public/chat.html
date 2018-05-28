@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="styles/chat.css" >    
+    <title>Chat App</title>
+  </head>
+
+  <body>
+    <div id="loader"></div>
+    <div id="mainContainer" style="display:none;">
+        <header>
+          <h1>Super Chat</h1>
+        </header>
+
+        <section>
+          <div id="change_username">
+      <input id="usernamenew" type="text" />
+      <button id="send_username" type="button">Change username</button>
+          </div>
+        </section>
+
+        <section id="chatroom">
+          <section id="feedback"></section>
+        </section>
+
+        
+
+        <section id="input_zone"> 
+          <input id="message" class="vertical-align" type="text" />
+          <button id="send_message" class="vertical-align" type="button">Send</button>
+        </section>
+    </div>  
+
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script src="scripts/unfoldingHeader.js"></script>
+    <script src="scripts/global.js"></script> <!-- Reusable functions -->
+    <script src="scripts/loginCheck.js"></script>
+    <script src="scripts/chat.js"></script>
+  </body>
+</html>

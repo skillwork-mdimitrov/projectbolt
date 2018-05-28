@@ -1,27 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Bolt</title>
-		<link rel="icon" href="images/thunder.png"/>
-	</head>
-	<body>
-		<p>
-			<!-- Link to search and compare component -->
-			<a href="searchAndCompare.html">String comparison</a>
-			- Search and compare your query
-			<br> 
-			<!-- Link to view all questions component -->
-			<a href="viewAllQuestions.html">View questions</a>
-			- View all questions
-			<br> 
-			<!-- Link to add new questions component -->
-			<a href="addQuestion.html">Add a question</a>
-			- Post a new Question
-			<br>
-			<!-- Link to add new questions component -->
-			<a href="addAnswer.html">Add an answer</a>
-			- Answer a question
-		</p>
-	</body>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bolt</title>
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="styles/index.css">
+    <link rel="stylesheet" type="text/css" href="styles/viewQuestions.css">
+    <link rel="stylesheet" type="text/css" href="styles/searchStyle.css">
+    <link rel="stylesheet" type="text/css" href="styles/awesomplete.css" />
+    <link rel="stylesheet" type="text/css" href="styles/loader.css" />
+  </head>
+  <body>  
+    <div id="loader"></div>
+
+    <div class="mainContainer" style="display:none;" id="mainContainer">
+      <!-- Logout button -->
+      <button onclick="global.logout()">Logout</button>>
+      <!-- Link to chatting-->
+      <a href="chat">Chat</a>
+      <span>- Chatting page</span><br>
+
+      <!-- Questions table -->
+      <div id="questionsTable" class="Table">
+        <!-- Headings -->
+        <div class="Table-row Table-header">
+            <div class="Table-row-item u-Flex-grow9">Question</div>
+            <div class="Table-row-item u-Flex-grow1">User</div>
+            <div class="Table-row-item u-Flex-grow1">Answers</div>
+        </div>
+        <!-- JavaScript will generate rows here -->
+      </div>
+
+      <!-- Ask a question AND get suggestions in 1 -->
+      <div class="searchContainer">
+        <div class="searchBar">
+          <label for="questionBox">Ask a question:</label>
+          <img class="magnifyingGlass" src="images/magnifyingGlass.png" alt="searchIcon">
+          <input type="text" name="question" placeholder="Enter your question here..." id="questionBox"><br><br>
+          <input type="submit" value="Submit" id="submitQuestionBtn">
+        </div>
+      </div>
+    </div> <!-- Close mainContainer -->
+
+    <!-- SCRIPTS, load after the DOM↓
+    ============================================================== -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
+    <script src="scripts/global.js"></script>    
+    <script src="scripts/loginCheck.js"></script>    
+    <script src="scripts/unfoldingHeader.js"></script> <!-- Collapsing header -->
+    <script src="scripts/viewQuestions.js"></script>
+    <script src="scripts/awesomplete.js"></script>
+    <script src="scripts/addQuestion.js"></script>    
+    <script src="scripts/stringCompare.js"></script>
+  </body>
 </html>

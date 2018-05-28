@@ -1,0 +1,215 @@
+/* Global
+ ============================================================== */
+/* Browser reset */
+* {
+  margin: 0;
+}
+
+/* Remove element from DOM */
+.notDisplayed {
+  display: none;
+}
+
+/* Hide element, but remains in DOM */
+.hidden {
+  visibility: hidden;
+}
+
+.mainContainer {
+  margin: 10px 10px 10px 10px
+}
+
+/* Responsive Question/Answer table
+ ============================================================== */
+.Table {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  border: 1px solid #f2f2f2;
+  font-size: 1rem;
+  margin: 0.5rem;
+  line-height: 1.5;
+
+  /* Animations */
+  opacity: 0; /* Initially opaque, so when opacity is changed in the JS, the transition will trigger */
+  transition: 0.4s opacity ease-in;
+}
+
+.Table-header {
+  display: none;
+}
+
+@media (min-width: 500px) {
+  .Table-header {
+    font-weight: 700;
+    background-color: #f2f2f2;
+  }
+}
+.Table-row {
+  width: 100%;
+}
+
+.Table-row:nth-of-type(even) {
+  background-color: #f2f2f2;
+}
+
+.Table-row:nth-of-type(odd) {
+  background-color: #ffffff;
+}
+
+@media (min-width: 500px) {
+  .Table-row {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+
+  .Table-row:nth-of-type(even) {
+    background-color: #ffffff;
+  }
+
+  .Table-row:nth-of-type(odd) {
+    background-color: #f2f2f2;
+  }
+}
+.Table-row-item {
+  display: flex;
+  flex-flow: row nowrap;
+  flex-grow: 1;
+  flex-basis: 0;
+  padding: 0.5em;
+  word-break: break-word;
+}
+
+.Table-row-item:before {
+  content: attr(data-header);
+  width: 30%;
+  font-weight: 700;
+}
+
+@media (min-width: 500px) {
+  .Table-row-item {
+    border: 1px solid #ffffff;
+    padding: 0.5em;
+  }
+
+  .Table-row-item:before {
+    content: none;
+  }
+}
+.u-Flex-grow1 {
+  flex-grow: 1;
+}
+
+.u-Flex-grow2 {
+  flex-grow: 2;
+}
+
+.u-Flex-grow3 {
+  flex-grow: 3;
+}
+
+.u-Flex-grow4 {
+  flex-grow: 4;
+}
+
+.u-Flex-grow5 {
+  flex-grow: 5;
+}
+
+.u-Flex-grow6 {
+  flex-grow: 6;
+}
+
+.u-Flex-grow7 {
+  flex-grow: 7;
+}
+
+.u-Flex-grow8 {
+  flex-grow: 8;
+}
+
+.u-Flex-grow9 {
+  flex-grow: 9;
+}
+
+.u-Flex-grow10 {
+  flex-grow: 10;
+}
+
+/* Buttons
+ ============================================================== */
+
+/* Add your own answer button
+ ============================================================== */
+span.addOwnAnswerBtn {
+  display: inline-block;
+  width: 310px;
+  padding: 0.5em 3em;
+  border: 0.16em solid #DDDDDD;
+  margin: 0 0.3em 0.3em 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  color: #DDDDDD;
+  text-align: center;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+span.addOwnAnswerBtn:hover {
+  color: #BBBBBB;
+  border-color: #BBBBBB;
+}
+
+span.addOwnAnswerBtn:active {
+  color: #000000;
+  border-color: #000000;
+  filter: blur(0.5px);
+}
+
+@media all and (max-width: 30em) {
+  span.addOwnAnswerBtn {
+    display: block;
+    margin: 0.4em auto;
+  }
+}
+
+/* Submit your own answer button
+ ============================================================== */
+button.submitOwnAnswerBtn {
+  display: inline-block;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid #FFFFFF;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  color: #FFFFFF;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+button.submitOwnAnswerBtn:hover {
+  color: #000000;
+  background-color: #FFFFFF;
+}
+
+@media all and (max-width: 30em) {
+  button.submitOwnAnswerBtn {
+    display: block;
+    margin: 0.4em auto;
+  }
+}
+/*  ============================================================== */
+
+.addAnswerContainer {
+  background-color: lightgray;
+}
+
+.addAnswerContainer .areaContainer {
+  display: flex;
+}

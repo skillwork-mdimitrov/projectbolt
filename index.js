@@ -1,81 +1,113 @@
-/* JSHint quality control options
-   ============================================================== */
-/*globals $:false*/
-/*jslint devel: true*/
-/*jshint esversion: 6*/
+#!/usr/bin/env node
 
-/* LEGEND, COMMENTS
-   ============================================================== */
-// HC = Hard coded
+/**
+ * Module dependencies.
+ */
 
-/* VARIABLES
-   ============================================================== */
-let selectingQueries = require('./server/sqlCommands/selectingQueries');
-let insertingQueries = require('./server/sqlCommands/insertingQueries');
-const express = require('express');
-const app = express();
-// =====================================================================================================================
+var app = require('./app');
+var debug = require('debug')('projectbolt:server');
+var http = require('http');
 
-/* SERVER
-   ============================================================== */
-// Will handle every STATIC file placed in the public directory. Scripts that have to deal with the database are NOT static
-app.use(express.static('public'));
+/**
+ * Get port from environment and store in Express.
+ */
 
-app.get('/dynamic_request_fetchDB', function(request, response) {
-  "use strict";
-  let toWrite = "";
-  selectingQueries.getResultsAsArray("SELECT question FROM questions"); // select every question from the database and store it in dbResults array
-  selectingQueries.dataLoading.then(function(resolve) {
-    toWrite = resolve.join(); // since response needs to return a string, join() the array results
-    response.write(toWrite); // return the results from the resolvement of the promise (the dbResults array) to the client
-    response.end();
-  })
-  .catch(function (error) {
-    toWrite = error.message; // if the promise returns an error, catch it
-    response.write(toWrite); // return the error message to the client
-    response.end();
-  });
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+var io = require('socket.io')(server);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+io.on('connection', function(socket){
+  console.log('New user online')
+	
+	//default username
+	socket.username = "Anonymous"
+	
+	//listen to changeUsername
+	socket.on('changeUsername', (data) => {
+		socket.username = data.username
+	})
+	//listen on new_message
+    socket.on('new_message', (data) => {
+        //broadcast the new message
+        io.sockets.emit('new_message', {message : data.message, username : socket.username});
+	})
+	//listen on typing
+    socket.on('typing', (data) => {
+    	socket.broadcast.emit('typing', {username : socket.username})
+	})
 });
 
-/* INSERTING INTO THE DB EXAMPLE METHOD
-   ============================================================== */
-/*
-  // This will fail if what you try to INSERT already exists in the database
-  let tableName = "questions"; // info like this can come from the body of your AJAX request
-  insertingQueries.insertStatement("INSERT INTO " + tableName + " (question) VALUES ('Test11')");
-  insertingQueries.insertion.then(function(resolve) {
-    console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
-  })
-  .catch(function (error) {
-    console.log("Insert failed - " + error.message); // re-write this in the response.write("Msg " + error)
-  });
-*/
+/**
+ * Normalize a port into a number, string, or false.
+ */
 
-// Test
-app.post('/dynamic_request_writeToDB', function(request, response) {
-  "use strict";
-  let answer = request.body.answer;
-  let questionID = request.body.questionID;
-  console.log(answer);
-  insertingQueries.insertStatement("INSERT INTO answers (answer, questionid) VALUES (" + "'" + answer + "'" + ", '" + questionID + "')");
-  insertingQueries.insertion.then(function(resolve) {
-    console.log(resolve); // write this resolve back to the user, like response.write(resolve) maybe
-  })
-      .catch(function (error) {
-        console.log("Insert failed - " + error.message); // re-write this in the response.write("Msg " + error)
-      });
-  response.end("A OK");
-});
+function normalizePort(val) {
+  var port = parseInt(val, 10);
 
-// =====================================================================================================================
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
 
-/* PORT
-   ============================================================== */
-// Specify port
-var port = process.env.PORT || 1337;
-// Listen to port
-app.listen(port, function() {
-  "use strict";
-  console.log("Server running at http://localhost:%d", port);
-});
-// =====================================================================================================================
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  console.log("Server running at http://localhost:%d", port); // New
+  debug('Listening on ' + bind);
+}

@@ -1,0 +1,265 @@
+/* CHANGES ONLY ACCEPTED IN THE .SCSS NOT .CSS
+ ============================================================== */
+// any-hover instead of hover
+// display should be first property
+// background-colors should be last property
+
+/* Global
+ ============================================================== */
+
+// Breakpoints
+$break-smallest: 400px;
+$break-small: 500px;
+$break-large: 750px;
+$break-largest: 1000px;
+
+// Colours
+$darkBlue: #19354E;
+$grey: #8190A5;
+
+/* Mixins
+ ============================================================== */
+/// Mixin to prefix a property
+/// @author Hugo Giraudel
+/// @param {String} $property - Property name
+/// @param {*} $value - Property value
+/// @param {List} $prefixes (()) - List of prefixes to print
+@mixin prefix($property, $value, $prefixes: ()) {
+  @each $prefix in $prefixes {
+    #{'-' + $prefix + '-' + $property}: $value;
+  }
+
+  // Output standard non-prefixed declaration
+  #{$property}: $value;
+}
+
+// Example: @include prefix(transform, rotate(45deg), webkit ms);
+
+@mixin absoluteZero {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+@mixin barlowFont($fontSize) {
+  font-family: 'Barlow', sans-serif;
+  font-size: $fontSize;
+}
+
+// Reusable
+.fieldBox {
+  @include barlowFont(1em);
+  width: 100%;
+  border: 2px solid $grey;
+  @include prefix(border-radius, 6px, webkit moz);
+  padding: 8px;
+  outline: none;
+  @include prefix(box-sizing, border-box, webkit moz);
+  @include prefix(transition, .3s time, webkit moz ms o);
+
+  &:focus {
+    border-color: $darkBlue;
+    @include prefix(box-shadow, 0 0 8px 0 $darkBlue, webkit moz);
+  }
+}
+
+h1 {
+  @include barlowFont(2.6em);
+}
+
+body {
+  background-color: $darkBlue;
+}
+
+// generate Flexbox grow-rate utility classes
+@for $i from 1 through 10 {
+  .u-Flex-grow#{$i} {
+    flex-grow: $i;
+  }
+}
+// ============================================================ */
+
+/* Content container
+ ============================================================== */
+.mainContainer {
+  display: flex;
+  height: 100vh; // 100% of the view-port
+  justify-content: center;
+  align-items: center;
+
+  .loginContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 30%;
+    height: 85%;
+    @include prefix(border-radius, 3px, webkit moz);
+
+    background-color: #E5E9F2; // light gray
+
+    /* Media queries
+    ============================================================== */
+    @media screen and (max-width: $break-large) {
+      width: 35%;
+      font-size: 14px;
+    }
+
+    @media screen and (max-width: $break-small) {
+      width: 50%;
+    }
+
+    @media screen and (max-width: $break-smallest) {
+      width: 70%;
+      min-width: 250px;
+    }
+
+    /* Targeted queries
+    ============================================================== */
+    // 1024 tablet
+    @media screen and (width: 1024px) {
+      font-size: 21px;
+    }
+
+    // 1080p desktop
+    @media screen and (width: 1366px) and (height: 768px) {
+      font-size: 22px;
+    }
+
+    .headContainer {
+      display: flex;
+      justify-content: center;
+      width: 80%;
+      height: 20%;
+
+      //background-color: blue;
+
+      .thunderLogoContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 10.5%;
+        margin-right: 10px;
+        margin-top: 1px;
+
+        //background-color: green;
+
+        .circleContainer {
+          $circleContainerWidth: 100%;
+
+          position: relative; // so the absolutely position .circle is relative to this
+          width: $circleContainerWidth;
+          padding-top: $circleContainerWidth;
+
+          //background-color: brown;
+
+          .circle {
+            @include absoluteZero;
+            border-radius: 50%;
+
+            background-color: $darkBlue;
+
+            .thunderLogo {
+              width: 100%;
+            }
+          }
+        }
+      }
+
+      .boltAppContainer {
+        display: flex;
+        align-items: center;
+
+        //background-color: yellow;
+      }
+    }
+  }
+
+  .credentialsContainer {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    height: 60%;
+
+    //background-color: purple;
+
+    .fillInContainer {
+      display: flex;
+      justify-content: center;
+      //height: 20%;
+
+      //background-color: aqua;
+
+      .fillIn-Text {
+        @include barlowFont(1em);
+        color: $grey;
+      }
+    }
+
+    .inputsContainer {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      height: 80%;
+      margin-top: 10px;
+
+      //background-color: maroon;
+
+      .fieldContainer {
+        display: flex;
+        width: 90%;
+        height: 18%;
+        justify-content: center;
+        margin-bottom: 10px;
+
+        //background-color: greenyellow;
+
+        // Field box is in Global
+      }
+
+      .submitContainer {
+        position: relative;
+        height: 64%;
+        width: 90%;
+
+        //background-color: deeppink;
+
+        .cloudContainer {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 70%;
+
+          .thunderingCloud {
+            width: 15%;
+          }
+        }
+
+        .submitButtonContainer {
+          display: flex;
+          height: 28.13%;
+          align-self: flex-end;
+          justify-content: center;
+          align-items: center;
+          color: white;
+          cursor: pointer;
+
+          background-color: $darkBlue;
+        }
+      }
+    }
+  }
+
+  .actionsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 20%;
+    @include barlowFont(0.7em);
+    color: #3498db;
+  }
+}
+
+

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Match screen's width in device-independent pixels -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login</title>
+  <link rel="shortcut icon" href="images/favicon.ico">
+
+  <!-- First eliminate browser inconsistencies -->
+  <link rel="stylesheet" type="text/css" href="styles/normalize.css">
+  <!-- Then load your styles, potentially overriding  properties, where necessary -->
+  <link rel="stylesheet" type="text/css" href="styles/login.css">
+  <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet"> <!-- Google font -->
+</head>
+<body>
+
+  <div id="loader"></div> <!-- Spinning loader -->
+
+  <!-- mainContainer, holds the content of the page -->
+  <div class="mainContainer" id="mainContainer"> <!-- Loader's display none scrapped for now as it interferes with css design -->
+
+    <div class="loginContainer">
+      <div class="headContainer">
+        <div class="thunderLogoContainer">
+          <div class="circleContainer">
+            <div class="circle">
+              <img src="images/thunder.png" alt="Thunder bolt" class="thunderLogo">
+            </div>
+          </div>
+        </div>
+        <div class="boltAppContainer">
+          <h1>Bolt app</h1>
+        </div>
+      </div>
+
+      <div class="credentialsContainer">
+        <div class="fillInContainer">
+          <h3 class="fillIn-Text">Please fill in your username and password</h3>
+        </div>
+
+        <div class="inputsContainer">
+          <div class="fieldContainer">
+            <input type="text" id="userNameBox" class="fieldBox" placeholder="Username">
+          </div>
+
+          <div class="fieldContainer">
+            <input type="password" id="passwordBox" class="fieldBox" placeholder="Password">
+          </div>
+
+          <div class="submitContainer">
+            <div class="cloudContainer">
+              <img src="images/thunderingCloud.gif" alt="thunderingCloud" class="thunderingCloud">
+            </div>
+            <div class="submitButtonContainer fieldBox" id="loginButton">
+              <span>Sign in</span>
+            </div>
+          </div> <!-- /submitContainer -->
+        </div> <!-- /inputsContainer -->
+      </div> <!-- /credentialsContainer -->
+
+      <div class="actionsContainer">
+        <p>Lorem ipsum</p>
+      </div>
+
+    </div> <!-- /loginContainer -->
+  </div> <!-- /mainContainer -->
+
+  <!-- SCRIPTS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
+  <script src="scripts/global.js"></script>
+  <script src="scripts/unfoldingHeader.js"></script>
+  <script src="scripts/login.js"></script>
+
+</body>
+</html>
