@@ -53,9 +53,10 @@ const admin = function () {
     const banUser = function(banButton) {
         var userID = banButton.attr("id");
         var buttonText = banButton.text();
+        var sessionID = sessionStorage.getItem("projectBoltSessionID");
 
         if (buttonText === "Ban") {
-            $.post("login/ban-user", { userID: userID }, function() {})
+            $.post("login/ban-user/"+sessionID, { userID: userID }, function() {})
             .done(function() {
                 console.log("Request complete");
                 loadUsers();
@@ -65,7 +66,7 @@ const admin = function () {
             });
         }
         if (buttonText === "Unban") {
-            $.post("login/unban-user", { userID: userID }, function() {})
+            $.post("login/unban-user/"+sessionID, { userID: userID }, function() {})
             .done(function() {
                 console.log("Request complete");
                 loadUsers();
