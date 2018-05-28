@@ -61,6 +61,6 @@ $(document).ready(function () {
     });
   })
   .fail(function () {
-    console.log("error");
+    console.log("Get all questions failed");
   })
 });

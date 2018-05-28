@@ -98,8 +98,6 @@ const viewAnswers = function() {
         rowItemRating.setAttribute("data-header", "Rating");
         rowItemRating.setAttribute("id", answerID);
 
-
-
         /* APPENDS
         ============================================================== */
 

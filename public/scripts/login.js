@@ -82,9 +82,23 @@ $(document).ready(function() {
           login.login(userdata);
         }
       });
+
+      // Enter button triggers login on user field
+      login.usernameBox.keyup(function(event) {
+        if(event.keyCode === 13) {
+          login.loginBtn.click();
+        }
+      });
+
+      // Enter button triggers login on password field
+      login.passwordBox.keyup(function(event) {
+        if(event.keyCode === 13) {
+          login.loginBtn.click();
+        }
+      });
     }
   })
   .fail(function () {
-    console.log("Check session failed");
+    console.log("error");
   })  
 });
