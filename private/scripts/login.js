@@ -1,4 +1,5 @@
 var bcrypt = require('bcrypt');
+var database = require('./database');
 
 var sessionData = {};
 var nextSessionID = 0;
@@ -68,8 +69,21 @@ function getTimeDifference(dateA, dateB) {
 
     return Math.floor(utcB - utcA);
 }
+
+function isAdmin(sessionID) {
+    return new Promise((resolve, reject) => {
+        database.getUserRoleById(sessionData[sessionID]["userID"]).then((userRole) => {
+            resolve(userRole[0].RoleID === 3);
+        })
+        .catch((reason) => {
+            console.log('Handle rejected promise ('+reason+') here.');
+            reject(reason);
+        });
+    });
+}
   
 exports.createSession = createSession;
 exports.sessionValid = sessionValid;  
 exports.getHash = getHash;
 exports.getSessionData = getSessionData;
+exports.isAdmin = isAdmin;
