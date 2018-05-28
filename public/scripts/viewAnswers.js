@@ -190,37 +190,35 @@ const viewAnswers = function() {
     // AJAX get all answers request + not only
     const getAnswers = function() {
       let questionID = getQuestionID();
+      let sessionID = sessionStorage.getItem('projectBoltSessionID');
+      
+      $.getJSON( "answers/"+questionID+"/"+sessionID, function() {})
+      .done(function(data) {
+        console.log("Request complete");
+        $.each( data, function( key, val ) {
+          // First element contains the question text
+          if (key === 0) {
+            document.getElementById("questionHeading").textContent = val["Question"];
+          }
+          else {
+            viewAnswers.addToTable([val["Answer"], val["ID"], val["Username"]]);
+          }
+        });
 
-      if (questionID.length > 0) {
-        $.getJSON( "answers/"+questionID, function() {})
-          .done(function(data) {
-            console.log("Request complete");
-            $.each( data, function( key, val ) {
-              // First element contains the question text
-              if (key === 0) {
-                document.getElementById("questionHeading").textContent = val["Question"];
-              }
-              else {
-                viewAnswers.addToTable([val["Answer"], val["ID"], val["Username"]]);
-              }
-            });
+        $('.ui.rating').on("click", function(){
+          addRating.rateAnswer($(this));
+        });
 
-            $('.ui.rating').on("click", function(){
-              addRating.rateAnswer($(this));
-            });
+        $('.ui.rating').rating({
+          maxRating: 5
+        });
 
-            $('.ui.rating').rating({
-              maxRating: 5
-            });
-
-            viewRatings.updateAllRatings();
-            viewAnswers.resolveAnswersArrived(); // All answers arrived, resolve the promise
-          })
-          .fail(function() {
-            unfoldingHeader.unfoldHeader("Error", "orange");
-          })
-      }
-
+        viewRatings.updateAllRatings();
+        viewAnswers.resolveAnswersArrived(); // All answers arrived, resolve the promise
+      })
+      .fail(function() {
+        unfoldingHeader.unfoldHeader("Error", "orange");
+      })
     };
 
     const resetAnswersPromise = function() {
@@ -280,7 +278,8 @@ $(document).ready(function() {
             let bodyJSON = {
               questionID: viewAnswers.getQuestionID(),
               answer: viewAnswers.addAnswerArea.val(),
-              userID: data.userID
+              userID: data.userID,
+              sessionID: sessionStorage.getItem('projectBoltSessionID')
             };
 
             // Send the AJAX request

@@ -1,5 +1,7 @@
 const admin = function () {
     const loadUsers = function() {    
+        var sessionID = sessionStorage.getItem("projectBoltSessionID");
+
         $("#userTable tr").remove();
         
         var newRow = $("<tr/>");
@@ -9,7 +11,7 @@ const admin = function () {
         $("#userTable").append(newRow);
 
         console.log("Sending request");
-        $.getJSON("login/get-usernames-status", function () {})
+        $.getJSON("login/get-usernames-status/"+sessionID, function () {})
         .done(function (data) {
             console.log("Request complete");
             $.each(data, function (key, val) {
@@ -51,9 +53,10 @@ const admin = function () {
     const banUser = function(banButton) {
         var userID = banButton.attr("id");
         var buttonText = banButton.text();
+        var sessionID = sessionStorage.getItem("projectBoltSessionID");
 
         if (buttonText === "Ban") {
-            $.post("login/ban-user", { userID: userID }, function() {})
+            $.post("login/ban-user/"+sessionID, { userID: userID }, function() {})
             .done(function() {
                 console.log("Request complete");
                 loadUsers();
@@ -63,7 +66,7 @@ const admin = function () {
             });
         }
         if (buttonText === "Unban") {
-            $.post("login/unban-user", { userID: userID }, function() {})
+            $.post("login/unban-user/"+sessionID, { userID: userID }, function() {})
             .done(function() {
                 console.log("Request complete");
                 loadUsers();
@@ -83,12 +86,10 @@ const admin = function () {
 $(document).ready(function () {
     var sessionID = sessionStorage.getItem("projectBoltSessionID");
 
-    $.getJSON("login/get-user-role/"+sessionID, function () {})
-    .done(function (data) {
+    $.getJSON("login/is-admin/"+sessionID, function () {})
+    .done(function (isAdmin) {
         console.log("Request complete");
-        var userRole = data[0].RoleID;
-
-        if (userRole === 3) {
+        if (isAdmin) {
             admin.loadUsers();
         }
         else {
@@ -97,7 +98,5 @@ $(document).ready(function () {
     })
     .fail(function () {
         console.log("error");
-    })
-
-    
+    })    
 });

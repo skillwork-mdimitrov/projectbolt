@@ -50,8 +50,10 @@ const viewQuestions = function () {
 //  ============================================================== */
 
 $(document).ready(function () {
+  let sessionID = sessionStorage.getItem('projectBoltSessionID');
+
   console.log("Sending request");
-  $.getJSON("questions/get-all-questions", function () {})
+  $.getJSON("questions/get-all-questions/"+sessionID, function () {})
   .done(function (data) {
     console.log("Request complete");
     $.each(data, function (key, val) {

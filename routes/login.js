@@ -41,107 +41,150 @@ router.post('/', function(req, res) {
 /* GET session check */
 router.get('/check-session/:sessionID', function(req, res, next) {
   let sessionID = req.params["sessionID"];
-  let sessionValid = login.sessionValid(sessionID);
-
-  res.send({'sessionValid': sessionValid});
+  res.send({'sessionValid': login.sessionValid(sessionID)});
 });
 
 /* GET username from session */
 router.get('/get-username/:sessionID', function(req, res, next) {  
   let sessionID = req.params["sessionID"];
-  let sessionData = login.getSessionData(sessionID);
-  
-  // Check if the session exists
-  if (sessionData === undefined || typeof sessionData === "undefined") {
-    res.status(500).send('Session not found');
-  }
-  else {
-    database.getUsernameById(sessionData["userID"]).then((username) => {
+    
+  // Check if the session is valid
+  if (login.sessionValid(sessionID)) {
+    database.getUsernameById(login.getSessionData(sessionID)["userID"]).then((username) => {
       res.send(username);
     }).catch(
     (reason) => {
       console.log('Handle rejected promise ('+reason+') here.');
       res.status(500).send('Something broke! ' + reason)
     });
+  }
+  else {
+    res.status(500).send('Invalid session');
   }    
 });
 
 /* GET user role from session */
-router.get('/get-user-role/:sessionID', function(req, res, next) {  
+router.get('/is-admin/:sessionID', function(req, res, next) {  
   let sessionID = req.params["sessionID"];
-  let sessionData = login.getSessionData(sessionID);
   
-  // Check if the session exists
-  if (sessionData === undefined) {
-    res.status(500).send('Session not found');
-  }
-  else {
-    database.getUserRoleById(sessionData["userID"]).then((userRole) => {
-      res.send(userRole);
+  // Check if the session is valid
+  if (login.sessionValid(sessionID)) {
+    login.isAdmin(sessionID).then((isAdmin) => {
+      res.send(isAdmin);
     }).catch(
     (reason) => {
       console.log('Handle rejected promise ('+reason+') here.');
       res.status(500).send('Something broke! ' + reason)
     });
+  }
+  else {
+    res.status(500).send('Invalid session');
   }    
 });
 
 /* GET userID from session */
 router.get('/get-userID/:sessionID', function(req, res, next) {
   let sessionID = req.params["sessionID"];
-  let sessionData = login.getSessionData(sessionID);
 
-  // Check if the session exists
-  if (sessionData === undefined) {
-    res.status(500).send('Session not found');
+  // Check if the session is valid
+  if (login.sessionValid(sessionID)) {
+    res.send({'userID': login.getSessionData(sessionID)["userID"]});
   }
   else {
-    res.send({'userID': sessionData["userID"]});
+    res.status(500).send('Invalid session');
   }  
 });
 
 /* GET id, username and ban status from all users */
-router.get('/get-usernames-status', function(req, res, next) {
-  database.getUsernamesBannedStatus().then((users) => {
-    res.json(users);
-  }).catch(
-   (reason) => {
-    console.log('Handle rejected promise ('+reason+') here.');
-    res.status(500).send('Something broke! ' + reason)
-  });  
+router.get('/get-usernames-status/:sessionID', function(req, res, next) {
+  let sessionID = req.params["sessionID"];
+
+  // Check if the session is valid and user is admin
+  if (login.sessionValid(sessionID)) {
+    database.getUsernamesBannedStatus().then((users) => {
+      res.json(users);
+    }).catch((reason) => {
+      console.log('Handle rejected promise ('+reason+') here.');
+      res.status(500).send('Something broke! ' + reason)
+    });    
+  }
+  else {
+    res.status(500).send('Invalid session');
+  }     
+});
+
+/* Get individual user's banned status from sessionID */
+router.get('/get-banned-status/:sessionID', function(req, res, next) {
+  let sessionID = req.params["sessionID"];
+
+  // Check if the session is valid and user is admin
+  if (login.sessionValid(sessionID)) {
+    database.getUserBannedStatusById(login.getSessionData(sessionID)["userID"]).then((bannedStatus) => {
+      res.send(bannedStatus);
+    }).catch((reason) => {
+      console.log('Handle rejected promise ('+reason+') here.');
+      res.status(500).send('Something broke! ' + reason)
+    });
+  }
+  else {
+    res.status(500).send('Invalid session');
+  } 
 });
 
 /* Ban a user */
-router.post('/ban-user', function(req, res, next) {
-  database.banUser(req.body.userID).then(() => {
-    res.status(200).send("Ban succesful");
-  }).catch(
-   (reason) => {
-    console.log('Handle rejected promise ('+reason+') here.');
-    res.status(500).send('Something broke! ' + reason)
-  });  
+router.post('/ban-user/:sessionID', function(req, res, next) {
+  let sessionID = req.params["sessionID"];
+
+  // Check if the session is valid and user is admin
+  if (login.sessionValid(sessionID)) {
+    login.isAdmin(sessionID).then((isAdmin) => {
+      if (isAdmin) {
+        database.banUser(req.body.userID).then(() => {
+          res.status(200).send("Ban succesful");
+        }).catch((reason) => {
+          console.log('Handle rejected promise ('+reason+') here.');
+          res.status(500).send('Something broke! ' + reason)
+        }); 
+      }
+      else {
+        res.status(500).send('Unauthorized access');
+      }        
+    }).catch((reason) => {
+      console.log('Handle rejected promise ('+reason+') here.');
+      res.status(500).send('Something broke! ' + reason)
+    });
+  }
+  else {
+    res.status(500).send('Invalid session');
+  } 
 });
 
 /* Unban a user */
-router.post('/unban-user', function(req, res, next) {
-  database.unbanUser(req.body.userID).then(() => {
-    res.status(200).send("Ban succesful");
-  }).catch(
-   (reason) => {
-    console.log('Handle rejected promise ('+reason+') here.');
-    res.status(500).send('Something broke! ' + reason)
-  });  
-});
+router.post('/unban-user/:sessionID', function(req, res, next) {
+  let sessionID = req.params["sessionID"];
 
-/* Get user's banned status from userID */
-router.get('/get-banned-status/:userID', function(req, res, next) {
-  database.getUserBannedStatusById(req.params["userID"]).then((bannedStatus) => {
-    res.send(bannedStatus);
-    }).catch(
-      (reason) => {
-        console.log('Handle rejected promise ('+reason+') here.');
-        res.status(500).send('Something broke! ' + reason)
-      });
+  // Check if the session is valid and user is admin
+  if (login.sessionValid(sessionID)) {
+    login.isAdmin(sessionID).then((isAdmin) => {
+      if (isAdmin) {
+        database.unbanUser(req.body.userID).then(() => {
+          res.status(200).send("Ban succesful");
+        }).catch((reason) => {
+          console.log('Handle rejected promise ('+reason+') here.');
+          res.status(500).send('Something broke! ' + reason)
+        });  
+      }
+      else {
+        res.status(500).send('Unauthorized access');
+      }        
+    }).catch((reason) => {
+      console.log('Handle rejected promise ('+reason+') here.');
+      res.status(500).send('Something broke! ' + reason)
+    });
+  }
+  else {
+    res.status(500).send('Invalid session');
+  } 
 });
 
 module.exports = router;

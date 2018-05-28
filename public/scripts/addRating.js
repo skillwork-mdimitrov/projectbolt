@@ -13,11 +13,12 @@ const addRating = function() {
         let ratingData = {
             "answerID": answerID,
             "userID": userID,
-            "rating": rating
+            "rating": rating,
+            "sessionID": sessionID
         };
 
         console.log("Sending rating exists request");          
-        $.getJSON("rating/get-rating-answer-user/"+answerID+"/"+userID, function () {})
+        $.getJSON("rating/get-rating-answer-user/"+answerID+"/"+userID+"/"+sessionID, function () {})
         .done(function (data) {
             console.log("Request complete");
             console.log("Sending insert rating request");
