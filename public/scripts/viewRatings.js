@@ -1,10 +1,11 @@
 const viewRatings = function() {
     const updateAllRatings = function updateAllRatings() {
+        let sessionID = sessionStorage.getItem('projectBoltSessionID');
         $('.ui.rating').each(function( index ) {
             let answerID = $(this).attr("id");
             let ratingElement = $(this);
 
-            $.getJSON( "rating/get-all-ratings/"+answerID, function() {})
+            $.getJSON( "rating/get-all-ratings/"+answerID+"/"+sessionID, function() {})
             .done(function(data) {
                 console.log("Request complete");
                 let totalRating = 0;
@@ -23,8 +24,9 @@ const viewRatings = function() {
 
     const updateRatings = function updateRatings(ratingElement) {
         let answerID = ratingElement.attr("id");
+        let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
-        $.getJSON( "rating/get-all-ratings/"+answerID, function() {})
+        $.getJSON( "rating/get-all-ratings/"+answerID+"/"+sessionID, function() {})
         .done(function(data) {
             console.log("Request complete");
             let totalRating = 0;
