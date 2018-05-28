@@ -52,7 +52,7 @@ router.get('/get-username/:sessionID', function(req, res, next) {
   let sessionData = login.getSessionData(sessionID);
   
   // Check if the session exists
-  if (sessionData === undefined) {
+  if (sessionData === undefined || typeof sessionData === "undefined") {
     res.status(500).send('Session not found');
   }
   else {
