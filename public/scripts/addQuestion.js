@@ -5,12 +5,11 @@ const addQuestion = function() {
   const questionBox = $('#questionBox');
   const submitQuestionBtn = $('#submitQuestionBtn');
   const submitQuestion = function(question) {
-    let sessionID = sessionStorage.getItem('projectBoltSessionID');
     "use strict";
     $.ajax({
       type: 'post',
       data: question,
-      url: 'questions/add-question/'+sessionID,
+      url: 'questions/add-question',
       success: function(data){
         unfoldingHeader.unfoldHeader(data, "green");
       },
@@ -38,18 +37,19 @@ $(document).ready(function() {
   /* ATTACH EVENT LISTENERS
     ============================================================== */
   addQuestion.submitQuestionBtn.on("click", function() {
-
+    let sessionID = sessionStorage.getItem('projectBoltSessionID');
     //Get UserID
     "use strict";
     $.ajax({
       type: 'get',
-      url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
+      url: 'login/get-userID/'+sessionID,
       success: function (data) {
 
         // JSON'ize the question
         let questionJSON = {
           question: addQuestion.questionBox.val(),
-          userID: data.userID
+          userID: data.userID,
+          sessionID: sessionID
         };
         // Send the AJAX request
         addQuestion.submitQuestion(questionJSON);

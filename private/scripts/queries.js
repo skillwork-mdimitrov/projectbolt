@@ -80,6 +80,14 @@ function getInsertQuestionQuery(question, userID) {
     return {query: query, params: params};
 }
 
+function getDeleteQuestionQuery(questionID) {
+    var query  = "DELETE FROM Questions WHERE ID = @questionID";
+    var params = [
+        {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID}
+    ]
+    return {query: query, params: params};
+}
+
 function getAnswersByQuestionIdQuery(questionID) {
     var query = `SELECT Answers.ID, Answers.Answer, Users.Username 
                 FROM Answers 
@@ -176,6 +184,7 @@ exports.getAllQuestionsQuery = getAllQuestionsQuery;
 exports.getAllNonBannedQuestionsQuery = getAllNonBannedQuestionsQuery;
 exports.getQuestionTextByIdQuery = getQuestionTextByIdQuery;
 exports.getInsertQuestionQuery = getInsertQuestionQuery;
+exports.getDeleteQuestionQuery = getDeleteQuestionQuery;
 
 exports.getAnswersByQuestionIdQuery = getAnswersByQuestionIdQuery;
 exports.getNonBannedAnswersByQuestionIdQuery = getNonBannedAnswersByQuestionIdQuery;
