@@ -8,18 +8,8 @@ const viewAnswers = function() {
     const submitAnswerBtn = $('#submitAnswerBtn');
     const cancelAnswerBtn = $('#cancelAnswerBtn');
 
-    /* Outside promise for resolving or rejecting answers arrival
-    ============================================================== */
-    var resolveAnswersArrived;
-    var rejectAnswersArrived;
-    var answersArrived = new Promise(function(resolve, reject) {
-      resolveAnswersArrived = resolve;
-      rejectAnswersArrived = reject;
-    });
-    // ============================================================== */
-
     // Since the new implementation calls addToTable many times, having a separate table instantiation is necessary
-    const mkAnswersTableSkeleton = function(callback) {
+    const mkAnswersTableSkeleton = function() {
       /* CREATES
       ============================================================== */
 
@@ -98,8 +88,6 @@ const viewAnswers = function() {
         rowItemRating.setAttribute("data-header", "Rating");
         rowItemRating.setAttribute("id", answerID);
 
-
-
         /* APPENDS
         ============================================================== */
 
@@ -175,60 +163,51 @@ const viewAnswers = function() {
         type: 'POST',
         data: bodyJSON,
         url: 'answers/add-answer',
-        success: function(data){
-          console.log("Answer added successfully");
+        success: function(){
+          console.log(`${postAnswer.name} says: Answer added successfully`);
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-          unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
-          console.log('jqXHR: ' + jqXHR);
-          console.log('textStatus: ' + textStatus);
-          console.log('errorThrown: ' + errorThrown);
+        error: function(jqXHR) {
+          unfoldingHeader.unfoldHeader("Failed to post your answer. Apologies :(", "orange");
+          global.logAJAXErr(postAnswer.name, jqXHR);
         }
       });
     };
 
     // AJAX get all answers request + not only
     const getAnswers = function() {
-      let questionID = getQuestionID();
-      let sessionID = sessionStorage.getItem('projectBoltSessionID');
-      
-      $.getJSON( "answers/"+questionID+"/"+sessionID, function() {})
-      .done(function(data) {
-        console.log("Request complete");
-        $.each( data, function( key, val ) {
-          // First element contains the question text
-          if (key === 0) {
-            document.getElementById("questionHeading").textContent = val["Question"];
-          }
-          else {
-            viewAnswers.addToTable([val["Answer"], val["ID"], val["Username"]]);
-          }
-        });
+      return new Promise(function(resolve, reject) {
+        let questionID = getQuestionID();
+        let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
-        $('.ui.rating').on("click", function(){
-          addRating.rateAnswer($(this));
-        });
+        $.getJSON( "answers/"+questionID+"/"+sessionID, function() {})
+            .done(function(data) {
+              console.log("Request complete");
+              $.each( data, function( key, val ) {
+                // First element contains the question text
+                if (key === 0) {
+                  document.getElementById("questionHeading").textContent = val["Question"];
+                }
+                else {
+                  viewAnswers.addToTable([val["Answer"], val["ID"], val["Username"]]);
+                }
+              });
 
-        $('.ui.rating').rating({
-          maxRating: 5
-        });
+              $('.ui.rating').on("click", function(){
+                addRating.rateAnswer($(this));
+              });
 
-        viewRatings.updateAllRatings();
-        viewAnswers.resolveAnswersArrived(); // All answers arrived, resolve the promise
-      })
-      .fail(function() {
-        unfoldingHeader.unfoldHeader("Error", "orange");
-      })
-    };
+              $('.ui.rating').rating({
+                maxRating: 5
+              });
 
-    const resetAnswersPromise = function() {
-      // Reset the promise, because once it's fulfilled it can't be reused
-      viewAnswers.resolveAnswersArrived = "";
-      viewAnswers.rejectAnswersArrived = "";
-
-      viewAnswers.answersArrived = new Promise(function(resolve, reject) {
-        viewAnswers.resolveAnswersArrived = resolve;
-        viewAnswers.rejectAnswersArrived = reject;
+              viewRatings.updateAllRatings();
+              resolve("Answers arrived"); // All answers arrived, resolve the promise
+            })
+            .fail(function(jqXHR) {
+              global.logAJAXErr(getAnswers.name, jqXHR);
+              unfoldingHeader.unfoldHeader("Failed to obtain the answers. Apologies :(", "orange");
+              reject(`Failed to fetch answers for ↓ \n questionID: ${questionID}, sessionID: ${sessionID}`);
+            })
       });
     };
 
@@ -240,17 +219,11 @@ const viewAnswers = function() {
         cancelAnswerBtn: cancelAnswerBtn,
         addAnswerArea: addAnswerArea,
 
-        // Outside promise for answers arrival
-        answersArrived: answersArrived,
-        resolveAnswersArrived: resolveAnswersArrived,
-        rejectAnswersArrived: rejectAnswersArrived,
-        resetAnswersPromise: resetAnswersPromise,
-
         // Functions
         mkAnswersTableSkeleton: mkAnswersTableSkeleton,
         addToTable: addToTable,
         rmAnswersTable: rmAnswersTable,
-        addOwnAnswer: addOwnAnswer,
+        addOwnAnswer: addOwnAnswer, // returns functions
         getQuestionID: getQuestionID,
         postAnswer: postAnswer,
         getAnswers: getAnswers
@@ -291,16 +264,17 @@ $(document).ready(function() {
             ============================================================== */
             viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
             viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
-            viewAnswers.getAnswers(); // Populate the answers table again (with the new answers)
             document.getElementById("answersTable").style.visibility = "hidden";
             document.getElementById("loader").style.display = "block";
-
-            // Animate-in the newly arrived answers
-            viewAnswers.answersArrived.then(function() {
+            // Populate the answers table again (with the new answers)
+            viewAnswers.getAnswers().then(function() {
+              // When answers arrive animate them in
               document.getElementById("loader").style.display = "none";
               document.getElementById("answersTable").style.visibility = "visible";
               document.getElementById("answersTable").style.opacity = "1";
-              viewAnswers.resetAnswersPromise();
+            })
+            .catch(function(reject) {
+              console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
             })
           }
           else {
@@ -309,7 +283,7 @@ $(document).ready(function() {
         },
         error: function (jqXHR, textStatus, errorThrown) {
           unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
-          console.log('jqXHR: ' + jqXHR);
+          console.log('jqXHR: ' + jqXHR.status);
           console.log('textStatus: ' + textStatus);
           console.log('errorThrown: ' + errorThrown);
         }
@@ -324,13 +298,16 @@ $(document).ready(function() {
 
     console.log("Sending get answers request");
     viewAnswers.mkAnswersTableSkeleton(); // Create the answers table skeleton
-    viewAnswers.getAnswers(); // Populate the answers table
     document.getElementById("loader").style.display = "block";
-
-    // Animate-in the newly arrived answers
-    viewAnswers.answersArrived.then(function() {
+    // Populate the answers table
+    viewAnswers.getAnswers().then(function() {
+      // Animate-in the newly arrived answers
       document.getElementById("loader").style.display = "none";
       document.getElementById("answersTable").style.opacity = "1";
-      viewAnswers.resetAnswersPromise();
-    });
+      return true;
+    })
+    .catch(function(reject) {
+      console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
+      return false;
+    })
 });
