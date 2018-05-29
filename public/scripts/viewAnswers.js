@@ -8,7 +8,10 @@ const viewAnswers = function() {
     const submitAnswerBtn = $('#submitAnswerBtn');
     const cancelAnswerBtn = $('#cancelAnswerBtn');
 
-    // Since the new implementation calls addToTable many times, having a separate table instantiation is necessary
+    // Vanilla JS
+    const loader = document.getElementById("loader");
+
+    // Make the answers table with the heading columns
     const mkAnswersTableSkeleton = function() {
       /* CREATES
       ============================================================== */
@@ -44,7 +47,6 @@ const viewAnswers = function() {
       tableHeader.appendChild(answersColumn);
       tableHeader.appendChild(userColumn);
       tableHeader.appendChild(ratingsColumn);
-
 
       // Append that table header to the answers table
       answersTable.appendChild(tableHeader);
@@ -167,8 +169,15 @@ const viewAnswers = function() {
           console.log(`${postAnswer.name} says: Answer added successfully`);
         },
         error: function(jqXHR) {
-          unfoldingHeader.unfoldHeader("Failed to post your answer. Apologies :(", "orange");
-          global.logAJAXErr(postAnswer.name, jqXHR);
+          // If the server response includes "Violation of UNIQUE KEY"
+          if(global.logAJAXErr(postAnswer.name, jqXHR) === true) {
+            // The user is trying to add an already existing answer
+            unfoldingHeader.unfoldHeader("This answer already exists", "red");
+          }
+          // More general error
+          else {
+            unfoldingHeader.unfoldHeader("Failed to post your answer. Apologies :(", "orange");
+          }
         }
       });
     };
@@ -211,6 +220,32 @@ const viewAnswers = function() {
       });
     };
 
+    // Visually manipulate the loader
+    const loaderUI = function() {
+      const showLoader = () => loader.style.display = "block";
+      const hideLoader = () => loader.style.display = "none";
+
+      return {
+        showLoader: showLoader,
+        hideLoader: hideLoader
+      }
+    }(); // IIFE;
+
+    // Visually manipulate the answers table
+    const answersTableUI = function() {
+      const table = document.getElementById("answersTable");
+
+      const hide = () => table.style.visibility = "hidden";
+      const show = () => table.style.visibility = "visible";
+      const fadeIn = () => table.style.opacity = "1";
+
+      return {
+        hide: hide,
+        show: show,
+        fadeIn: fadeIn
+      }
+    }; // NOT IIFE;
+
     // Made publicly available
     return {
         // DOM elements that need to be accessed outside the namespace
@@ -223,10 +258,12 @@ const viewAnswers = function() {
         mkAnswersTableSkeleton: mkAnswersTableSkeleton,
         addToTable: addToTable,
         rmAnswersTable: rmAnswersTable,
-        addOwnAnswer: addOwnAnswer, // returns functions
+        addOwnAnswer: addOwnAnswer, // return functions
         getQuestionID: getQuestionID,
         postAnswer: postAnswer,
-        getAnswers: getAnswers
+        getAnswers: getAnswers,
+        loaderUI: loaderUI, // return functions
+        answersTableUI: answersTableUI // execute first to get the functions
     }
 }();
 //  ============================================================== */
@@ -240,6 +277,8 @@ $(document).ready(function() {
     });
 
     viewAnswers.submitAnswerBtn.on("click", function() {
+      const buttonID = this.id; // for logging purposes
+
       $.ajax({
         type: 'get',
         url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
@@ -264,14 +303,14 @@ $(document).ready(function() {
             ============================================================== */
             viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
             viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
-            document.getElementById("answersTable").style.visibility = "hidden";
-            document.getElementById("loader").style.display = "block";
+            viewAnswers.answersTableUI().hide();
+            viewAnswers.loaderUI.showLoader();
             // Populate the answers table again (with the new answers)
             viewAnswers.getAnswers().then(function() {
               // When answers arrive animate them in
-              document.getElementById("loader").style.display = "none";
-              document.getElementById("answersTable").style.visibility = "visible";
-              document.getElementById("answersTable").style.opacity = "1";
+              viewAnswers.loaderUI.hideLoader();
+              viewAnswers.answersTableUI().show();
+              viewAnswers.answersTableUI().fadeIn();
             })
             .catch(function(reject) {
               console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
@@ -281,14 +320,11 @@ $(document).ready(function() {
             unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
           }
         },
-        error: function (jqXHR, textStatus, errorThrown) {
-          unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
-          console.log('jqXHR: ' + jqXHR.status);
-          console.log('textStatus: ' + textStatus);
-          console.log('errorThrown: ' + errorThrown);
+        error: function (jqXHR) {
+          unfoldingHeader.unfoldHeader('Invalid session, please logout and login again. Apologies :(', "red");
+          global.logAJAXErr(buttonID, jqXHR);
         }
       });
-
     });
 
     viewAnswers.cancelAnswerBtn.on("click", function() {
@@ -298,12 +334,12 @@ $(document).ready(function() {
 
     console.log("Sending get answers request");
     viewAnswers.mkAnswersTableSkeleton(); // Create the answers table skeleton
-    document.getElementById("loader").style.display = "block";
+    viewAnswers.loaderUI.showLoader();
     // Populate the answers table
     viewAnswers.getAnswers().then(function() {
       // Animate-in the newly arrived answers
-      document.getElementById("loader").style.display = "none";
-      document.getElementById("answersTable").style.opacity = "1";
+      viewAnswers.loaderUI.hideLoader();
+      viewAnswers.answersTableUI().fadeIn();
       return true;
     })
     .catch(function(reject) {

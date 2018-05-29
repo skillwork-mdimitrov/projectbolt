@@ -64,7 +64,9 @@ const global = function() {
   /* Console.log an AJAX request error
    * functionName example: logout.name
    * jqXHR examplse: $.ajax( . . . error(function(jqXHR)); $.getJSON().fail(function(jqXHR)
-   * DRAWBACKS: The exact line from where the error got logged will be lost, but it is known that logAJAXErr logged it */
+   * DRAWBACKS: ↓
+   * NOT GOOD for anonymous functions (You would need to do something like "const buttonID = this.id" and pass that as the first parameter
+   * The exact line from where the error got logged will be lost, but it will be known that logAJAXErr function logged it */
   const logAJAXErr = function(functionName, jqXHR) {
     console.log(`${logAJAXErr.name} reporting: 
                   ${functionName} AJAX request failed. Details: ↓
@@ -72,6 +74,14 @@ const global = function() {
                   Error thrown: ${jqXHR.statusText}
                   responseText: ↓
                   ${jqXHR.responseText}`);
+
+    /* @return {true} If the server response contains the phrase in the includes()
+     ============================================================== */
+    /* Example of how to use the return true: ↓
+    *  if(global.logAJAXErr(postAnswer.name, jqXHR) === true) {
+    *     unfoldingHeader.unfoldHeader("This answer already exists", "red");
+    *  } */
+    return jqXHR.responseText.includes("Violation of UNIQUE KEY");
   };
 
   return {
