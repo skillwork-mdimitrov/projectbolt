@@ -75,13 +75,19 @@ const global = function() {
                   responseText: ↓
                   ${jqXHR.responseText}`);
 
-    /* @return {true} If the server response contains the phrase in the includes()
+    /* @returns {duplicatedKey} if the server response contains the phrase in the if includes()
      ============================================================== */
-    /* Example of how to use the return true: ↓
-    *  if(global.logAJAXErr(postAnswer.name, jqXHR) === true) {
+    /* Example of how to use the returned "duplicatedKey: ↓
+    *  if(global.logAJAXErr(postAnswer.name, jqXHR) === "duplicatedKey) {
     *     unfoldingHeader.unfoldHeader("This answer already exists", "red");
     *  } */
-    return jqXHR.responseText.includes("Violation of UNIQUE KEY");
+    if (jqXHR.responseText.includes("Violation of UNIQUE KEY")) {
+      return "duplicatedKey";
+    }
+    // Add your else if here
+    else {
+      return false;
+    }
   };
 
   return {

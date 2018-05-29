@@ -170,7 +170,7 @@ const viewAnswers = function() {
         },
         error: function(jqXHR) {
           // If the server response includes "Violation of UNIQUE KEY"
-          if(global.logAJAXErr(postAnswer.name, jqXHR) === true) {
+          if(global.logAJAXErr(postAnswer.name, jqXHR) === "duplicatedKey") {
             // The user is trying to add an already existing answer
             unfoldingHeader.unfoldHeader("This answer already exists", "red");
           }
