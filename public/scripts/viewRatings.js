@@ -21,9 +21,11 @@ const viewRatings = function() {
             });
             averageRating = Math.ceil(totalRating / ratingCount);
             ratingElement.rating('set rating', averageRating)
+            ratingElement.rating("enable");
         })
         .fail(function(message) {
             console.log("Failed acquiring ratings of answerID " + answerID + ": " + message);
+            ratingElement.rating("enable");
         })
     };
 

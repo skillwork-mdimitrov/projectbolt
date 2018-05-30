@@ -1,5 +1,6 @@
 const addRating = function() {
     const rateAnswer = function rateAnswer(ratingElement) {
+        ratingElement.rating("disable");
         let answerID = ratingElement.attr("id");
         let rating = $('#'+answerID).rating('get rating');
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
@@ -24,6 +25,7 @@ const addRating = function() {
                 })
                 .fail(function(message) {
                     console.log("Updating rating failed on answerID " + answerID + ": " + message);   
+                    ratingElement.rating("enable");
                 });
                 }
             else {
@@ -35,11 +37,13 @@ const addRating = function() {
                 })
                 .fail(function() {
                     console.log("Inserting rating failed on answerID " + answerID + ": " + message);   
+                    ratingElement.rating("enable");
                 });
             }
         })
         .fail(function (message) {
             console.log("Rating check failed on answerID " + answerID + ": " + message);   
+            ratingElement.rating("enable");
         })
     };
 
