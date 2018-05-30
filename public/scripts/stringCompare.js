@@ -12,10 +12,10 @@ const stringCompare = function() {
         var questionSimilarityMapping = new Map();
         var sessionID = sessionStorage.getItem('projectBoltSessionID');
 
-        console.log("Sending request");
+        console.log("Retrieving all questions");
         $.getJSON( "questions/get-all-questions/"+sessionID, function() {})
         .done(function(data) {
-            console.log("Request complete");
+            console.log("All questions recieved");
             $.each( data, function( key, val ) {
                 questionSet.push(val["Question"]);
             });
@@ -35,8 +35,8 @@ const stringCompare = function() {
             stringCompare.autoCompleter.list = optionsArray;
             stringCompare.autoCompleter.evaluate();
         })
-        .fail(function() {
-            console.log( "error");
+        .fail(function(message) {
+            console.log("Failed retrieving all questions: " + message);
         })
     }
 
