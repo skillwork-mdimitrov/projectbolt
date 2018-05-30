@@ -24,6 +24,7 @@ const addRating = function() {
                     viewRatings.updateRating(ratingElement);
                 })
                 .fail(function(message) {
+                    unfoldingHeader.unfoldHeader("Failed updating rating, see console for details", "red", true);
                     console.log("Updating rating failed on answerID " + answerID + ": " + message);   
                     ratingElement.rating("enable");
                 });
@@ -36,12 +37,14 @@ const addRating = function() {
                     viewRatings.updateRating(ratingElement);
                 })
                 .fail(function() {
+                    unfoldingHeader.unfoldHeader("Failed inserting rating, see console for details", "red", true);
                     console.log("Inserting rating failed on answerID " + answerID + ": " + message);   
                     ratingElement.rating("enable");
                 });
             }
         })
         .fail(function (message) {
+            unfoldingHeader.unfoldHeader("Failed checking rating, see console for details", "red", true);
             console.log("Rating check failed on answerID " + answerID + ": " + message);   
             ratingElement.rating("enable");
         })

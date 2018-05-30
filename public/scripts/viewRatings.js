@@ -24,6 +24,7 @@ const viewRatings = function() {
             ratingElement.rating("enable");
         })
         .fail(function(message) {
+            unfoldingHeader.unfoldHeader("Failed acquiring ratings, see console for details", "red", true);
             console.log("Failed acquiring ratings of answerID " + answerID + ": " + message);
             ratingElement.rating("enable");
         })

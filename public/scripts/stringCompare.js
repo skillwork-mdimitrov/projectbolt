@@ -36,6 +36,7 @@ const stringCompare = function() {
             stringCompare.autoCompleter.evaluate();
         })
         .fail(function(message) {
+            unfoldingHeader.unfoldHeader("Failed retrieving questions, see console for details", "red", true);
             console.log("Failed retrieving all questions: " + message);
         })
     }
