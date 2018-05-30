@@ -4,6 +4,10 @@
  ============================================================== */
 /* Mixins
  ============================================================== */
+/* Mixin to prefix a property
+  @param {String} $property - Property name
+  @param {*} $value - Property value
+  @param {List} $prefixes (()) - List of prefixes to print */
 .fieldBox {
   font-family: "Barlow", sans-serif;
   font-size: 1em;

@@ -78,10 +78,10 @@ const global = function() {
     /* @returns {duplicatedKey} if the server response contains the phrase in the if includes()
      ============================================================== */
     /* Example of how to use the returned "duplicatedKey: ↓
-    *  if(global.logAJAXErr(postAnswer.name, jqXHR) === "duplicatedKey) {
+    *  if(global.logAJAXErr(postAnswer.name, jqXHR) === "duplicatedKey") {
     *     unfoldingHeader.unfoldHeader("This answer already exists", "red");
     *  } */
-    if (jqXHR.responseText.includes("Violation of UNIQUE KEY")) {
+    if(jqXHR.responseText.includes("Violation of UNIQUE KEY")) {
       return "duplicatedKey";
     }
     // Add your else if here

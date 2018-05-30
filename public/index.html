@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bolt</title>
     <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="styles/normalize.css"> <!-- First eliminate browser inconsistencies -->
+    <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet"> <!-- Google Barlow font -->
     <link rel="stylesheet" type="text/css" href="styles/index.css">
     <link rel="stylesheet" type="text/css" href="styles/viewQuestions.css">
     <link rel="stylesheet" type="text/css" href="styles/searchStyle.css">
@@ -15,11 +17,20 @@
     <div id="loader"></div>
 
     <div class="mainContainer" style="display:none;" id="mainContainer">
-      <!-- Logout button -->
-      <button onclick="global.logout()">Logout</button>>
-      <!-- Link to chatting-->
-      <a href="chat">Chat</a>
-      <span>- Chatting page</span><br>
+      <!-- Navigation bar -->
+      <header>
+        <nav class="nav">
+          <ul>
+            <!-- INLINE JS WILL BE MOVED TO public/scripts/index.js SOON -->
+            <li onclick="unfoldingHeader.unfoldHeader('To be implemented', 'orange')">Ask a question</li>
+            <li onclick="unfoldingHeader.unfoldHeader('To be implemented', 'orange')">Questions list</li>
+            <li onclick="unfoldingHeader.unfoldHeader('To be implemented', 'orange')">User profile</li>
+            <li onclick="unfoldingHeader.unfoldHeader('To be implemented', 'orange')">About</li>
+            <li><a href="chat">Chat!</a></li>
+            <li class="logout" onclick="global.logout()">Logout</li> <!-- INLINE WILL BE MOVED TO public/scripts/index.js SOON -->
+          </ul>
+        </nav>
+      </header>
 
       <!-- Questions table -->
       <div id="questionsTable" class="Table">
