@@ -20,7 +20,15 @@
     <div id="loader"></div>
     <div id="mainContainer" style="display:none;">
         <header>
-          <h1>Super Chat</h1>
+          <h1>
+		  <div class="thunderLogoContainer">
+          <div class="circleContainer">
+            <div class="circle">
+              <img src="images/thunder.png" alt="Thunder bolt" class="thunderLogo">
+            </div>
+          </div>
+        </div>
+		  Bold Chat</h1>
         </header>
 
         <section>
@@ -41,8 +49,8 @@
           <button id="send_message" class="vertical-align" type="button">Send</button>
         </section>
     </div>  
-
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.4.3/jquery.timeago.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script src="scripts/unfoldingHeader.js"></script>
     <script src="scripts/global.js"></script> <!-- Reusable functions -->
