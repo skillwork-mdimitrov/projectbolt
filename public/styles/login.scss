@@ -19,11 +19,11 @@ $grey: #8190A5;
 
 /* Mixins
  ============================================================== */
-/// Mixin to prefix a property
-/// @author Hugo Giraudel
-/// @param {String} $property - Property name
-/// @param {*} $value - Property value
-/// @param {List} $prefixes (()) - List of prefixes to print
+
+/* Mixin to prefix a property
+  @param {String} $property - Property name
+  @param {*} $value - Property value
+  @param {List} $prefixes (()) - List of prefixes to print */
 @mixin prefix($property, $value, $prefixes: ()) {
   @each $prefix in $prefixes {
     #{'-' + $prefix + '-' + $property}: $value;

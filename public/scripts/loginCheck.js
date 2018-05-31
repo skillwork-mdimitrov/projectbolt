@@ -15,7 +15,7 @@ const loginCheck = function() {
           let banned = bannedJSON[0].Banned;
           if (!banned) {
             document.getElementById("loader").style.display = "none";
-            document.getElementById("mainContainer").style.display = "block";
+            document.getElementById("mainContainer").style.display = "block"; // CHECK LATER
             $.holdReady(false);
           }
           else
