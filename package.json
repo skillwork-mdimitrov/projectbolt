@@ -11,6 +11,7 @@
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "morgan": "~1.9.0",
+    "nodemon": "^1.17.5",
     "semantic-ui-rating": "^2.3.1",
     "socket.io": "^1.7.3",
     "tedious": "^2.3.1"
