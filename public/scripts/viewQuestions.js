@@ -8,7 +8,7 @@ const viewQuestions = function () {
 
     let questionsTable = document.getElementById("questionsTable");
 
-    // A row with a question, user and answers
+    // A row with a delete button, question, user and answers
     let tableRow = document.createElement("div");
     tableRow.setAttribute("class", "Table-row");
 
@@ -44,7 +44,7 @@ const viewQuestions = function () {
     rowItemAnswerLink.href = "answers.html?qid=" + questionID;
     rowItemAnswer.appendChild(rowItemAnswerLink);
 
-    // Append the question, user and answer to that table row
+    // Append the delete button, question, user and answer to that table row
     tableRow.appendChild(rowItemDelete);
     tableRow.appendChild(rowItemQuestion);
     tableRow.appendChild(rowItemUser);

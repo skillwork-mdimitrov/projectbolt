@@ -42,7 +42,7 @@ router.post('/add-question', function(req, res) {
   }
 });
 
-/* DELTE a question */
+/* DELETE a question */
 router.post('/remove-question', function(req, res) {
   let questionID = req.body.questionID;
   let sessionID = req.body.sessionID;

@@ -25,6 +25,11 @@ const viewAnswers = function() {
       const tableHeader = document.createElement("div");
       tableHeader.setAttribute("class", "Table-row Table-header");
 
+      // Delete answers column
+      const deleteAnswersColumn = document.createElement("div");
+      deleteAnswersColumn.setAttribute("class", "Table-row-item u-Flex-grow1");
+      deleteAnswersColumn.textContent = "Action";
+
       // Answers column
       const answersColumn = document.createElement("div");
       answersColumn.setAttribute("class", "Table-row-item u-Flex-grow9");
@@ -43,7 +48,8 @@ const viewAnswers = function() {
       /* APPENDS
       ============================================================== */
 
-      // Append the answer and rating columns to the table header
+      // Append the delete, the answer, the user and rating columns to the table header
+      tableHeader.appendChild(deleteAnswersColumn);
       tableHeader.appendChild(answersColumn);
       tableHeader.appendChild(userColumn);
       tableHeader.appendChild(ratingsColumn);
@@ -68,9 +74,19 @@ const viewAnswers = function() {
         /* CREATES
         ============================================================== */
 
-        // A row with a answer, user and answers
+        // A row with a delete button, answer, user and rating.
         const tableRow = document.createElement("div");
         tableRow.setAttribute("class", "Table-row");
+
+        //The delete button
+        const rowItemDelete = document.createElement("div");
+        rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1");
+        rowItemDelete.setAttribute("data-header", "Action");
+        const rowItemDeleteButton = document.createElement("button");
+        rowItemDeleteButton.setAttribute("class", "deleteButton");
+        rowItemDeleteButton.setAttribute("id", answerID);
+        rowItemDeleteButton.textContent = "Delete";
+        rowItemDelete.appendChild(rowItemDeleteButton);
 
         // The answer
         const rowItemAnswer = document.createElement("div");
@@ -93,7 +109,8 @@ const viewAnswers = function() {
         /* APPENDS
         ============================================================== */
 
-        // Append the answer, user and rating to that table row
+        // Append the delete button, answer, user and rating to that table row
+        tableRow.appendChild(rowItemDelete);
         tableRow.appendChild(rowItemAnswer);
         tableRow.appendChild(rowUser);
         tableRow.appendChild(rowItemRating);
@@ -201,7 +218,22 @@ const viewAnswers = function() {
                 }
               });
 
-              $('.ui.rating').on("click", function(){
+              $(".deleteColumn").css("display", "none");
+              $.getJSON("login/is-teacher/"+sessionID, function () {})
+              .done(function (isTeacher) {
+                if (isTeacher) {
+                    $(".deleteColumn").css("display", "block");
+                }
+
+                 $('.deleteButton').on("click", function(){
+                     removeAnswer.removeAnswer($(this));
+                 });
+              })
+                    .fail(function () {
+                        console.log("error");
+                    })
+
+                $('.ui.rating').on("click", function(){
                 addRating.rateAnswer($(this));
               });
 

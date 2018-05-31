@@ -52,4 +52,23 @@ router.post('/add-answer', function(req, res) {
   }
 });
 
+/* DELETE an answer */
+router.post('/remove-answer', function(req, res) {
+    let answerID = req.body.answerID;
+    let sessionID = req.body.sessionID;
+
+    if (Number.isInteger(parseInt(answerID)) && login.sessionValid(sessionID) && login.isTeacher(sessionID)) {
+        database.deleteAnswer(answerID).then(() => {
+            res.status(200).send("Delete succesful");
+    })
+    .catch((reason) => {
+            console.log("Error removing answer " + answerID + ": " + reason);
+        res.status(500).send(reason);
+    });
+    }
+    else {
+        res.status(500).send('Invalid request');
+    }
+});
+
 module.exports = router;

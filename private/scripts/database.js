@@ -208,8 +208,8 @@ function getNonBannedAnswersByQuestionId(questionID) {
             resolve(answers);
         }).catch((reason) => {
             reject(reason);
-        }); 
-    });   
+        });
+    });
 }
 
 function insertAnswer(answer, questionID, userID) {
@@ -219,6 +219,16 @@ function insertAnswer(answer, questionID, userID) {
         }).catch((reason) => {
             reject(reason);
         }); 
+    });
+}
+
+function deleteAnswer(answerID) {
+    return new Promise((resolve, reject) => {
+            runGenericQuery(queries.getDeleteAnswerQuery(answerID)).then(() =>      {
+        resolve();
+            }).catch((reason) => {
+        reject(reason);
+            });
     });
 }
 
@@ -310,6 +320,7 @@ exports.deleteQuestion = deleteQuestion;
 exports.getAnswersByQuestionId = getAnswersByQuestionId;
 exports.getNonBannedAnswersByQuestionId = getNonBannedAnswersByQuestionId;
 exports.insertAnswer = insertAnswer;
+exports.deleteAnswer = deleteAnswer;
 
 exports.getUsernamesBannedStatus = getUsernamesBannedStatus;
 exports.getIdPasswordByUsername = getIdPasswordByUsername;
