@@ -29,7 +29,6 @@
   }
   
   div#change_username, section#input_zone {
-      border: 5px outset #cc6600;
   }
   
   div#change_username {
@@ -39,7 +38,6 @@
   }
   
   section#chatroom {
-      border: 5px inset #cc6600;
       height: 85%;
       overflow: auto;
   }
