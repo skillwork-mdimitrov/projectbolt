@@ -4,9 +4,9 @@
 /*jslint devel: true*/
 /*globals unfoldingHeader, global, $:false*/
 
-/* index NAMESPACE
+/* mainPage NAMESPACE
  ============================================================== */
-const index = function() {
+const mainPage = function() {
   "use strict";
   // DOM selectors
   const askQuestionBtn = $('#askQuestionBtn');
@@ -29,13 +29,13 @@ $(document).ready(function() {
   "use strict";
   /* ATTACH EVENT LISTENERS
   ============================================================== */
-  index.askQuestionBtn.on("click", () => unfoldingHeader.unfoldHeader('To be implemented', 'orange'));
+  mainPage.askQuestionBtn.on("click", () => unfoldingHeader.unfoldHeader('To be implemented', 'orange'));
 
-  index.questionListBtn.on("click", () => unfoldingHeader.unfoldHeader('To be implemented', 'orange'));
+  mainPage.questionListBtn.on("click", () => unfoldingHeader.unfoldHeader('To be implemented', 'orange'));
 
-  index.userProfileBtn.on("click", () => unfoldingHeader.unfoldHeader('To be implemented', 'orange'));
+  mainPage.userProfileBtn.on("click", () => unfoldingHeader.unfoldHeader('To be implemented', 'orange'));
 
-  index.aboutPageBtn.on("click", () => unfoldingHeader.unfoldHeader('To be implemented', 'orange'));
+  mainPage.aboutPageBtn.on("click", () => unfoldingHeader.unfoldHeader('To be implemented', 'orange'));
 
-  index.logoutBtn.on("click", () => global.logout());
+  mainPage.logoutBtn.on("click", () => global.logout());
 });

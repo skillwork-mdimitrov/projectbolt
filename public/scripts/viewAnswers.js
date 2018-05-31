@@ -1,6 +1,6 @@
 /* JSHint quality control
  ============================================================== */
-/*jshint esversion: 6 */
+/*jshint esversion: 6*/
 /*jslint devel: true*/
 /*globals unfoldingHeader, global, $, URLSearchParams, removeAnswer, viewRatings, addRating:false*/
 
