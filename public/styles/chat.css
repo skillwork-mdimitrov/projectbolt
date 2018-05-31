@@ -29,7 +29,6 @@
   }
   
   div#change_username, section#input_zone {
-      border: 5px outset #cc6600;
   }
   
   div#change_username {
@@ -39,7 +38,6 @@
   }
   
   section#chatroom {
-      border: 5px inset #cc6600;
       height: 85%;
       overflow: auto;
   }
@@ -84,6 +82,11 @@
       font-family: 'Comfortaa', sans-serif;
       padding: 1vh;
   }
+  .thunderLogoContainer
+  {
+	max-width: 500px;
+	margin: auto;
+	}
   
   .message:nth-child(even) {
       background-color: #E5E9F2;
@@ -95,12 +98,9 @@
 		color: white;
 	}
 	.thunderLogoContainer {
-		display: flex;
 		justify-content: center;
 		align-items: center;
 		width: 10.5%;
-		margin-right: 10px;
-		margin-top: 1px;
 	}
 	.thunderLogoContainer .circleContainer {
 		position: relative;
