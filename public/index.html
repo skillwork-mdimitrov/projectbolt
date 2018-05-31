@@ -21,13 +21,12 @@
       <header>
         <nav class="nav">
           <ul>
-            <!-- INLINE JS WILL BE MOVED TO public/scripts/index.js SOON -->
-            <li onclick="unfoldingHeader.unfoldHeader('To be implemented', 'orange')">Ask a question</li>
-            <li onclick="unfoldingHeader.unfoldHeader('To be implemented', 'orange')">Questions list</li>
-            <li onclick="unfoldingHeader.unfoldHeader('To be implemented', 'orange')">User profile</li>
-            <li onclick="unfoldingHeader.unfoldHeader('To be implemented', 'orange')">About</li>
+            <li id="askQuestionBtn">Ask a question</li>
+            <li id="questionListBtn">Questions list</li>
+            <li id="userProfileBtn">User profile</li>
+            <li id="aboutPageBtn">About</li>
             <li><a href="chat">Chat!</a></li>
-            <li class="logout" onclick="global.logout()">Logout</li> <!-- INLINE WILL BE MOVED TO public/scripts/index.js SOON -->
+            <li id="logoutBtn" class="logoutBtn">Logout</li>
           </ul>
         </nav>
       </header>
@@ -61,6 +60,7 @@
     <script src="scripts/global.js"></script>    
     <script src="scripts/loginCheck.js"></script>    
     <script src="scripts/unfoldingHeader.js"></script> <!-- Collapsing header -->
+    <script src="scripts/index.js"></script> <!-- Own script -->
     <script src="scripts/viewQuestions.js"></script>
     <script src="scripts/awesomplete.js"></script>
     <script src="scripts/addQuestion.js"></script>    

@@ -1,6 +1,13 @@
+/* JSHint quality control
+ ============================================================== */
+/*jshint esversion: 6 */
+/*jslint devel: true*/
+/*globals unfoldingHeader, global, $, URLSearchParams, removeAnswer, viewRatings, addRating:false*/
+
 /* viewAnswers, also addAnswers NAMESPACE
  ============================================================== */
 const viewAnswers = function() {
+    "use strict";
     // DOM selectors
     const addOwnAnswerBtn = $('#addOwnAnswerBtn');
     const addAnswerContainer = $('#addAnswerContainer');
@@ -157,14 +164,14 @@ const viewAnswers = function() {
 
         return {
           toggleUI: toggleUI
-        }
+        };
     }(); // Immediately invoked
 
     // Grab the question id from the URL
     const getQuestionID = function() {
-      var urlParams = new URLSearchParams(window.location.search);
-      var urlEntries = urlParams.entries();
-      var questionID = "";
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlEntries = urlParams.entries();
+      let questionID = "";
 
       for(let pair of urlEntries) {
         if (pair[0] === "qid")
@@ -177,7 +184,6 @@ const viewAnswers = function() {
 
     // AJAX post answer
     const postAnswer = function (bodyJSON){
-      "use strict";
       $.ajax({
         type: 'POST',
         data: bodyJSON,
@@ -231,7 +237,7 @@ const viewAnswers = function() {
               })
                     .fail(function () {
                         console.log("error");
-                    })
+                    });
 
                 $('.ui.rating').on("click", function(){
                 addRating.rateAnswer($(this));
@@ -248,7 +254,7 @@ const viewAnswers = function() {
               global.logAJAXErr(getAnswers.name, jqXHR);
               unfoldingHeader.unfoldHeader("Failed to obtain the answers. Apologies :(", "orange");
               reject(`Failed to fetch answers for ↓ \n questionID: ${questionID}, sessionID: ${sessionID}`);
-            })
+            });
       });
     };
 
@@ -260,7 +266,7 @@ const viewAnswers = function() {
       return {
         showLoader: showLoader,
         hideLoader: hideLoader
-      }
+      };
     }(); // IIFE;
 
     // Visually manipulate the answers table
@@ -275,7 +281,7 @@ const viewAnswers = function() {
         hide: hide,
         show: show,
         fadeIn: fadeIn
-      }
+      };
     }; // NOT IIFE;
 
     // Made publicly available
@@ -296,7 +302,7 @@ const viewAnswers = function() {
         getAnswers: getAnswers,
         loaderUI: loaderUI, // return functions
         answersTableUI: answersTableUI // execute first to get the functions
-    }
+    };
 }();
 //  ============================================================== */
 
@@ -346,7 +352,7 @@ $(document).ready(function() {
             })
             .catch(function(reject) {
               console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
-            })
+            });
           }
           else {
             unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
@@ -377,5 +383,5 @@ $(document).ready(function() {
     .catch(function(reject) {
       console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
       return false;
-    })
+    });
 });

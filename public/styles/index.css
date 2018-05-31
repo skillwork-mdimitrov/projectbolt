@@ -41,7 +41,7 @@
   color: inherit;
   text-decoration: inherit;
 }
-.mainContainer .nav ul .logout {
+.mainContainer .nav ul .logoutBtn {
   justify-self: flex-end;
   margin-left: auto;
 }
