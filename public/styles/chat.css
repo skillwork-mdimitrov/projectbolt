@@ -29,17 +29,15 @@
   }
   
   div#change_username, section#input_zone {
-      border: 5px outset #DCBE50;
   }
   
   div#change_username {
       height: 3%;
       display: inline-block;
-      background-color: #DCBE50;
+      background-color: #ff9900;
   }
   
   section#chatroom {
-      border: 5px inset #DCBE50;
       height: 85%;
       overflow: auto;
   }
@@ -47,7 +45,7 @@
   section#input_zone {
       height: 7%;
       text-align: center;
-      background-color: #DCBE50;
+      background-color: #ff9900;
   }
   
   .vertical-align {
@@ -86,8 +84,8 @@
   }
   .thunderLogoContainer
   {
-    max-width: 500px;
-    margin: auto;
+	max-width: 500px;
+	margin: auto;
 	}
   
   .message:nth-child(even) {

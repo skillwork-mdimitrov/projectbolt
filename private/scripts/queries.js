@@ -111,13 +111,21 @@ function getNonBannedAnswersByQuestionIdQuery(questionID) {
 }
 
 function getInsertAnswerQuery(answer, questionID, userID) {
-    var query = "INSERT INTO answers (answer, questionid, userid) VALUES ( @answer , @questionID , @userID )";
+    var query = "INSERT INTO Answers (answer, questionid, userid) VALUES ( @answer , @questionID , @userID )";
     var params = [
         {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID},
         {paramName: "userID", paramType: TYPES.Int, paramValue: userID},
         {paramName: "answer", paramType: TYPES.NVarChar, paramValue: answer}
     ]
     return {query: query, params: params}; 
+}
+
+function getDeleteAnswerQuery(answerID) {
+    var query  = "DELETE FROM Answers WHERE ID = @answerID";
+    var params = [
+        {paramName: "answerID", paramType: TYPES.Int, paramValue: answerID}
+    ]
+    return {query: query, params: params};
 }
 
 function getUsernamesBannedStatusQuery() {
@@ -189,6 +197,8 @@ exports.getDeleteQuestionQuery = getDeleteQuestionQuery;
 exports.getAnswersByQuestionIdQuery = getAnswersByQuestionIdQuery;
 exports.getNonBannedAnswersByQuestionIdQuery = getNonBannedAnswersByQuestionIdQuery;
 exports.getInsertAnswerQuery = getInsertAnswerQuery;
+exports.getDeleteAnswerQuery = getDeleteAnswerQuery;
+
 
 exports.getUsernamesBannedStatusQuery = getUsernamesBannedStatusQuery;
 exports.getIdPasswordByUsernameQuery = getIdPasswordByUsernameQuery;
