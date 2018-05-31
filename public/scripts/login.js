@@ -5,6 +5,7 @@ const login = function() {
   let usernameBox = $('#userNameBox');
   let loginBtn = $('#loginButton');
   let passwordBox = $('#passwordBox');
+  let documentBody = $('body');
 
   const login = function(userdata) {
       "use strict";
@@ -49,6 +50,7 @@ const login = function() {
     usernameBox: usernameBox,
     loginBtn: loginBtn,
     passwordBox: passwordBox,
+    documentBody: documentBody,
     login: login,
     noEmptyFields: noEmptyFields
   }
@@ -83,15 +85,8 @@ $(document).ready(function() {
         }
       });
 
-      // Enter button triggers login on user field
-      login.usernameBox.keyup(function(event) {
-        if(event.keyCode === 13) {
-          login.loginBtn.click();
-        }
-      });
-
-      // Enter button triggers login on password field
-      login.passwordBox.keyup(function(event) {
+      // Enter button clicked anywhere in the document triggers logging in
+      login.documentBody.keyup(function(event) {
         if(event.keyCode === 13) {
           login.loginBtn.click();
         }
