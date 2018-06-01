@@ -23,19 +23,23 @@
   
   header {
       text-align: center;
+	  height: 20vh;
   }
   
   h1 {
       font-family: 'Comfortaa', sans-serif;
       margin: 0px;
   }
-  
+  section#change_username_div
+  {
+	  height: 4vh;
+  }
   div#change_username, section#input_zone {
       border: 5px outset #DCBE50;
   }
   
   div#change_username {
-      height: 3%;
+      height: 4vh;
       display: inline-block;
       background-color: #DCBE50;
   }
@@ -43,7 +47,7 @@
   section#chatroom {
 	border: 5px inset #DCBE50;
 	/*height: 40%;*/
-	height: 67vh;
+	height: 60vh;
 	border: #DCBE50 solid 1px;
 	overflow-y: auto;
   }
