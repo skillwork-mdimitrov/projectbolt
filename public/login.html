@@ -12,7 +12,6 @@
   <!-- Then load your styles, potentially overriding  properties, where necessary -->
   <link rel="stylesheet" type="text/css" href="styles/login.css">
   <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet"> <!-- Google Barlow font -->
-  <link
 </head>
 <body>
 
@@ -25,7 +24,9 @@
       <div class="headContainer">
         <div class="thunderLogoContainer">
           <div class="thunderLogoImgContainer">
-            <object data="images/thunderLogo.svg" type="image/svg+xml" class="thunderLogo"></object>
+            <object data="images/thunderLogo.svg" type="image/svg+xml" class="thunderLogo">
+              <img src="images/thunderLogoFallback.png" /> <!-- Fallback if browser can't render the SVG -->
+            </object>
           </div>
         </div>
         <div class="boltAppContainer">
