@@ -14,7 +14,7 @@ const addQuestion = function() {
         unfoldingHeader.unfoldHeader(data, "green");
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
+        unfoldingHeader.unfoldHeader('It is not allowed to insert the same question', "orange");
         console.log('jqXHR: ' + jqXHR);
         console.log('textStatus: ' + textStatus);
         console.log('errorThrown: ' + errorThrown);
