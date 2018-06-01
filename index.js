@@ -30,13 +30,14 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+var _websocket;
+//testing connection
 io.on('connection', function(socket){
 	var users = []; //count the users
 	
 	reloadUsers(); // Send the count to all the users
 	//default username
 	socket.username = "Anonymous"
-	setHeight();
 	//listen to changeUsername
 	socket.on('changeUsername', (data) => {
 		socket.username = data.username
@@ -97,11 +98,11 @@ io.on('connection', function(socket){
 		console.log("users connected: "+users.toString());
 		io.sockets.emit('nbUsers', {"nb": users.toString()});
 	}
-	const scrollbar = $("#slimScrollBar ui-draggable");
-	function setHeight() {
-		scrollbar.height('603');
-		scrollbar.css('overflow', 'visible')
-	}
+});
+io.on('connect_error', function(error)
+{
+	unfoldingHeader.unfoldHeader("Erro"+error.printStackTrace(), "red");
+	return false;
 });
 
 

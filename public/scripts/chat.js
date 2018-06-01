@@ -25,15 +25,11 @@ $(document).ready(function() {
 				return getUsername(data);
 			})
 		}
-		catch (Exception e1)
+		catch (exception)
 		{
-			unfoldingHeader.unfoldHeader("Erro"+e1.printStackTrace(), "red");
+			unfoldingHeader.unfoldHeader("Erro"+exception.printStackTrace(), "red");
 			return false;
 		}
-		.fail(function () {
-		console.log("error");
-		return "Error";
-		})
 	});
 
 	// In the chat field, enter will simulate click
