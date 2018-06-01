@@ -15,7 +15,7 @@ const stringCompare = function() {
         console.log("Retrieving all questions");
         $.getJSON( "questions/get-all-questions/"+sessionID, function() {})
         .done(function(data) {
-            console.log("All questions recieved");
+            console.log("All questions receieved");
             $.each( data, function( key, val ) {
                 questionSet.push(val["Question"]);
             });
