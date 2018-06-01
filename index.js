@@ -31,12 +31,12 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 io.on('connection', function(socket){
-	var users = 0; //count the users
-	users += 1; // Add 1 to the count
+	var users = []; //count the users
+	
 	reloadUsers(); // Send the count to all the users
 	//default username
 	socket.username = "Anonymous"
-	
+	setHeight();
 	//listen to changeUsername
 	socket.on('changeUsername', (data) => {
 		socket.username = data.username
@@ -46,6 +46,8 @@ io.on('connection', function(socket){
 	//listen on new_message
     socket.on('new_message', (data) => {
         //broadcast the new message
+		users.push(socket.username); // Add user to active users
+		console.log("Users typing"+users.toString());
 		var transmit = {date : new Date().toISOString(), username : socket.username, message : data.message};
 		io.sockets.emit('new_message', transmit);
 		console.log("user "+ transmit['username'] +" said \""+transmit['message']+"\""+" at "+getTime());
@@ -92,7 +94,13 @@ io.on('connection', function(socket){
 		pseudo.slice(index - 1, 1);*/
 	})
 	function reloadUsers() { // Send the count of the users to all
-		socket.emit('nbUsers', {"nb": users});
+		console.log("users connected: "+users.toString());
+		io.sockets.emit('nbUsers', {"nb": users.toString()});
+	}
+	const scrollbar = $("#slimScrollBar ui-draggable");
+	function setHeight() {
+		scrollbar.height('603');
+		scrollbar.css('overflow', 'visible')
 	}
 });
 

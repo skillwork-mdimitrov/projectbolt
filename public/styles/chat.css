@@ -17,6 +17,8 @@
   body {
       margin: 0px;
       height: 100%;
+	  flex-direction: column;
+	  display: flex;
   }
   
   header {
@@ -39,15 +41,21 @@
   }
   
   section#chatroom {
-      border: 5px inset #DCBE50;
-      height: 85%;
-      overflow: auto;
+	border: 5px inset #DCBE50;
+	height: 600px;
+	border: red solid 1px;
+	overflow-y: auto;
   }
   
   section#input_zone {
       height: 7%;
       text-align: center;
       background-color: #DCBE50;
+	  flex-shrink: 0;
+  }
+  section#connectedUsers
+  {
+	  flex-shrink: 0;
   }
   
   .vertical-align {
