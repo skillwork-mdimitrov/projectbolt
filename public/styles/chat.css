@@ -42,7 +42,8 @@
   
   section#chatroom {
 	border: 5px inset #DCBE50;
-	height: 550px;
+	/*height: 40%;*/
+	height: 67vh;
 	border: #DCBE50 solid 1px;
 	overflow-y: auto;
   }
