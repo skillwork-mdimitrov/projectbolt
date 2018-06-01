@@ -18,15 +18,22 @@ $(document).ready(function() {
 	// Inital change of username towards active session
 	$(document).ready(function () {
 		console.log("Started fetching username json");
-		$.getJSON("login/get-username/"+sessionid, function () {})
-		  .done(function (data) {
-        console.log("Recieved user json");
-        return getUsername(data);
-		  })
-		  .fail(function () {
-			  console.log("error");
-			  return "Error";
-		  })
+		try{
+			$.getJSON("login/get-username/"+sessionid, function () {})
+			  .done(function (data) {
+				console.log("Recieved user json");
+				return getUsername(data);
+			})
+		}
+		catch (Exception e1)
+		{
+			unfoldingHeader.unfoldHeader("Erro"+e1.printStackTrace(), "red");
+			return false;
+		}
+		.fail(function () {
+		console.log("error");
+		return "Error";
+		})
 	});
 
 	// In the chat field, enter will simulate click
