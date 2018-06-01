@@ -2,9 +2,9 @@
  ============================================================== */
 /*jshint esversion: 6*/
 /*jslint devel: true*/
-/*globals unfoldingHeader, global, $, URLSearchParams, removeAnswer, viewRatings, addRating:false*/
+/*globals unfoldingHeader, global, $, URLSearchParams, removeAnswer, viewRatings, addRating, addAnswer:false*/
 
-/* viewAnswers, also addAnswers NAMESPACE
+/* viewAnswers NAMESPACE
  ============================================================== */
 const viewAnswers = function() {
     "use strict";
@@ -182,29 +182,6 @@ const viewAnswers = function() {
       return questionID;
     };
 
-    // AJAX post answer
-    const postAnswer = function (bodyJSON){
-      $.ajax({
-        type: 'POST',
-        data: bodyJSON,
-        url: 'answers/add-answer',
-        success: function(){
-          console.log(`${postAnswer.name} says: Answer added successfully`);
-        },
-        error: function(jqXHR) {
-          // If the server response includes "Violation of UNIQUE KEY"
-          if(global.logAJAXErr(postAnswer.name, jqXHR) === "duplicatedKey") {
-            // The user is trying to add an already existing answer
-            unfoldingHeader.unfoldHeader("This answer already exists", "red");
-          }
-          // More general error
-          else {
-            unfoldingHeader.unfoldHeader("Failed to post your answer. Apologies :(", "red");
-          }
-        }
-      });
-    };
-
     // AJAX get all answers request + not only
     const getAnswers = function() {
       return new Promise(function(resolve, reject) {
@@ -298,7 +275,6 @@ const viewAnswers = function() {
         rmAnswersTable: rmAnswersTable,
         addOwnAnswer: addOwnAnswer, // return functions
         getQuestionID: getQuestionID,
-        postAnswer: postAnswer,
         getAnswers: getAnswers,
         loaderUI: loaderUI, // return functions
         answersTableUI: answersTableUI // execute first to get the functions
@@ -333,7 +309,7 @@ $(document).ready(function() {
             };
 
             // Send the AJAX request
-            viewAnswers.postAnswer(bodyJSON);
+            addAnswer.postAnswer(bodyJSON);
             viewAnswers.addOwnAnswer.toggleUI();
             viewAnswers.addAnswerArea.val(''); // Reset textarea
 

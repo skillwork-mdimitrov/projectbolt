@@ -19,7 +19,7 @@ const addQuestion = function() {
         // If the server response includes "Violation of UNIQUE KEY"
         if(global.logAJAXErr(submitQuestion.name, jqXHR) === "duplicatedKey") {
           // The user is trying to add an already existing question
-          unfoldingHeader.unfoldHeader("This question already exists", "red");
+          unfoldingHeader.unfoldHeader("This question already exists", "orange");
         }
         // More general error
         else {
