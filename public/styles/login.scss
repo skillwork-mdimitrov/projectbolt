@@ -141,28 +141,17 @@ body {
         align-items: center;
         width: 10.5%;
         margin-right: 10px;
-        margin-top: 1px;
+        margin-top: 5.5px;
 
         //background-color: green;
 
-        .circleContainer {
-          $circleContainerWidth: 100%;
+        .thunderLogoImgContainer {
+          width: 100%;
 
-          position: relative; // so the absolutely position .circle is relative to this
-          width: $circleContainerWidth;
-          padding-top: $circleContainerWidth;
+          //background-color: lightyellow;
 
-          //background-color: brown;
-
-          .circle {
-            @include absoluteZero;
-            border-radius: 50%;
-
-            background-color: $darkBlue;
-
-            .thunderLogo {
-              width: 100%;
-            }
+          .thunderLogo {
+            width: 100%;
           }
         }
       }

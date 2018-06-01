@@ -145,23 +145,12 @@ body {
   align-items: center;
   width: 10.5%;
   margin-right: 10px;
-  margin-top: 1px;
+  margin-top: 5.5px;
 }
-.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer {
-  position: relative;
+.mainContainer .loginContainer .headContainer .thunderLogoContainer .thunderLogoImgContainer {
   width: 100%;
-  padding-top: 100%;
 }
-.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer .circle {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: 50%;
-  background-color: #19354E;
-}
-.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer .circle .thunderLogo {
+.mainContainer .loginContainer .headContainer .thunderLogoContainer .thunderLogoImgContainer .thunderLogo {
   width: 100%;
 }
 .mainContainer .loginContainer .headContainer .boltAppContainer {
