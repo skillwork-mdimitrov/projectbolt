@@ -58,6 +58,7 @@ const viewQuestions = function () {
     addToTable: addToTable
   }
 }();
+
 //  ============================================================== */
 
 $(document).ready(function () {
@@ -77,7 +78,6 @@ $(document).ready(function () {
         if (isTeacher) {
           $(".deleteColumn").css("display", "block");
         }
-
         $('.deleteButton').on("click", function(){
           removeQuestion.removeQuestion($(this));
         });

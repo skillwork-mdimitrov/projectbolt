@@ -54,7 +54,7 @@ $(document).ready(function() {
           addQuestion.submitQuestion(questionJSON);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
+          unfoldingHeader.unfoldHeader('error', "orange");
           console.log('jqXHR: ' + jqXHR);
           console.log('textStatus: ' + textStatus);
           console.log('errorThrown: ' + errorThrown);
