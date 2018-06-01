@@ -71,6 +71,7 @@ const stringCompare = function() {
         }
     }
 
+    //Check if the question is similar to one other previous asked questions
     const mapSimilarities = function(question, originalQuery, sanitizedQuery, questionSimilarityMapping)
     {
         var questionSimilarity = getSimilarity(question, originalQuery, sanitizedQuery);

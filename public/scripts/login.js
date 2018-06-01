@@ -26,7 +26,7 @@ const login = function() {
       });
     };
 
-  // Display appropriate msg and return a boolean
+  // Display appropriate message and return a boolean
   const noEmptyFields = function() {
     if(global.fieldIsEmpty(usernameBox) && global.fieldIsEmpty(passwordBox)) {
       unfoldingHeader.unfoldHeader("Please fill in your credentials", "orange", true);

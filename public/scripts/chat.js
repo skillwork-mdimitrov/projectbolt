@@ -87,23 +87,6 @@ $(document).ready(function() {
 	});
 	
 	// Handle the socket.io connections
-
-	
-
-	
-	/*function pseudoSet(socket) { // Test if the user has a name
-		var test;
-		if (socket.nickname == null ) test = false;
-		else test = true;
-		return test;
-	}*/
-	
-	
-	
-	
-	
-	
-	
 	function rooms (){
 
 		var socket = io('/rooms', { transports: ['websocket'] });
@@ -214,7 +197,6 @@ $(document).ready(function() {
         if(users.constructor !== Array){
           users = [users];
         }
-
         var html = '';
         for(var user of users) {
           user.username = this.encodeHTML(user.username);
@@ -225,15 +207,12 @@ $(document).ready(function() {
                         <div class="status"><i class="fa fa-circle online"></i> online</div>
                      </div></li>`;
         }
-
         if(html === ''){ return; }
-
         if(clear != null && clear == true){
           $('.users-list ul').html('').html(html);
         }else{
           $('.users-list ul').prepend(html);
         }
-
         this.updateNumOfUsers();
     }
 
@@ -256,15 +235,15 @@ $(document).ready(function() {
 		$(".chat-history").animate({ scrollTop: $('.chat-history')[0].scrollHeight}, 1000);
     }
 
-    // Update number of rooms
-    // This method MUST be called after adding a new room
+    /*Update number of rooms
+    /This method MUST be called after adding a new room*/
     function updateNumOfRooms (){
       var num = $('.room-list ul li').length;
       $('.room-num-rooms').text(num +  " Room(s)");
     }
 
-    // Update number of online users in the current room
-    // This method MUST be called after adding, or removing list element(s)
+    /* Update number of online users in the current room
+    / This method MUST be called after adding, or removing list element(s)*/
     function updateNumOfUsers (){
       var num = $('.users-list ul li').length;
       $('.chat-num-users').text(num +  " User(s)");
