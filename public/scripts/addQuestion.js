@@ -13,11 +13,18 @@ const addQuestion = function() {
       success: function(data){
         unfoldingHeader.unfoldHeader(data, "green");
       },
-      error: function(jqXHR, textStatus, errorThrown) {
-        unfoldingHeader.unfoldHeader('It is not allowed to insert the same question', "orange");
-        console.log('jqXHR: ' + jqXHR);
-        console.log('textStatus: ' + textStatus);
-        console.log('errorThrown: ' + errorThrown);
+      error: function(jqXHR) {
+        /* TODO REVIEW ME. Old implementation was replaced, since the error could have been for anything (not only duplication)
+          The way to check for duplication is shown below. DELETE ME WHEN REVIEWED */
+        // If the server response includes "Violation of UNIQUE KEY"
+        if(global.logAJAXErr(submitQuestion.name, jqXHR) === "duplicatedKey") {
+          // The user is trying to add an already existing question
+          unfoldingHeader.unfoldHeader("This question already exists", "red");
+        }
+        // More general error
+        else {
+          unfoldingHeader.unfoldHeader("Failed to post your question. Apologies :(", "red");
+        }
       }
     });
   };

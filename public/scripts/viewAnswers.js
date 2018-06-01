@@ -199,7 +199,7 @@ const viewAnswers = function() {
           }
           // More general error
           else {
-            unfoldingHeader.unfoldHeader("Failed to post your answer. Apologies :(", "orange");
+            unfoldingHeader.unfoldHeader("Failed to post your answer. Apologies :(", "red");
           }
         }
       });
