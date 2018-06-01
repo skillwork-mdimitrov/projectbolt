@@ -5,7 +5,7 @@ const stringCompare = function() {
     let autoCompleter;
     let queryTimeout = false;
     let questionSet = [];    
-
+//TO DO: Comment the main function Jasper :)
     const retrieveAndEvaluate = function(searchQuery)
     {
         sanitizedQuery = sanitize(searchQuery);
