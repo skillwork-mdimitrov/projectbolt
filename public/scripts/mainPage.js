@@ -17,10 +17,27 @@ const mainPage = function() {
   const aboutPageBtn = $('#aboutPageBtn');
   const logoutBtn = $('#logoutBtn');
 
-  // Remove the black background from all navigation bar items
-  const rmBgNavBar = () => {
-    $('.nav ul li').removeClass("blackBg");
-  };
+  const navBarManipulation = function(){
+    // Remove the black background from all navigation bar items
+    const clearNavBg = () => {
+      $('.nav ul li').removeClass("blackBg");
+    };
+
+    // Set a black background to an element
+    const setNavBg = (element) => {
+      element.addClass("blackBg");
+    };
+
+    // Clear all the black background from all li items and set one for an element
+    const clearAndSetNavBg = (forElement) => {
+      clearNavBg();
+      setNavBg(forElement);
+    };
+
+    return {
+      clearAndSetNavBg: clearAndSetNavBg
+    };
+  }(); // IIFE
 
   return {
     questionsTable: questionsTable,
@@ -31,7 +48,7 @@ const mainPage = function() {
     aboutPageBtn: aboutPageBtn,
     logoutBtn: logoutBtn,
 
-    rmBgNavBar: rmBgNavBar
+    navBarManipulation: navBarManipulation // return functions
   };
 }();
 // ============================================================== */
@@ -47,10 +64,7 @@ $(document).ready(function() {
       mainPage.searchContainer.fadeIn("fast");
 
       // Clear nav bar bg colours and set black for this button
-      (() => {
-        mainPage.rmBgNavBar();
-        mainPage.askQuestionBtn.addClass("blackBg");
-      })();
+      mainPage.navBarManipulation.clearAndSetNavBg(mainPage.askQuestionBtn);
     })
   );
 
@@ -58,13 +72,10 @@ $(document).ready(function() {
   mainPage.questionListBtn.on("click", () => {
     mainPage.searchContainer.fadeOut("fast", () =>
       mainPage.questionsTable.fadeIn("fast", () =>
-        mainPage.questionsTable.css("display", "flex"))); // cuz fadeIn sets it displays to block);
+        mainPage.questionsTable.css("display", "flex"))); // because fadeIn sets it to displays:block);
 
         // Clear nav bar bg colours and set black for this button
-        (() => {
-          mainPage.rmBgNavBar();
-          mainPage.questionListBtn.addClass("blackBg");
-        })();
+        mainPage.navBarManipulation.clearAndSetNavBg(mainPage.questionListBtn);
   });
 
   mainPage.userProfileBtn.on("click", () => unfoldingHeader.unfoldHeader('To be implemented', 'orange'));
