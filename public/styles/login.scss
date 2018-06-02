@@ -57,7 +57,7 @@ $grey: #8190A5;
   padding: 8px;
   outline: none;
   @include prefix(box-sizing, border-box, webkit moz);
-  @include prefix(transition, .3s time, webkit moz ms o);
+  @include prefix(transition, all .3s, webkit moz ms o);
 
   &:focus {
     border-color: $darkBlue;

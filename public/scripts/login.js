@@ -1,3 +1,9 @@
+/* JSHint quality control
+ ============================================================== */
+/*jshint esversion: 6 */
+/*jslint devel: true*/
+/*globals unfoldingHeader, global, $:false*/
+
 /* Login NAMESPACE
  ============================================================== */
 const login = function() {
@@ -8,7 +14,6 @@ const login = function() {
   let documentBody = $('body');
 
   const login = function(userdata) {
-      "use strict";
       $.ajax({
         type: 'post',
         data: userdata,
@@ -53,7 +58,7 @@ const login = function() {
     documentBody: documentBody,
     login: login,
     noEmptyFields: noEmptyFields
-  }
+  };
 }();
 //  ============================================================== */
 
@@ -95,5 +100,5 @@ $(document).ready(function() {
   })
   .fail(function () {
     console.log("error");
-  })  
+  });
 });
