@@ -1,70 +1,11 @@
+@import "navigationBar";
+
 /* CHANGES ONLY ACCEPTED IN THE .SCSS NOT .CSS
  ============================================================== */
-
-/* Global
- ============================================================== */
-
-// Colours
-$darkBlue: #19354E;
-$grey: #8190A5;
-
-/* Mixins
- ============================================================== */
-
-/* Mixin to prefix a property
-  @param {String} $property - Property name
-  @param {*} $value - Property value
-  @param {List} $prefixes (()) - List of prefixes to print */
-@mixin prefix($property, $value, $prefixes: ()) {
-  @each $prefix in $prefixes {
-    #{'-' + $prefix + '-' + $property}: $value;
-  }
-
-  // Output standard non-prefixed declaration
-  #{$property}: $value;
-}
 
 /* Content container
  ============================================================== */
 .mainContainer {
   margin: 10px 10px 10px 10px;
-
-  .nav {
-    width: 100%;
-    font-family: 'Barlow', sans-serif; // to generalize
-    @include prefix(border-radius, 3px, webkit moz);
-    background-color: $darkBlue;
-
-    ul {
-      display: flex;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      
-      li {
-        display: inline-block; // check me
-        padding: 10px 20px;
-        text-decoration: none;
-        color: white;
-        cursor: pointer;
-
-        &:hover {
-          background-color: $grey;
-        }
-
-        a {
-          color: inherit;
-          text-decoration: inherit;
-        }
-      }
-      // Dunno why can't be inside the li
-      .logoutBtn {
-        justify-self: flex-end;
-        margin-left: auto;
-      }
-    }
-  }
-
-
 }
 

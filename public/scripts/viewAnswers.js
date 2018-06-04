@@ -2,7 +2,7 @@
  ============================================================== */
 /*jshint esversion: 6*/
 /*jslint devel: true*/
-/*globals unfoldingHeader, global, $, URLSearchParams, removeAnswer, viewRatings, addRating, addAnswer:false*/
+/*globals unfoldingHeader, global, $, URLSearchParams, removeAnswer, viewRatings, addRating, addAnswer, redirectToIndex:false*/
 
 /* viewAnswers NAMESPACE
  ============================================================== */
@@ -14,6 +14,11 @@ const viewAnswers = function() {
     const addAnswerArea = $('#addAnswerArea');
     const submitAnswerBtn = $('#submitAnswerBtn');
     const cancelAnswerBtn = $('#cancelAnswerBtn');
+
+    // Nav bar
+    const askQuestionBtn = $('#askQuestionBtn');
+    const questionListBtn = $('#questionListBtn');
+    const logoutBtn = $('#logoutBtn');
 
     // Vanilla JS
     const loader = document.getElementById("loader");
@@ -263,7 +268,12 @@ const viewAnswers = function() {
 
     // Made publicly available
     return {
-        // DOM elements that need to be accessed outside the namespace
+        // Nav bar
+        askQuestionBtn: askQuestionBtn,
+        questionListBtn: questionListBtn,
+        logoutBtn: logoutBtn,
+
+       // DOM elements that need to be accessed outside the namespace
         addOwnAnswerBtn: addOwnAnswerBtn,
         submitAnswerBtn: submitAnswerBtn,
         cancelAnswerBtn: cancelAnswerBtn,
@@ -286,6 +296,23 @@ $(document).ready(function() {
     "use strict";
     /* ATTACH EVENT LISTENERS
     ============================================================== */
+
+    /* Navigation bar
+    ============================================================== */
+    viewAnswers.askQuestionBtn.on("click", () => {
+      redirectToIndex.goTo("1");
+    });
+
+    viewAnswers.questionListBtn.on("click", () => {
+      redirectToIndex.goTo("2");
+    });
+
+    viewAnswers.logoutBtn.on("click", () => {
+      global.logout();
+    });
+
+    // ============================================================== */
+
     viewAnswers.addOwnAnswerBtn.on("click", function(){
       viewAnswers.addOwnAnswer.toggleUI();
     });

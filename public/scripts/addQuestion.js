@@ -14,8 +14,6 @@ const addQuestion = function() {
         unfoldingHeader.unfoldHeader(data, "green");
       },
       error: function(jqXHR) {
-        /* TODO REVIEW ME. Old implementation was replaced, since the error could have been for anything (not only duplication)
-          The way to check for duplication is shown below. DELETE ME WHEN REVIEWED */
         // If the server response includes "Violation of UNIQUE KEY"
         if(global.logAJAXErr(submitQuestion.name, jqXHR) === "duplicatedKey") {
           // The user is trying to add an already existing question

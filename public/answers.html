@@ -6,15 +6,30 @@
     <title>Answers</title>
 
     <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="styles/normalize.css">
     <link rel="stylesheet" type="text/css" href="styles/viewAnswers.css">
     <link rel="stylesheet" type="text/css" href="rating.min.css">
     <link rel="stylesheet" type="text/css" href="styles/loader.css" />
+    <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet"> <!-- Google Barlow font -->
   </head>
 
   <body>
     <div id="loader"></div>
     <!-- Holds everything -->
     <div class="mainContainer" style="display:none;" id="mainContainer">
+
+      <!-- Navigation bar -->
+      <header>
+        <nav class="nav">
+          <ul>
+            <li id="askQuestionBtn">Ask a question</li>
+            <li id="questionListBtn">Questions list</li>
+            <li><a href="chat">Chat!</a></li>
+            <li id="logoutBtn" class="logoutBtn">Logout</li>
+          </ul>
+        </nav>
+      </header>
+
       <h1 id="questionHeading"></h1>
 
       <!-- Add own answer -->
@@ -38,6 +53,7 @@
     <script src="scripts/global.js"></script> <!-- Reusable functions -->
     <script src="scripts/loginCheck.js"></script>
     <script src="scripts/unfoldingHeader.js"></script> <!-- Collapsing header -->
+    <script src="scripts/redirectToIndex.js"></script> <!-- A jQuery AJAX request to fetch the index.html -->
     <script src="rating.min.js"></script>
     <script src="scripts/addAnswer.js"></script>
     <script src="scripts/viewRatings.js"></script>

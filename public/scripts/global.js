@@ -97,6 +97,6 @@ const global = function() {
     redirect: redirect,
     logout: logout,
     logAJAXErr: logAJAXErr
-  }
+  };
 }();
 //  ============================================================== */

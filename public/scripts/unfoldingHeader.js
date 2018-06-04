@@ -1,13 +1,19 @@
+/* JSHint quality control
+ ============================================================== */
+/*jshint esversion: 6*/
+/*jslint devel: true*/
+/*globals unfoldingHeader, global, $:false*/
+
 /* unfoldingHeader NAMESPACE
  ============================================================== */
 const unfoldingHeader = function () {
-
+  "use strict";
   /* LEGEND
   * GREEN/RED/ORANGE/GRAY collapsing header
   * REQUIREMENTS: ↓
   ** No elements with id #foldingHeader
   ** Place the unfoldingHeader script, before the script that's going to call it
-  ** You've used css browser reset: * { margin: 0 } in your CSS (if you want it to look properly)
+  ** You've used css browser reset: * { margin: 0 } in your CSS or link href to normalize.css (if you want it to look properly)
   * EXAMPLES: ↓
   ** <script src="scripts/unfoldingHeader.js"></script> // in the HTML, before the scripts using it
   ** <script src="yourScript.js></script>
@@ -82,6 +88,10 @@ const unfoldingHeader = function () {
 
     // If the 3rd parameter is omitted or false, unfoldingHeader will decide if to push content down or not
     if(isFixed() === false) {
+      // Reset the foldingHeader if some other instance created it
+      foldingHeader.css("position", "static");
+
+      // Decide to push content down or not based on vertical scrollbar value
       if(window.scrollY !== 0) {
         foldingHeader.css("position", "fixed");
       }
@@ -117,12 +127,12 @@ const unfoldingHeader = function () {
     setTimeout(function() {
       foldingHeader.css("height", "0"); // unfold it
       headerInfo.css("visibility", "hidden"); // hide the text
-    }, 5000)
+    }, 5000);
   };
 
   return {
     unfoldHeader: unfoldHeader
-  }
+  };
 }();
 //  ============================================================== */
 

@@ -11,11 +11,17 @@ const mainPage = function() {
   // DOM selectors
   const questionsTable = $('#questionsTable');
   const searchContainer = $('#searchContainer');
+
+  // Nav bar
   const askQuestionBtn = $('#askQuestionBtn');
   const questionListBtn = $('#questionListBtn');
-  const userProfileBtn = $('#userProfileBtn');
-  const aboutPageBtn = $('#aboutPageBtn');
   const logoutBtn = $('#logoutBtn');
+
+  // ENUMS of the navigation bar indices, sealed
+  const NavBarIndex = Object.freeze({
+    "1": askQuestionBtn,
+    "2": questionListBtn
+  });
 
   const navBarManipulation = function(){
     // Remove the black background from all navigation bar items
@@ -39,15 +45,21 @@ const mainPage = function() {
     };
   }(); // IIFE
 
+  // "Click" a navigation bar tab and set the current tab in the session
+  const goToNavTab = (tabNumber) => {
+    localStorage.setItem("navTabNumber", tabNumber);
+    NavBarIndex[tabNumber].click();
+  };
+
   return {
-    questionsTable: questionsTable,
-    searchContainer: searchContainer,
+    // Nav bar
     askQuestionBtn: askQuestionBtn,
     questionListBtn: questionListBtn,
-    userProfileBtn: userProfileBtn,
-    aboutPageBtn: aboutPageBtn,
     logoutBtn: logoutBtn,
+    goToNavTab: goToNavTab,
 
+    questionsTable: questionsTable,
+    searchContainer: searchContainer,
     navBarManipulation: navBarManipulation // return functions
   };
 }();
@@ -65,6 +77,9 @@ $(document).ready(function() {
 
       // Clear nav bar bg colours and set black for this button
       mainPage.navBarManipulation.clearAndSetNavBg(mainPage.askQuestionBtn);
+
+      // Set the navTabNumber to this tab
+      localStorage.setItem("navTabNumber", "1");
     })
   );
 
@@ -76,11 +91,22 @@ $(document).ready(function() {
 
         // Clear nav bar bg colours and set black for this button
         mainPage.navBarManipulation.clearAndSetNavBg(mainPage.questionListBtn);
+
+         // Set the navTabNumber to this tab
+        localStorage.setItem("navTabNumber", "2");
   });
 
-  mainPage.userProfileBtn.on("click", () => unfoldingHeader.unfoldHeader('To be implemented', 'orange'));
-
-  mainPage.aboutPageBtn.on("click", () => unfoldingHeader.unfoldHeader('To be implemented', 'orange'));
-
   mainPage.logoutBtn.on("click", () => global.logout());
+
+  // After the button click events were defined ↓
+  (() => {
+    // navTabNumber session will be empty when mainPage is run initially in a new browser session */
+    if(localStorage.getItem("navTabNumber") === null) {
+      mainPage.goToNavTab("2"); // default tab
+    }
+    // "Click" a desired tab
+    else {
+      mainPage.goToNavTab(localStorage.getItem("navTabNumber"));
+    }
+  })(); // IIFE;
 });

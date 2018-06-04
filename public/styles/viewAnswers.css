@@ -1,10 +1,7 @@
+@import "navigationBar.css";
+
 /* Global
  ============================================================== */
-/* Browser reset */
-* {
-  margin: 0;
-}
-
 /* Remove element from DOM */
 .notDisplayed {
   display: none;
@@ -206,6 +203,8 @@ button.submitOwnAnswerBtn:hover {
 }
 /*  ============================================================== */
 
+/* Answer containers
+ ============================================================== */
 .addAnswerContainer {
   background-color: lightgray;
 }
@@ -213,3 +212,6 @@ button.submitOwnAnswerBtn:hover {
 .addAnswerContainer .areaContainer {
   display: flex;
 }
+/*  ============================================================== */
+
+

@@ -1,9 +1,5 @@
 /* CHANGES ONLY ACCEPTED IN THE .SCSS NOT .CSS
  ============================================================== */
-/* Mixin to prefix a property
-  @param {String} $property - Property name
-  @param {*} $value - Property value
-  @param {List} $prefixes (()) - List of prefixes to print */
 /* Responsive Question/Answer table
 ============================================================== */
 .Table {

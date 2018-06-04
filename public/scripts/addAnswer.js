@@ -2,7 +2,7 @@
  ============================================================== */
 /*jshint esversion: 6*/
 /*jslint devel: true*/
-/*globals unfoldingHeader, global, $, URLSearchParams, removeAnswer, viewRatings, addRating:false*/
+/*globals unfoldingHeader, global, $:false*/
 
 /* addAnswer NAMESPACE
  ============================================================== */

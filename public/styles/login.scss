@@ -1,6 +1,7 @@
+@import "mixins";
+
 /* CHANGES ONLY ACCEPTED IN THE .SCSS NOT .CSS
  ============================================================== */
-// any-hover instead of hover
 // display should be first property
 // background-colors should be last property
 
@@ -16,37 +17,6 @@ $break-largest: 1000px;
 // Colours
 $darkBlue: #19354E;
 $grey: #8190A5;
-
-/* Mixins
- ============================================================== */
-
-/* Mixin to prefix a property
-  @param {String} $property - Property name
-  @param {*} $value - Property value
-  @param {List} $prefixes (()) - List of prefixes to print */
-@mixin prefix($property, $value, $prefixes: ()) {
-  @each $prefix in $prefixes {
-    #{'-' + $prefix + '-' + $property}: $value;
-  }
-
-  // Output standard non-prefixed declaration
-  #{$property}: $value;
-}
-
-// Example: @include prefix(transform, rotate(45deg), webkit ms);
-
-@mixin absoluteZero {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-@mixin barlowFont($fontSize) {
-  font-family: 'Barlow', sans-serif;
-  font-size: $fontSize;
-}
 
 // Reusable
 .fieldBox {
