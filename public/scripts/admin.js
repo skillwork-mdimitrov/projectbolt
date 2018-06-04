@@ -59,6 +59,7 @@ const admin = function () {
             $.post("login/ban-user", { userID: userID, sessionID: sessionID }, function() {})
             .done(function() {
                 console.log("Request complete");
+                unfoldingHeader.unfoldHeader("User Banned.", "green");
                 loadUsers();
             })
             .fail(function() {
@@ -69,6 +70,7 @@ const admin = function () {
             $.post("login/unban-user", { userID: userID, sessionID: sessionID }, function() {})
             .done(function() {
                 console.log("Request complete");
+                unfoldingHeader.unfoldHeader("User Unbanned.", "green");
                 loadUsers();
             })
             .fail(function() {
