@@ -95,9 +95,8 @@ const viewAnswers = function() {
         rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1");
         rowItemDelete.setAttribute("data-header", "Action");
         const rowItemDeleteButton = document.createElement("button");
-        rowItemDeleteButton.setAttribute("class", "deleteButton");
+        rowItemDeleteButton.setAttribute("class", "deleteButton fa fa-close");
         rowItemDeleteButton.setAttribute("id", answerID);
-        rowItemDeleteButton.textContent = "Delete";
         rowItemDelete.appendChild(rowItemDeleteButton);
 
         // The answer
