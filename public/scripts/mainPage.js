@@ -30,14 +30,20 @@ const mainPage = function() {
     };
 
     // Set a black background to an element
-    const setNavBg = (element) => {
-      element.addClass("blackBg");
+    const setNavBg = (tabIndex) => {
+      NavBarIndex[tabIndex].addClass("blackBg");
+    };
+
+    // Set currently selected nav bar index
+    const setNavBarIndex = (index) => {
+      localStorage.setItem("navTabNumber", index);
     };
 
     // Clear all the black background from all li items and set one for an element
-    const clearAndSetNavBg = (forElement) => {
+    const clearAndSetNavBg = (tabIndex) => {
       clearNavBg();
-      setNavBg(forElement);
+      setNavBarIndex(tabIndex);
+      setNavBg(tabIndex);
     };
 
     return {
@@ -46,9 +52,9 @@ const mainPage = function() {
   }(); // IIFE
 
   // "Click" a navigation bar tab and set the current tab in the session
-  const goToNavTab = (tabNumber) => {
-    localStorage.setItem("navTabNumber", tabNumber);
-    NavBarIndex[tabNumber].click();
+  const goToNavTab = (tabIndex) => {
+    localStorage.setItem("navTabNumber", tabIndex);
+    NavBarIndex[tabIndex].click();
   };
 
   return {
@@ -75,11 +81,8 @@ $(document).ready(function() {
     mainPage.questionsTable.fadeOut("fast", () => {
       mainPage.searchContainer.fadeIn("fast");
 
-      // Clear nav bar bg colours and set black for this button
-      mainPage.navBarManipulation.clearAndSetNavBg(mainPage.askQuestionBtn);
-
-      // Set the navTabNumber to this tab
-      localStorage.setItem("navTabNumber", "1");
+      // Set the colour and local storage for this button
+      mainPage.navBarManipulation.clearAndSetNavBg("1");
     })
   );
 
@@ -89,22 +92,19 @@ $(document).ready(function() {
       mainPage.questionsTable.fadeIn("fast", () =>
         mainPage.questionsTable.css("display", "flex"))); // because fadeIn sets it to displays:block);
 
-        // Clear nav bar bg colours and set black for this button
-        mainPage.navBarManipulation.clearAndSetNavBg(mainPage.questionListBtn);
-
-         // Set the navTabNumber to this tab
-        localStorage.setItem("navTabNumber", "2");
+        // Set the colour and local storage for this button
+        mainPage.navBarManipulation.clearAndSetNavBg("2");
   });
 
   mainPage.logoutBtn.on("click", () => global.logout());
 
-  // After the button click events were defined ↓
+  // After the button click events were defined and this script was run ↓
   (() => {
     // navTabNumber session will be empty when mainPage is run initially in a new browser session */
     if(localStorage.getItem("navTabNumber") === null) {
-      mainPage.goToNavTab("2"); // default tab
+      mainPage.goToNavTab("2"); // default tab/page
     }
-    // "Click" a desired tab
+    // "Click" a desired tab (for example redirect can come from answers.html with a navTabNumber in set in the local storage)
     else {
       mainPage.goToNavTab(localStorage.getItem("navTabNumber"));
     }
