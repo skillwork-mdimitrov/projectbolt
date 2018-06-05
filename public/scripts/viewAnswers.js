@@ -90,10 +90,20 @@ const viewAnswers = function() {
         const tableRow = document.createElement("div");
         tableRow.setAttribute("class", "Table-row");
 
-        //The delete button
+        /* Delete
+        ============================================================== */
+        // The delete div
         const rowItemDelete = document.createElement("div");
         rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1");
         rowItemDelete.setAttribute("data-header", "Action");
+
+        // The delete div style
+        rowItemDelete.style.display = "flex";
+        rowItemDelete.style.justifyContent = "center";
+        rowItemDelete.style.alignContent = "center";
+        // ============================================================== */
+
+        // The delete button
         const rowItemDeleteButton = document.createElement("button");
         rowItemDeleteButton.setAttribute("class", "deleteButton fa fa-close");
         rowItemDeleteButton.setAttribute("id", answerID);

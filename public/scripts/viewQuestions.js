@@ -12,14 +12,22 @@ const viewQuestions = function () {
     let tableRow = document.createElement("div");
     tableRow.setAttribute("class", "Table-row");
 
-    // The delete button
+    /* Delete
+    ============================================================== */
+    // The delete div
     let rowItemDelete = document.createElement("div");
     rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1 deleteColumn");
     rowItemDelete.setAttribute("data-header", "Action");
+
+    // The delete div style
+    rowItemDelete.style.display = "flex";
+    rowItemDelete.style.justifyContent = "center";
+    rowItemDelete.style.alignContent = "center";
+
+    // The delete button
     let rowItemDeleteButton = document.createElement("button");
-    rowItemDeleteButton.setAttribute("class", "deleteButton");
+    rowItemDeleteButton.setAttribute("class", "deleteButton fa fa-close");
     rowItemDeleteButton.setAttribute("id", questionID);
-    rowItemDeleteButton.textContent = "Delete";
     rowItemDelete.appendChild(rowItemDeleteButton);
 
     // The question
@@ -76,7 +84,7 @@ $(document).ready(function () {
     $.getJSON("login/is-teacher/"+sessionID, function () {})
     .done(function (isTeacher) {
         if (isTeacher) {
-          $(".deleteColumn").css("display", "block");
+          $(".deleteColumn").css("display", "flex");
         }
         $('.deleteButton').on("click", function(){
           removeQuestion.removeQuestion($(this));
