@@ -25,7 +25,7 @@ const addRating = function() {
                 })
                 .fail(function(message) {
                     unfoldingHeader.unfoldHeader("Failed updating rating, see console for details", "red", true);
-                    console.log("Updating rating failed on answerID " + answerID + ": " + message);   
+                    console.log("Updating rating failed on answerID " + answerID + ": " + message.responseText);   
                     ratingElement.rating("enable");
                 });
                 }
@@ -36,16 +36,16 @@ const addRating = function() {
                     unfoldingHeader.unfoldHeader("Rating successful", "green", true);
                     viewRatings.updateRating(ratingElement);
                 })
-                .fail(function() {
+                .fail(function(message) {
                     unfoldingHeader.unfoldHeader("Failed inserting rating, see console for details", "red", true);
-                    console.log("Inserting rating failed on answerID " + answerID + ": " + message);   
+                    console.log("Inserting rating failed on answerID " + answerID + ": " + message.responseText);   
                     ratingElement.rating("enable");
                 });
             }
         })
         .fail(function (message) {
             unfoldingHeader.unfoldHeader("Failed checking rating, see console for details", "red", true);
-            console.log("Rating check failed on answerID " + answerID + ": " + message);   
+            console.log("Rating check failed on answerID " + answerID + ": " + message.responseText);   
             ratingElement.rating("enable");
         })
     };
