@@ -12,6 +12,8 @@ const addQuestion = function() {
       url: 'questions/add-question',
       success: function(data){
         unfoldingHeader.unfoldHeader(data, "green");
+          viewQuestions.reloadQuestions();
+          // Redirect?
       },
       error: function(jqXHR) {
         // If the server response includes "Violation of UNIQUE KEY"
