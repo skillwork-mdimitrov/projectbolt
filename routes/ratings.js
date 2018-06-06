@@ -74,7 +74,7 @@ router.post('/update-rating', function(req, res, next) {
         login.sessionValid(sessionID)) {
         let userID = login.getSessionData(sessionID)["userID"];
 
-        database.updateRating(answerID, userID, 0).then(() => {
+        database.updateRating(answerID, userID, rating).then(() => {
             res.status(200).send("Update rating succesful");
         }).catch((reason) => {
             res.status(500).send(reason.toString());

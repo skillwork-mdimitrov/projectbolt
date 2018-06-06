@@ -20,27 +20,29 @@ const addRating = function() {
                 console.log("Requesting update rating on answerID " + answerID);
                 $.post("rating/update-rating", ratingData, function() {})
                 .done(function() {
-                    unfoldingHeader.unfoldHeader("Rating successful", "green", true);
-                    viewRatings.updateRating(ratingElement);
+                    unfoldingHeader.unfoldHeader("Rating successful", "green", true);                    
                 })
                 .fail(function(message) {
                     unfoldingHeader.unfoldHeader("Failed updating rating, see console for details", "red", true);
                     console.log("Updating rating failed on answerID " + answerID + ": " + message.responseText);   
-                    ratingElement.rating("enable");
+                })
+                .always(function() {
+                    viewRatings.updateRating(ratingElement);
                 });
-                }
+            }
             else {
                 console.log("Requesting insert rating on answerID " + answerID);
                 $.post("rating/insert-rating", ratingData, function() {})
                 .done(function() {
                     unfoldingHeader.unfoldHeader("Rating successful", "green", true);
-                    viewRatings.updateRating(ratingElement);
                 })
                 .fail(function(message) {
                     unfoldingHeader.unfoldHeader("Failed inserting rating, see console for details", "red", true);
                     console.log("Inserting rating failed on answerID " + answerID + ": " + message.responseText);   
-                    ratingElement.rating("enable");
-                });
+                })                
+                .always(function() {
+                    viewRatings.updateRating(ratingElement);
+                });              
             }
         })
         .fail(function (message) {

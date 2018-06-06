@@ -20,14 +20,15 @@ const viewRatings = function() {
                 totalRating += val["Rating"];
             });
             averageRating = Math.ceil(totalRating / ratingCount);
-            ratingElement.rating('set rating', averageRating)
-            ratingElement.rating("enable");
+            ratingElement.rating('set rating', averageRating);
         })
         .fail(function(message) {
             unfoldingHeader.unfoldHeader("Failed acquiring ratings, see console for details", "red", true);
             console.log("Failed acquiring ratings of answerID " + answerID + ": " + message.responseText);
-            ratingElement.rating("enable");
         })
+        .always(function() {
+            ratingElement.rating("enable");
+        });
     };
 
     return {
