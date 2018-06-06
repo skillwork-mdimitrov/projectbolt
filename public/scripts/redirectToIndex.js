@@ -10,8 +10,8 @@ const redirectToIndex = function() {
   "use strict";
   const goTo = function(toWhichTab) {
     $.get( "/", function() {
-      localStorage.setItem("navTabNumber", toWhichTab); // adjust the local storage for the desired nav tab to go to
-      // When mainPage got executed, it will grab the navTabNumber from the localStorage and go to that nav tab
+      localStorage.setItem("navTabNumber", toWhichTab);
+      // When mainPage is executed, it will grab the navTabNumber from the localStorage and go to that nav tab
       global.redirect("");
     })
     .fail(function(jqXHR) {

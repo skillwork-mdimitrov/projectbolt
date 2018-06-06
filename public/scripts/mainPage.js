@@ -17,8 +17,6 @@ const mainPage = function() {
   const questionListBtn = $('#questionListBtn');
   const logoutBtn = $('#logoutBtn');
 
-  // ENUMS of the navigation bar indices, sealed
-  // Possibly in the future this will be moved to global.js
   const NavBarIndex = Object.freeze({
     "1": askQuestionBtn,
     "2": questionListBtn
@@ -70,10 +68,10 @@ const mainPage = function() {
     navBarManipulation: navBarManipulation // return functions
   };
 }();
-// ============================================================== */
 
 $(document).ready(function() {
   "use strict";
+
   /* ATTACH EVENT LISTENERS
   ============================================================== */
 
