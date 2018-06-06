@@ -2,7 +2,7 @@ const addRating = function() {
     const rateAnswer = function rateAnswer(ratingElement) {
         ratingElement.rating("disable");
         let answerID = ratingElement.attr("id");
-        let rating = $('#'+answerID).rating('get rating');
+        let rating = $("#"+answerID+".star").rating('get rating');
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
         let ratingData = {
