@@ -7,11 +7,12 @@
         
         $.post("questions/remove-question", { questionID: questionID, sessionID: sessionID }, function() {})
         .done(function() {
-            console.log("Request complete");
-            window.location.reload();
+            unfoldingHeader.unfoldHeader("Removed successfully", "green", true);               
+            viewQuestions.reloadQuestions();
         })
-        .fail(function() {
-            console.log( "error");
+        .fail(function(message) {
+            unfoldingHeader.unfoldHeader("Failed removing question, see console for details", "red", true);   
+            console.log("Failed removing question " + questionID + ": " + message.responseText);
         });
     };
   

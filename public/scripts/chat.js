@@ -4,7 +4,8 @@ $(document).ready(function() {
 	// Make connections
 	const socket = io();
 
-	// DOM selectors
+  /* DOM selectors
+  ============================================================== */
 	const message = $("#message");
 	const usernameextra = $("#usernamenew");
 	const send_message = $("#send_message");
@@ -14,8 +15,14 @@ $(document).ready(function() {
 	const connected = $("#connected");
 	let sessionid = sessionStorage.getItem("projectBoltSessionID");
 	let username; // to be re-assigned later
+
+  // Nav bar
+  const askQuestionBtn = $('#askQuestionBtn');
+  const questionListBtn = $('#questionListBtn');
+  const logoutBtn = $('#logoutBtn');
+  // ============================================================== */
 	
-	// Inital change of username towards active session
+	// Initial change of username towards active session
 	$(document).ready(function () {
 		console.log("Started fetching username json");
 		try{
@@ -23,7 +30,7 @@ $(document).ready(function() {
 			  .done(function (data) {
 				console.log("Recieved user json");
 				return getUsername(data);
-			})
+			});
 		}
 		catch (exception)
 		{
@@ -49,7 +56,7 @@ $(document).ready(function() {
 	// Get the username from the json data
 	function getUsername(data){
 		username = data[0].Username;
-		socket.emit('changeUsername', {username : data[0].Username})
+		socket.emit('changeUsername', {username : data[0].Username});
 	}
 	
 	// Emit message
@@ -58,7 +65,7 @@ $(document).ready(function() {
 			unfoldingHeader.unfoldHeader("Please type something...^^", "orange");
 			return false;
 		}
-		socket.emit('new_message', {message : message.val()})
+		socket.emit('new_message', {message : message.val()});
 	});
 
 	// Listen on new_message
@@ -82,17 +89,17 @@ $(document).ready(function() {
 	
 	// Emit a username
 	send_username.click(function(){
-		socket.emit('changeUsername', {username : username+"@"+usernameextra.val()})
+		socket.emit('changeUsername', {username : username+"@"+usernameextra.val()});
 	});
 	
-	//Emit typing
+	// Emit typing
 	message.bind("keypress", () => {
-		socket.emit('typing')
+		socket.emit('typing');
 	});
 	
 	// Listen on typing
 	socket.on('typing', (data) => {
-		feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>")
+		feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>");
 	});
 	
 	// Automatic scroll down to the end of the chat
@@ -100,5 +107,19 @@ $(document).ready(function() {
 		var objDiv = document.getElementById("chatroom");
 		objDiv.scrollTop = objDiv.scrollHeight;
 	}
-}
-)
+
+  /* ATTACH EVENT LISTENERS NAVIGATION BAR
+    ============================================================== */
+  askQuestionBtn.on("click", () => {
+    redirectToIndex.goTo("1");
+  });
+
+  questionListBtn.on("click", () => {
+    redirectToIndex.goTo("2");
+  });
+
+  logoutBtn.on("click", () => {
+    global.logout();
+  });
+  // ============================================================== */
+});

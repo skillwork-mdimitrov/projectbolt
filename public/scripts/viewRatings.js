@@ -7,6 +7,7 @@ const viewRatings = function() {
     };
 
     const updateRating = function updateRatings(ratingElement) {
+        ratingElement.rating("disable");
         let answerID = ratingElement.attr("id");
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
@@ -20,14 +21,15 @@ const viewRatings = function() {
                 totalRating += val["Rating"];
             });
             averageRating = Math.ceil(totalRating / ratingCount);
-            ratingElement.rating('set rating', averageRating)
-            ratingElement.rating("enable");
+            ratingElement.rating('set rating', averageRating);
         })
         .fail(function(message) {
             unfoldingHeader.unfoldHeader("Failed acquiring ratings, see console for details", "red", true);
-            console.log("Failed acquiring ratings of answerID " + answerID + ": " + message);
-            ratingElement.rating("enable");
+            console.log("Failed acquiring ratings of answerID " + answerID + ": " + message.responseText);
         })
+        .always(function() {
+            ratingElement.rating("enable");
+        });
     };
 
     return {

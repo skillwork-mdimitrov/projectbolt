@@ -37,7 +37,7 @@ const stringCompare = function() {
         })
         .fail(function(message) {
             unfoldingHeader.unfoldHeader("Failed retrieving questions, see console for details", "red", true);
-            console.log("Failed retrieving all questions: " + message);
+            console.log("Failed retrieving all questions: " + message.responseText);
         })
     }
 

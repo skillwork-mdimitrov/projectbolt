@@ -39,7 +39,7 @@ const viewAnswers = function() {
 
       // Delete answers column
       const deleteAnswersColumn = document.createElement("div");
-      deleteAnswersColumn.setAttribute("class", "Table-row-item u-Flex-grow1");
+      deleteAnswersColumn.setAttribute("class", "Table-row-item u-Flex-grow1 deleteColumn");
       deleteAnswersColumn.textContent = "Action";
 
       // Answers column
@@ -90,14 +90,23 @@ const viewAnswers = function() {
         const tableRow = document.createElement("div");
         tableRow.setAttribute("class", "Table-row");
 
-        //The delete button
+        /* Delete
+        ============================================================== */
+        // The delete div
         const rowItemDelete = document.createElement("div");
-        rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1");
+        rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1 deleteColumn");
         rowItemDelete.setAttribute("data-header", "Action");
+
+        // The delete div style
+        rowItemDelete.style.display = "flex";
+        rowItemDelete.style.justifyContent = "center";
+        rowItemDelete.style.alignContent = "center";
+        // ============================================================== */
+
+        // The delete button
         const rowItemDeleteButton = document.createElement("button");
-        rowItemDeleteButton.setAttribute("class", "deleteButton");
+        rowItemDeleteButton.setAttribute("class", "deleteButton fa fa-close");
         rowItemDeleteButton.setAttribute("id", answerID);
-        rowItemDeleteButton.textContent = "Delete";
         rowItemDelete.appendChild(rowItemDeleteButton);
 
         // The answer

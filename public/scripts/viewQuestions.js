@@ -12,14 +12,22 @@ const viewQuestions = function () {
     let tableRow = document.createElement("div");
     tableRow.setAttribute("class", "Table-row");
 
-    // The delete button
+    /* Delete
+    ============================================================== */
+    // The delete div
     let rowItemDelete = document.createElement("div");
     rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1 deleteColumn");
     rowItemDelete.setAttribute("data-header", "Action");
+
+    // The delete div style
+    rowItemDelete.style.display = "flex";
+    rowItemDelete.style.justifyContent = "center";
+    rowItemDelete.style.alignContent = "center";
+
+    // The delete button
     let rowItemDeleteButton = document.createElement("button");
-    rowItemDeleteButton.setAttribute("class", "deleteButton");
+    rowItemDeleteButton.setAttribute("class", "deleteButton fa fa-close");
     rowItemDeleteButton.setAttribute("id", questionID);
-    rowItemDeleteButton.textContent = "Delete";
     rowItemDelete.appendChild(rowItemDeleteButton);
 
     // The question
@@ -54,40 +62,44 @@ const viewQuestions = function () {
     questionsTable.appendChild(tableRow);
   };
 
+  const reloadQuestions = function () {
+    let sessionID = sessionStorage.getItem('projectBoltSessionID');
+
+    console.log("Sending request");
+    $.getJSON("questions/get-all-questions/"+sessionID, function () {})
+    .done(function (data) {
+      console.log("Request complete");
+      $(".Table-row:not(.Table-header)").remove();
+      $.each(data, function (key, val) {
+        addToTable([val["Question"], val["Username"], val["ID"]]);
+      });
+
+      $(".deleteColumn").css("display", "none");
+      $.getJSON("login/is-teacher/"+sessionID, function () {})
+      .done(function (isTeacher) {
+          if (isTeacher) {
+            $(".deleteColumn").css("display", "flex");
+          }
+          $('.deleteButton').on("click", function(){
+            removeQuestion.removeQuestion($(this));
+          });
+      })
+      .fail(function () {
+          console.log("error");
+      }) 
+    })
+    .fail(function () {
+      console.log("Get all questions failed");
+    })
+  };
+
   return {
-    addToTable: addToTable
+    reloadQuestions: reloadQuestions
   }
 }();
 
-/* Delete button
-============================================================== */
+//  ============================================================== */
 
 $(document).ready(function () {
-  let sessionID = sessionStorage.getItem('projectBoltSessionID');
-
-  console.log("Sending request");
-  $.getJSON("questions/get-all-questions/"+sessionID, function () {})
-  .done(function (data) {
-    console.log("Request complete");
-    $.each(data, function (key, val) {
-      viewQuestions.addToTable([val["Question"], val["Username"], val["ID"]]);
-    });
-
-    $(".deleteColumn").css("display", "none");
-    $.getJSON("login/is-teacher/"+sessionID, function () {})
-    .done(function (isTeacher) {
-        if (isTeacher) {
-          $(".deleteColumn").css("display", "block");
-        }
-        $('.deleteButton').on("click", function(){
-          removeQuestion.removeQuestion($(this));
-        });
-    })
-    .fail(function () {
-        console.log("error");
-    }) 
-  })
-  .fail(function () {
-    console.log("Get all questions failed");
-  })
+  viewQuestions.reloadQuestions();
 });

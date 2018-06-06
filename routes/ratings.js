@@ -13,8 +13,7 @@ router.get('/get-all-ratings/:answerID/:sessionID', function(req, res, next) {
         database.getNonBannedRatingsByAnswerId(answerID).then((ratings) => {
             res.json(ratings);
         }).catch((reason) => {
-            console.log('Error retrieving ratings of answerID ' + answerID + ': ' + reason);
-            res.status(500).send('Something broke! ' + reason);
+            res.status(500).send(reason.toString());
         }); 
     }
     else {
@@ -34,8 +33,7 @@ router.get('/get-rating-answer-user/:answerID/:sessionID', function(req, res, ne
         database.getRatingByAnswerIdAndUserId(answerID, userID).then((rating) => {
             res.json(rating);
         }).catch((reason) => {
-            console.log('Error retrieving rating of answerID ' + answerID + ' userID ' + userID + ': ' + reason);
-            res.status(500).send('Something broke! ' + reason);
+            res.status(500).send(reason.toString());
         });
     }
     else {
@@ -57,8 +55,7 @@ router.post('/insert-rating', function(req, res, next) {
         database.insertRating(answerID, userID, rating).then(() => {
             res.status(200).send("Insert rating succesful");
         }).catch((reason) => {
-            console.log('Error inserting rating of answerID ' + answerID + ' rating ' + rating + ': ' + reason);
-            res.status(500).send('Something broke! ' + reason);
+            res.status(500).send(reason.toString());
         }); 
     }
     else {
@@ -80,8 +77,7 @@ router.post('/update-rating', function(req, res, next) {
         database.updateRating(answerID, userID, rating).then(() => {
             res.status(200).send("Update rating succesful");
         }).catch((reason) => {
-            console.log('Error updating rating of answerID ' + answerID + ' rating ' + rating + ': ' + reason);
-            res.status(500).send('Something broke! ' + reason);
+            res.status(500).send(reason.toString());
         }); 
     }
     else {
