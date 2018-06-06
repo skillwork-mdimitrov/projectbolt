@@ -62,39 +62,44 @@ const viewQuestions = function () {
     questionsTable.appendChild(tableRow);
   };
 
+  const reloadQuestions = function () {
+    let sessionID = sessionStorage.getItem('projectBoltSessionID');
+
+    console.log("Sending request");
+    $.getJSON("questions/get-all-questions/"+sessionID, function () {})
+    .done(function (data) {
+      console.log("Request complete");
+      $(".Table-row:not(.Table-header)").remove();
+      $.each(data, function (key, val) {
+        addToTable([val["Question"], val["Username"], val["ID"]]);
+      });
+
+      $(".deleteColumn").css("display", "none");
+      $.getJSON("login/is-teacher/"+sessionID, function () {})
+      .done(function (isTeacher) {
+          if (isTeacher) {
+            $(".deleteColumn").css("display", "flex");
+          }
+          $('.deleteButton').on("click", function(){
+            removeQuestion.removeQuestion($(this));
+          });
+      })
+      .fail(function () {
+          console.log("error");
+      }) 
+    })
+    .fail(function () {
+      console.log("Get all questions failed");
+    })
+  };
+
   return {
-    addToTable: addToTable
+    reloadQuestions: reloadQuestions
   }
 }();
 
 //  ============================================================== */
 
 $(document).ready(function () {
-  let sessionID = sessionStorage.getItem('projectBoltSessionID');
-
-  console.log("Sending request");
-  $.getJSON("questions/get-all-questions/"+sessionID, function () {})
-  .done(function (data) {
-    console.log("Request complete");
-    $.each(data, function (key, val) {
-      viewQuestions.addToTable([val["Question"], val["Username"], val["ID"]]);
-    });
-
-    $(".deleteColumn").css("display", "none");
-    $.getJSON("login/is-teacher/"+sessionID, function () {})
-    .done(function (isTeacher) {
-        if (isTeacher) {
-          $(".deleteColumn").css("display", "flex");
-        }
-        $('.deleteButton').on("click", function(){
-          removeQuestion.removeQuestion($(this));
-        });
-    })
-    .fail(function () {
-        console.log("error");
-    }) 
-  })
-  .fail(function () {
-    console.log("Get all questions failed");
-  })
+  viewQuestions.reloadQuestions();
 });
