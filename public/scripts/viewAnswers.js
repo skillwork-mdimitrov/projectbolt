@@ -39,7 +39,7 @@ const viewAnswers = function() {
 
       // Delete answers column
       const deleteAnswersColumn = document.createElement("div");
-      deleteAnswersColumn.setAttribute("class", "Table-row-item u-Flex-grow1");
+      deleteAnswersColumn.setAttribute("class", "Table-row-item u-Flex-grow1 deleteColumn");
       deleteAnswersColumn.textContent = "Action";
 
       // Answers column
@@ -94,7 +94,7 @@ const viewAnswers = function() {
         ============================================================== */
         // The delete div
         const rowItemDelete = document.createElement("div");
-        rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1");
+        rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1 deleteColumn");
         rowItemDelete.setAttribute("data-header", "Action");
 
         // The delete div style
