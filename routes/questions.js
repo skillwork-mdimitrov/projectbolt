@@ -13,8 +13,7 @@ router.get('/get-all-questions/:sessionID', function(req, res, next) {
       res.json(questions);
     }).catch(
     (reason) => {
-      console.log('Error retrieving all questions: ' + reason);
-      res.status(500).send('Something broke! ' + reason);
+      res.status(500).send(reason.toString());
     });  
   }
   else {
@@ -33,8 +32,7 @@ router.post('/add-question', function(req, res) {
       res.status(200).send("Insert successful");
     })
     .catch((reason) => {
-      console.log("Error adding question '" + question + "': " + reason);
-      res.status(500).send('Something broke! ' + reason);
+      res.status(500).send(reason.toString());
     });
   }
   else {
@@ -52,8 +50,7 @@ router.post('/remove-question', function(req, res) {
       res.status(200).send("Delete succesful");
     })
     .catch((reason) => {
-      console.log("Error removing question " + questionID + ": " + reason);
-      res.status(500).send('Something broke! ' + reason);
+      res.status(500).send(reason.toString());
     });
   }
   else {
