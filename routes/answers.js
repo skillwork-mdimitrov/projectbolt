@@ -16,12 +16,10 @@ router.get('/:questionID/:sessionID', function(req, res, next) {
       database.getNonBannedAnswersByQuestionId(questionID).then((answers) => {
         res.json(questionText.concat(answers));
       }).catch((reason) => {
-        console.log('Handle rejected promise ('+reason+') here.');
-        res.status(500).send('Something broke! ' + reason);
+        res.status(500).send(reason.toString());
       });
     }).catch((reason) => {
-      console.log('Handle rejected promise ('+reason+') here.');
-      res.status(500).send('Something broke! ' + reason);
+      res.status(500).send(reason.toString());
     });
   }
   else {
@@ -43,8 +41,7 @@ router.post('/add-answer', function(req, res) {
       res.status(200).send("Insert successful");
     })
     .catch((reason) => {
-      console.log('Handle rejected promise ('+reason+') here.');
-      res.status(500).send('Something broke! ' + reason)
+      res.status(500).send(reason.toString())
     });
   }
   else {
@@ -57,17 +54,26 @@ router.post('/remove-answer', function(req, res) {
     let answerID = req.body.answerID;
     let sessionID = req.body.sessionID;
 
-    if (Number.isInteger(parseInt(answerID)) && login.sessionValid(sessionID) && login.isTeacher(sessionID)) {
-        database.deleteAnswer(answerID).then(() => {
+    if (Number.isInteger(parseInt(answerID)) && login.sessionValid(sessionID)) {
+      login.isTeacher(sessionID).then((isTeacher) => {
+        if (isTeacher) {
+          database.deleteAnswer(answerID).then(() => {
             res.status(200).send("Delete successful");
-    })
-    .catch((reason) => {
-            console.log("Error removing answer " + answerID + ": " + reason);
-        res.status(500).send('Something broke! ' + reason);
-    });
+          })
+          .catch((reason) => {
+            res.status(500).send(reason.toString());
+          });
+        }
+        else {
+          res.status(500).send('Invalid request');
+        }        
+      })
+      .catch((reason) => {
+          res.status(500).send(reason.toString());
+      });      
     }
     else {
-        res.status(500).send('Invalid request');
+      res.status(500).send('Invalid request');
     }
 });
 
