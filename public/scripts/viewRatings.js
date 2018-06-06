@@ -7,6 +7,7 @@ const viewRatings = function() {
     };
 
     const updateRating = function updateRatings(ratingElement) {
+        ratingElement.rating("disable");
         let answerID = ratingElement.attr("id");
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
