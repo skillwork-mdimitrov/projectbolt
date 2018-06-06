@@ -8,6 +8,7 @@
  ============================================================== */
 const unfoldingHeader = function () {
   "use strict";
+
   /* LEGEND
   * GREEN/RED/ORANGE/GRAY collapsing header
   * REQUIREMENTS: ↓
@@ -34,16 +35,14 @@ const unfoldingHeader = function () {
         switch (fixedToViewPort) {
           case false:
             return false;
-            /* Weird 3rd parameter passed, the position won't be fixed the the viewport
-             ============================================================== */
+
+            // Weird 3rd parameter passed, the position won't be fixed the the viewport
           case undefined:
             return false;
           case null:
             return false;
-            // ============================================================== */
 
-            /* True passed or any non falsy parameter, folding header will be fixed to the viewport
-           ============================================================== */
+            //True passed or any non falsy parameter, folding header will be fixed to the viewport
           case true:
             return true;
           default:
@@ -54,6 +53,7 @@ const unfoldingHeader = function () {
 
     // Create a folding header if it doesn't exists
     if($("#foldingHeader").length === 0) {
+
       /* Create, style and append the folding header
        ============================================================== */
       $("body").prepend("<div id='foldingHeader'></div>");
@@ -83,8 +83,8 @@ const unfoldingHeader = function () {
       headerInfo.css("transition", "visibility 350ms linear");
     }
 
-    const foldingHeader = $('#foldingHeader'); // it's now created, select it
-    const headerInfo = $('#headerInfo'); // it's now created, select it
+    const foldingHeader = $('#foldingHeader');
+    const headerInfo = $('#headerInfo');
 
     // If the 3rd parameter is omitted or false, unfoldingHeader will decide if to push content down or not
     if(isFixed() === false) {
@@ -134,5 +134,5 @@ const unfoldingHeader = function () {
     unfoldHeader: unfoldHeader
   };
 }();
-//  ============================================================== */
+
 

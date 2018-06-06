@@ -98,8 +98,6 @@ const viewQuestions = function () {
   }
 }();
 
-//  ============================================================== */
-
 $(document).ready(function () {
   viewQuestions.reloadQuestions();
 });

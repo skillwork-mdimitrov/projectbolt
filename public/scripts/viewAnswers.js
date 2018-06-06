@@ -25,6 +25,7 @@ const viewAnswers = function() {
 
     // Make the answers table with the heading columns
     const mkAnswersTableSkeleton = function() {
+
       /* CREATES
       ============================================================== */
 
@@ -90,7 +91,7 @@ const viewAnswers = function() {
         const tableRow = document.createElement("div");
         tableRow.setAttribute("class", "Table-row");
 
-        /* Delete
+        /* DELETES
         ============================================================== */
         // The delete div
         const rowItemDelete = document.createElement("div");
@@ -299,15 +300,14 @@ const viewAnswers = function() {
         answersTableUI: answersTableUI // execute first to get the functions
     };
 }();
-//  ============================================================== */
 
 $(document).ready(function() {
     "use strict";
+
     /* ATTACH EVENT LISTENERS
     ============================================================== */
 
-    /* Navigation bar
-    ============================================================== */
+    // Navigation bar
     viewAnswers.askQuestionBtn.on("click", () => {
       redirectToIndex.goTo("1");
     });
@@ -320,7 +320,8 @@ $(document).ready(function() {
       global.logout();
     });
 
-    // ============================================================== */
+    /*View answers in the table
+     ============================================================== */
 
     viewAnswers.addOwnAnswerBtn.on("click", function(){
       viewAnswers.addOwnAnswer.toggleUI();
