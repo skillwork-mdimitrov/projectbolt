@@ -59,7 +59,8 @@ const viewQuestions = function () {
   }
 }();
 
-//  ============================================================== */
+/* Delete button
+============================================================== */
 
 $(document).ready(function () {
   let sessionID = sessionStorage.getItem('projectBoltSessionID');
