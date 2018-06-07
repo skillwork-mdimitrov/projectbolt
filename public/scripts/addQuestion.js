@@ -11,8 +11,8 @@ const addQuestion = function() {
       data: question,
       url: 'questions/add-question',
       success: function(data){
-        notifications.getNotificationSocket().emit('newQuestion', {question: data.question, questionID: data.questionID[0].ID});
         unfoldingHeader.unfoldHeader(data.response, "green");
+        notifications.getNotificationSocket().emit('newQuestion', {question: data.question, questionID: data.questionID[0].ID});
         viewQuestions.reloadQuestions();  
       },
       error: function(jqXHR) {

@@ -16,6 +16,7 @@ const addAnswer = function() {
       url: 'answers/add-answer',
       success: function(data){
         console.log(`${postAnswer.name} says: Answer added successfully`);
+        unfoldingHeader.unfoldHeader(data.response, "green");
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
         $.getJSON("questions/get-userid/"+bodyJSON.questionID+"/"+sessionID, function () {})
         .done(function (userID) {
@@ -23,7 +24,6 @@ const addAnswer = function() {
                                                                   questionID: bodyJSON.questionID, 
                                                                   userID: userID[0].UserID,
                                                                   username: data.username[0].FirstName});  
-          unfoldingHeader.unfoldHeader(data.response, "green");
         })
         .fail(function (message) {
             unfoldingHeader.unfoldHeader("Failed retrieving question user id, see console for details", "red", true);
