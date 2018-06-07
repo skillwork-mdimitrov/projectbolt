@@ -48,11 +48,13 @@ const global = function() {
   };
 
   const redirect = function redirect(route) {
-    if(window.location.href.includes("localhost")) {
-      window.location.href = "http://localhost:3000/"+route;
+    if(window.location.href.includes("projectboltrenew.azurewebsites")) {
+      window.location.href = "https://projectboltrenew.azurewebsites.net/"+route;
     }
     else {
-      window.location.href = "https://projectboltrenew.azurewebsites.net/"+route;
+      let portIndex = window.location.href.indexOf(":3000");
+      let baseUrl = window.location.href.substring(0, portIndex)
+      window.location.href = baseUrl+":3000/"+route;
     }
   };
 
