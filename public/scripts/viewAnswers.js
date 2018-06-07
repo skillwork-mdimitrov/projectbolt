@@ -339,6 +339,7 @@ $(document).ready(function() {
 
             // JSON'ize the question
             let bodyJSON = {
+              question: document.getElementById("questionHeading").textContent,
               questionID: viewAnswers.getQuestionID(),
               answer: viewAnswers.addAnswerArea.val(),
               userID: data.userID,

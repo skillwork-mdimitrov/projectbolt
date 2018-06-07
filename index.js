@@ -30,102 +30,6 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-var _websocket;
-//testing connection
-io.on('connection', function(socket){
-	var users = []; //count the users
-	
-	reloadUsers(); // Send the count to all the users
-	//default username
-	socket.username = "Anonymous"
-	//listen to changeUsername
-	socket.on('changeUsername', (data) => {
-		socket.username = data.username
-		console.log("user " + socket.username + " connected");
-	})
-	
-	//listen on new_message
-    socket.on('new_message', (data) => {
-        //broadcast the new message
-		users.push(socket.username); // Add user to active users
-		console.log("Users typing"+users.toString());
-		var transmit = {date : new Date().toISOString(), username : socket.username, message : data.message};
-		io.sockets.emit('new_message', transmit);
-		console.log("user "+ transmit['username'] +" said \""+transmit['message']+"\""+" at "+getTime());
-	})
-	function getTime(){
-		var today = new Date();
-		var mi = today.getMinutes();
-		var hr = today.getHours();
-		var dd = today.getDate();
-		var mm = today.getMonth()+1; //January is 0!
-		var yyyy = today.getFullYear();
-
-		if(mi<10) {
-			mi = '0'+dd
-		} 
-
-		if(hr<10) {
-			hr = '0'+mm
-		} 
-		
-		
-		if(dd<10) {
-			dd = '0'+dd
-		} 
-
-		if(mm<10) {
-			mm = '0'+mm
-		} 
-
-		today = "["+hr+":"+mi+"] " + mm + '/' + dd + '/' + yyyy;
-		return today
-	}
-	//listen on typing
-    socket.on('typing', (data) => {
-    	socket.broadcast.emit('typing', {username : socket.username})
-	})
-	socket.on('disconnect', function () { // Disconnection of the client
-		users -= 1;
-		reloadUsers();
-		console.log("disconnect...");
-		/*var pseudo; //in case we want a list of usernames
-		pseudo = socket.username;
-		var index = pseudoArray.indexOf(pseudo);
-		pseudo.slice(index - 1, 1);*/
-	})
-	function reloadUsers() { // Send the count of the users to all
-		console.log("users connected: "+users.toString());
-		io.sockets.emit('nbUsers', {"nb": users.toString()});
-	}
-});
-io.on('connect_error', function(error)
-{
-	unfoldingHeader.unfoldHeader("Erro"+error.printStackTrace(), "red");
-	return false;
-});
-
-
-/**
- * Normalize a port into a number, string, or false.
- */
-
-function normalizePort(val) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
-
 /**
  * Event listener for HTTP server "error" event.
  */
@@ -165,4 +69,109 @@ function onListening() {
     : 'port ' + addr.port;
   console.log("Server running at http://localhost:%d", port); // New
   debug('Listening on ' + bind);
+}
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+// Notification web socket namespace
+var notificationSocket = io.of('/notifications');
+notificationSocket.on('connection', function(socket){
+	console.log('Someone subscribed to notifications!');
+
+	socket.on('newQuestion', function (data) {
+    socket.broadcast.emit('newQuestion', data);
+	});
+	
+	socket.on('newAnswer', function (data) {
+    socket.broadcast.emit('newAnswer', data);
+	});
+
+	socket.on('disconnect', function(){
+    console.log('Someone unsubscribed from notifications');
+  });
+});
+
+// Chat web socket namespace
+var chatSocket = io.of('/chat');
+var chatUsers = []; // users chatting
+chatSocket.on('connection', function(socket){
+	//default username
+	socket.username = "Anonymous"
+	console.log(socket.username + " connected to the chat");
+	
+	//listen to changeUsername
+	socket.on('changeUsername', (data) => {
+		console.log(socket.username + " changed name to " + data.username);
+		socket.username = data.username
+		chatUsers.push(socket.username); // Add user to active users
+		chatSocket.emit('updateUsers', {"activeUsers": chatUsers.toString()});	
+	})
+	
+	//listen on new_message
+	socket.on('new_message', (data) => {		
+		var transmit = {date : new Date().toISOString(), username : socket.username, message : data.message};
+		chatSocket.emit('new_message', transmit);
+		console.log("User "+ transmit['username'] +" said \""+transmit['message']+"\""+" at " + getTime());
+	})
+
+	//listen on typing
+	socket.on('typing', (data) => {
+		socket.broadcast.emit('typing', {username : socket.username})
+	})
+	
+	socket.on('disconnect', function () {
+		console.log(socket.username + " disconnected from the chat");
+		var userIndex = chatUsers.indexOf(socket.username);
+		if (userIndex > -1) {
+			chatUsers.splice(userIndex, 1);
+		}
+		chatSocket.emit('updateUsers', {"activeUsers": chatUsers.toString()});	
+	})	
+});
+
+function getTime(){
+	var today = new Date();
+	var mi = today.getMinutes();
+	var hr = today.getHours();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+
+	if(mi<10) {
+		mi = '0'+dd
+	} 
+
+	if(hr<10) {
+		hr = '0'+mm
+	} 
+	
+	
+	if(dd<10) {
+		dd = '0'+dd
+	} 
+
+	if(mm<10) {
+		mm = '0'+mm
+	} 
+
+	today = "["+hr+":"+mi+"] " + mm + '/' + dd + '/' + yyyy;
+	return today
 }

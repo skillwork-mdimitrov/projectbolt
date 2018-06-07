@@ -23,7 +23,7 @@ const unfoldingHeader = function () {
   ** unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
   ** unfoldingHeader.unfoldHeader("Warning, password too short", "orange");
  ============================================================== */
-  const unfoldHeader = function(textToDisplay, color, fixedToViewPort) {
+  const unfoldHeader = function(textToDisplay, color, fixedToViewPort, redirectUrl) {
     // If 3rd parameter is passed, position is expected to be relative to the view port
     const isFixed = function() {
       // No 3rd parameter is passed, the position won't be fixed the the viewport
@@ -122,6 +122,14 @@ const unfoldingHeader = function () {
     headerInfo.text(textToDisplay);
     // Show the folding header text
     headerInfo.css("visibility", "visible");
+
+    if (redirectUrl !== undefined) {
+      let viewButton = $('<button/>', {
+        text: "View",
+        click: function () { global.redirect(redirectUrl) }
+      });
+      headerInfo.append(viewButton);
+    }    
 
     // Hide the header after 5 seconds
     setTimeout(function() {

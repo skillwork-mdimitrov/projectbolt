@@ -16,6 +16,7 @@ const addAnswer = function() {
       url: 'answers/add-answer',
       success: function(){
         console.log(`${postAnswer.name} says: Answer added successfully`);
+        notifications.getNotificationSocket().emit('newAnswer', {question: bodyJSON.question, questionID: bodyJSON.questionID});
       },
       error: function(jqXHR) {
         // If the server response includes "Violation of UNIQUE KEY"

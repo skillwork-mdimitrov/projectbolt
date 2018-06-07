@@ -1,8 +1,6 @@
-// BEWARE, chat.js doesn't use module pattern, global scope is polluted
-
-$(document).ready(function() {
+const chat = function() {
 	// Make connections
-	const socket = io();
+	const chatSocket = io('/chat');
 
   /* DOM selectors
   ============================================================== */
@@ -13,7 +11,6 @@ $(document).ready(function() {
 	const chatroom = $("#chatroom");
 	const feedback = $("#feedback");
 	const connected = $("#connected");
-	let sessionid = sessionStorage.getItem("projectBoltSessionID");
 	let username; // to be re-assigned later
 
   // Nav bar
@@ -22,23 +19,6 @@ $(document).ready(function() {
   const logoutBtn = $('#logoutBtn');
   // ============================================================== */
 	
-	// Initial change of username towards active session
-	$(document).ready(function () {
-		console.log("Started fetching username json");
-		try{
-			$.getJSON("login/get-username/"+sessionid, function () {})
-			  .done(function (data) {
-				console.log("Recieved user json");
-				return getUsername(data);
-			});
-		}
-		catch (exception)
-		{
-			unfoldingHeader.unfoldHeader("Erro"+exception.printStackTrace(), "red");
-			return false;
-		}
-	});
-
 	// In the chat field, enter will simulate click
 	message.keyup(function(event) {
 		if (event.keyCode === 13) {
@@ -53,23 +33,17 @@ $(document).ready(function() {
 		}
 	});
 	
-	// Get the username from the json data
-	function getUsername(data){
-		username = data[0].Username;
-		socket.emit('changeUsername', {username : data[0].Username});
-	}
-	
 	// Emit message
 	send_message.click(function(){
 		if (global.fieldIsEmpty(message)) {
 			unfoldingHeader.unfoldHeader("Please type something...^^", "orange");
 			return false;
 		}
-		socket.emit('new_message', {message : message.val()});
+		chatSocket.emit('new_message', {message : message.val()});
 	});
 
 	// Listen on new_message
-	socket.on("new_message", (data) => {
+	chatSocket.on("new_message", (data) => {
 		feedback.html('');
 		message.val('');
 		chatroom.append("<p class='message'>" + "[<time class='date' title='"+new Date().toISOString()+"'>"+new Date().toISOString()+"</time>"+"] "+ data.username + ": " + data.message + "</p>")
@@ -77,36 +51,24 @@ $(document).ready(function() {
 		bottomChat();
 	});
 	
-	socket.on('nbUsers', function(msg) {
-		connected.html(msg.nb);
+	chatSocket.on('updateUsers', function(message) {
+		connected.html(message.activeUsers);
 	});
-	
-	function time() {
-		$("time").each(function(){
-			$(this).text($.timeago($(this).attr('title')));
-		});
-	}
 	
 	// Emit a username
 	send_username.click(function(){
-		socket.emit('changeUsername', {username : username+"@"+usernameextra.val()});
+		chatSocket.emit('changeUsername', {username : username+"@"+usernameextra.val()});
 	});
 	
 	// Emit typing
 	message.bind("keypress", () => {
-		socket.emit('typing');
+		chatSocket.emit('typing');
 	});
 	
 	// Listen on typing
-	socket.on('typing', (data) => {
+	chatSocket.on('typing', (data) => {
 		feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>");
 	});
-	
-	// Automatic scroll down to the end of the chat
-	function bottomChat() {
-		var objDiv = document.getElementById("chatroom");
-		objDiv.scrollTop = objDiv.scrollHeight;
-	}
 
   /* ATTACH EVENT LISTENERS NAVIGATION BAR
     ============================================================== */
@@ -121,5 +83,44 @@ $(document).ready(function() {
   logoutBtn.on("click", () => {
     global.logout();
   });
-  // ============================================================== */
+	// ============================================================== */
+	
+	// Automatic scroll down to the end of the chat
+	const bottomChat = function() {
+		var objDiv = document.getElementById("chatroom");
+		objDiv.scrollTop = objDiv.scrollHeight;
+	}
+
+	// Get the username from the json data
+	const getUsername = function(data){
+		username = data[0].Username;
+		chatSocket.emit('changeUsername', {username : data[0].Username});
+	}
+	
+	const time = function() {
+		$("time").each(function(){
+			$(this).text($.timeago($(this).attr('title')));
+		});
+	}
+	return {
+		getUsername: getUsername
+	}	
+}();
+
+// Initial change of username towards active session
+$(document).ready(function () {
+	let sessionid = sessionStorage.getItem("projectBoltSessionID");
+	console.log("Started fetching username json");
+	try{
+		$.getJSON("login/get-username/"+sessionid, function () {})
+		.done(function (data) {
+			console.log("Recieved user json");
+			return chat.getUsername(data);
+		});
+	}
+	catch (exception)
+	{
+		unfoldingHeader.unfoldHeader("Erro"+exception, "red");
+		return false;
+	}
 });
