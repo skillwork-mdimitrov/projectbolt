@@ -172,6 +172,16 @@ function getQuestionTextById(questionID) {
     }); 
 }
 
+function getQuestionIdByText(question) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getQuestionIdByTextQuery(question)).then((questionID) => {
+            resolve(questionID);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    }); 
+}
+
 function insertQuestion(question, userID) {
     return new Promise((resolve, reject) => {
         runGenericQuery(queries.getInsertQuestionQuery(question, userID)).then(() => {
@@ -314,6 +324,7 @@ exports.updateRating = updateRating;
 exports.getAllQuestions = getAllQuestions;
 exports.getAllNonBannedQuestions = getAllNonBannedQuestions;
 exports.getQuestionTextById = getQuestionTextById;
+exports.getQuestionIdByText = getQuestionIdByText;
 exports.insertQuestion = insertQuestion;
 exports.deleteQuestion = deleteQuestion;
 
