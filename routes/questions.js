@@ -21,6 +21,25 @@ router.get('/get-all-questions/:sessionID', function(req, res, next) {
   }
 });
 
+/* GET a promise */
+router.get('/get-userid/:questionID/:sessionID', function(req, res, next) {
+  let sessionID = req.params["sessionID"];
+  let questionID = req.params["questionID"];
+
+  if (Number.isInteger(parseInt(questionID)) && 
+      login.sessionValid(sessionID)) {
+    database.getUserIdByQuestionId(questionID).then((userID) => {
+      res.json(userID);
+    }).catch(
+    (reason) => {
+      res.status(500).send(reason.toString());
+    });  
+  }
+  else {
+    res.status(500).send('Invalid request');
+  }
+});
+
 /* POST a question */
 router.post('/add-question', function(req, res) {
   let question = req.body.question; // the one sent from the AJAX's body

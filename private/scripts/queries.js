@@ -79,6 +79,14 @@ function getQuestionIdByTextQuery(question) {
     return {query: query, params: params};
 }
 
+function getUserIdByQuestionIdQuery(questionID) {
+    var query = "SELECT UserID FROM Questions WHERE ID in ( @questionID )";
+    var params = [
+        {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID}
+    ]
+    return {query: query, params: params};
+}
+
 function getInsertQuestionQuery(question, userID) {
     var query  = "INSERT INTO Questions (Question, UserID) VALUES ( @question , @userID )";
     var params = [
@@ -200,6 +208,7 @@ exports.getAllQuestionsQuery = getAllQuestionsQuery;
 exports.getAllNonBannedQuestionsQuery = getAllNonBannedQuestionsQuery;
 exports.getQuestionTextByIdQuery = getQuestionTextByIdQuery;
 exports.getQuestionIdByTextQuery = getQuestionIdByTextQuery;
+exports.getUserIdByQuestionIdQuery = getUserIdByQuestionIdQuery;
 exports.getInsertQuestionQuery = getInsertQuestionQuery;
 exports.getDeleteQuestionQuery = getDeleteQuestionQuery;
 

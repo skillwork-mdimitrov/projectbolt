@@ -10,7 +10,18 @@ const notifications = function() {
             });
         }      
         notificationSocket.on('newAnswer', function (data) {
-            unfoldingHeader.unfoldHeader("New answer on question " + data.question, "green", false, "answers.html?qid=" + data.questionID);
+            let sessionID = sessionStorage.getItem('projectBoltSessionID');
+            $.getJSON("login/get-userID/"+sessionID, function () {})
+            .done(function (userID) {
+                // If you asked the question with a new answer
+                if (userID.userID === data.userID) {
+                    unfoldingHeader.unfoldHeader("New answer on question " + data.question, "green", false, "answers.html?qid=" + data.questionID);
+                }                
+            })
+            .fail(function (message) {
+                unfoldingHeader.unfoldHeader("Failed retrieving user id, see console for details", "red", true);
+                console.log("Failed retrieving user id: " + message.responseText);   
+            })
         });  
     };    
 

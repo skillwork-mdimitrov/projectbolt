@@ -16,7 +16,15 @@ const addAnswer = function() {
       url: 'answers/add-answer',
       success: function(){
         console.log(`${postAnswer.name} says: Answer added successfully`);
-        notifications.getNotificationSocket().emit('newAnswer', {question: bodyJSON.question, questionID: bodyJSON.questionID});
+        let sessionID = sessionStorage.getItem('projectBoltSessionID');
+        $.getJSON("questions/get-userid/"+bodyJSON.questionID+"/"+sessionID, function () {})
+        .done(function (data) {
+          notifications.getNotificationSocket().emit('newAnswer', {question: bodyJSON.question, questionID: bodyJSON.questionID, userID: data[0].UserID});  
+        })
+        .fail(function (message) {
+            unfoldingHeader.unfoldHeader("Failed retrieving question user id, see console for details", "red", true);
+            console.log("Failed retrieving question user id: " + message.responseText);   
+        })
       },
       error: function(jqXHR) {
         // If the server response includes "Violation of UNIQUE KEY"
