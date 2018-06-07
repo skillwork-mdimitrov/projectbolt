@@ -14,12 +14,16 @@ const addAnswer = function() {
       type: 'POST',
       data: bodyJSON,
       url: 'answers/add-answer',
-      success: function(){
+      success: function(data){
         console.log(`${postAnswer.name} says: Answer added successfully`);
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
         $.getJSON("questions/get-userid/"+bodyJSON.questionID+"/"+sessionID, function () {})
-        .done(function (data) {
-          notifications.getNotificationSocket().emit('newAnswer', {question: bodyJSON.question, questionID: bodyJSON.questionID, userID: data[0].UserID});  
+        .done(function (userID) {
+          notifications.getNotificationSocket().emit('newAnswer', {question: bodyJSON.question, 
+                                                                  questionID: bodyJSON.questionID, 
+                                                                  userID: userID[0].UserID,
+                                                                  username: data.username[0].FirstName});  
+          unfoldingHeader.unfoldHeader(data.response, "green");
         })
         .fail(function (message) {
             unfoldingHeader.unfoldHeader("Failed retrieving question user id, see console for details", "red", true);

@@ -15,7 +15,7 @@ const notifications = function() {
             .done(function (userID) {
                 // If you asked the question with a new answer
                 if (userID.userID === data.userID) {
-                    unfoldingHeader.unfoldHeader("New answer on question " + data.question, "green", false, "answers.html?qid=" + data.questionID);
+                    unfoldingHeader.unfoldHeader(data.username + " answered your question: " + data.question, "green", false, "answers.html?qid=" + data.questionID);
                 }                
             })
             .fail(function (message) {

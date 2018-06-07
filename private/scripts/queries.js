@@ -115,6 +115,18 @@ function getAnswersByQuestionIdQuery(questionID) {
     return {query: query, params: params};
 }
 
+function getUsernameByAnswerQuery(questionID, answer) {
+    var query = `SELECT Users.FirstName 
+                FROM Answers
+                INNER JOIN Users ON Answers.UserID=Users.ID 
+                WHERE QuestionID in ( @questionID ) AND Answer = @answer`;
+    var params = [
+        {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID},
+        {paramName: "answer", paramType: TYPES.NVarChar, paramValue: answer}
+    ]
+    return {query: query, params: params};
+}
+
 function getNonBannedAnswersByQuestionIdQuery(questionID) {
     var query = `SELECT Answers.ID, Answers.Answer, Users.Username 
                 FROM Answers 
@@ -213,10 +225,10 @@ exports.getInsertQuestionQuery = getInsertQuestionQuery;
 exports.getDeleteQuestionQuery = getDeleteQuestionQuery;
 
 exports.getAnswersByQuestionIdQuery = getAnswersByQuestionIdQuery;
+exports.getUsernameByAnswerQuery = getUsernameByAnswerQuery;
 exports.getNonBannedAnswersByQuestionIdQuery = getNonBannedAnswersByQuestionIdQuery;
 exports.getInsertAnswerQuery = getInsertAnswerQuery;
 exports.getDeleteAnswerQuery = getDeleteAnswerQuery;
-
 
 exports.getUsernamesBannedStatusQuery = getUsernamesBannedStatusQuery;
 exports.getIdPasswordByUsernameQuery = getIdPasswordByUsernameQuery;

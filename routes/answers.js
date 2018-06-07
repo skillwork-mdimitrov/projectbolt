@@ -38,7 +38,12 @@ router.post('/add-answer', function(req, res) {
       Number.isInteger(parseInt(userID)) && 
       login.sessionValid(sessionID)) {
     database.insertAnswer(answer, questionID, userID).then(() => {
-      res.status(200).send("Insert successful");
+      database.getUsernameByAnswer(questionID, answer).then((username) => {
+        res.status(200).send({ response: "Insert successful", username: username });
+      })
+      .catch((reason) => {
+        res.status(500).send(reason.toString());
+      });
     })
     .catch((reason) => {
       res.status(500).send(reason.toString())
