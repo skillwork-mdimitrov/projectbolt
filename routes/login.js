@@ -26,7 +26,7 @@ router.post('/', function(req, res) {
       }
       else
       {
-        res.status(500).send('Authentication failure');  
+        res.status(500).send('Incorrect username/password');  
       }
     }).catch((reason) => {
       res.status(500).send(reason.toString());

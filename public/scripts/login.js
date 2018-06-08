@@ -14,22 +14,35 @@ const login = function() {
   let documentBody = $('body');
 
   const login = function(userdata) {
-      $.ajax({
-        type: 'post',
-        data: userdata,
-        url: 'login',
-        success: function(data){
-          sessionStorage.setItem("projectBoltSessionID", data.sessionID);
-          global.redirect("");
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-          unfoldingHeader.unfoldHeader("Login failed", "red", true);
-          console.log('jqXHR: ' + jqXHR);
-          console.log('textStatus: ' + textStatus);
-          console.log('errorThrown: ' + errorThrown);
-        }
-      });
-    };
+    $.ajax({
+      type: 'post',
+      data: userdata,
+      url: 'login',
+      success: function(data){
+        sessionStorage.setItem("projectBoltSessionID", data.sessionID);
+        let sessionID = sessionStorage.getItem('projectBoltSessionID');
+        console.log("Checking banned status");
+        $.getJSON("login/get-banned-status/"+sessionID, function () {})
+        .done(function (bannedJSON) {
+          console.log("Request complete");
+          let banned = bannedJSON[0].Banned;
+          if (!banned) {
+            global.redirect("");
+          }
+          else
+          {
+            unfoldingHeader.unfoldHeader("Login failed: You are banned", "red", true);
+          }  
+        })
+        .fail(function () {
+          unfoldingHeader.unfoldHeader("Login failed: "+jqXHR.responseText, "red", true);
+        })        
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        unfoldingHeader.unfoldHeader("Login failed: "+jqXHR.responseText, "red", true);
+      }
+    });
+  };
 
   // Display appropriate message and return a boolean
   const noEmptyFields = function() {
