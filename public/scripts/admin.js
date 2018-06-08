@@ -44,6 +44,8 @@ const admin = function () {
             $('#userTable :button').on("click", function(){
                 admin.banUser($(this));
             });
+            
+            global.hideLoader();
         })
         .fail(function () {
             console.log("error");
