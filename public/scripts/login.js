@@ -1,3 +1,9 @@
+/* JSHint quality control
+ ============================================================== */
+/*jshint esversion: 6 */
+/*jslint devel: true*/
+/*globals unfoldingHeader, global, $:false*/
+
 /* Login NAMESPACE
  ============================================================== */
 const login = function() {
@@ -5,9 +11,9 @@ const login = function() {
   let usernameBox = $('#userNameBox');
   let loginBtn = $('#loginButton');
   let passwordBox = $('#passwordBox');
+  let documentBody = $('body');
 
   const login = function(userdata) {
-      "use strict";
       $.ajax({
         type: 'post',
         data: userdata,
@@ -25,7 +31,7 @@ const login = function() {
       });
     };
 
-  // Display appropriate msg and return a boolean
+  // Display appropriate message and return a boolean
   const noEmptyFields = function() {
     if(global.fieldIsEmpty(usernameBox) && global.fieldIsEmpty(passwordBox)) {
       unfoldingHeader.unfoldHeader("Please fill in your credentials", "orange", true);
@@ -49,9 +55,10 @@ const login = function() {
     usernameBox: usernameBox,
     loginBtn: loginBtn,
     passwordBox: passwordBox,
+    documentBody: documentBody,
     login: login,
     noEmptyFields: noEmptyFields
-  }
+  };
 }();
 //  ============================================================== */
 
@@ -83,15 +90,8 @@ $(document).ready(function() {
         }
       });
 
-      // Enter button triggers login on user field
-      login.usernameBox.keyup(function(event) {
-        if(event.keyCode === 13) {
-          login.loginBtn.click();
-        }
-      });
-
-      // Enter button triggers login on password field
-      login.passwordBox.keyup(function(event) {
+      // Enter button clicked anywhere in the document triggers logging in
+      login.documentBody.keyup(function(event) {
         if(event.keyCode === 13) {
           login.loginBtn.click();
         }
@@ -100,5 +100,5 @@ $(document).ready(function() {
   })
   .fail(function () {
     console.log("error");
-  })  
+  });
 });

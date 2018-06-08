@@ -1,8 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	
     <link rel="shortcut icon" href="images/favicon.ico">
+	<!-- Match screen's width in device-independent pixels -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!-- First eliminate browser inconsistencies -->
+	<link rel="stylesheet" type="text/css" href="styles/normalize.css">
+	
+	
     <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="styles/chat.css" >    
     <title>Chat App</title>
@@ -12,29 +20,35 @@
     <div id="loader"></div>
     <div id="mainContainer" style="display:none;">
         <header>
-          <h1>Super Chat</h1>
+		    <div class="thunderLogoContainer">
+			  <div class="circleContainer">
+				<div class="circle">
+				  <img src="images/thunder.png" alt="Thunder bolt" class="thunderLogo">
+				</div>
+			  </div>
+		    <h1> Bolt Chat</h1>
+			</div>
         </header>
 
-        <section>
-          <div id="change_username">
-      <input id="usernamenew" type="text" />
-      <button id="send_username" type="button">Change username</button>
-          </div>
+        <section id="change_username_div">
+			<div id="change_username">
+				<input id="usernamenew" type="text" />
+				<button id="send_username" type="button">Change username</button>
+			</div>
         </section>
-
+		<section id="connectedUsers">
+		    There are currently: <section id="connected"></section>connected ^^
+		</section>
         <section id="chatroom">
           <section id="feedback"></section>
-        </section>
-
-        
-
+		</section>
         <section id="input_zone"> 
           <input id="message" class="vertical-align" type="text" />
           <button id="send_message" class="vertical-align" type="button">Send</button>
         </section>
     </div>  
-
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.4.3/jquery.timeago.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script src="scripts/unfoldingHeader.js"></script>
     <script src="scripts/global.js"></script> <!-- Reusable functions -->

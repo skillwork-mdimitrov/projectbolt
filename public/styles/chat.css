@@ -17,37 +17,50 @@
   body {
       margin: 0px;
       height: 100%;
+	  flex-direction: column;
+	  display: flex;
   }
   
   header {
       text-align: center;
+	  height: 20vh;
   }
   
   h1 {
       font-family: 'Comfortaa', sans-serif;
       margin: 0px;
   }
-  
+  section#change_username_div
+  {
+	  height: 4vh;
+  }
   div#change_username, section#input_zone {
-      border: 5px outset #8258FA;
+      border: 5px outset #DCBE50;
   }
   
   div#change_username {
-      height: 3%;
+      height: 4vh;
       display: inline-block;
-      background-color: #BCA9F5;
+      background-color: #DCBE50;
   }
   
   section#chatroom {
-      border: 5px inset #8258FA;
-      height: 85%;
-      overflow: auto;
+	border: 5px inset #DCBE50;
+	/*height: 40%;*/
+	height: 60vh;
+	border: #DCBE50 solid 1px;
+	overflow-y: auto;
   }
   
   section#input_zone {
       height: 7%;
       text-align: center;
-      background-color: #BCA9F5;
+      background-color: #DCBE50;
+	  flex-shrink: 0;
+  }
+  section#connectedUsers
+  {
+	  flex-shrink: 0;
   }
   
   .vertical-align {
@@ -84,11 +97,40 @@
       font-family: 'Comfortaa', sans-serif;
       padding: 1vh;
   }
+  .thunderLogoContainer
+  {
+    max-width: 500px;
+    margin: auto;
+	}
   
   .message:nth-child(even) {
-      background-color: #81DAF5;
+      background-color: #E5E9F2;
+	  color: black;
   }
   
-  .message:nth-child(odd) {
-      background-color: #81BEF7;
-  }
+	.message:nth-child(odd) {
+		background-color: #19354E;
+		color: white;
+	}
+	.thunderLogoContainer {
+		justify-content: center;
+		align-items: center;
+		width: 10.5%;
+	}
+	.thunderLogoContainer .circleContainer {
+		position: relative;
+		width: 100%;
+		padding-top: 100%;
+	}
+	.thunderLogoContainer .circleContainer .circle {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		border-radius: 50%;
+		background-color: #19354E;
+	}
+	.thunderLogoContainer .circleContainer .circle .thunderLogo {
+		width: 100%;
+	}

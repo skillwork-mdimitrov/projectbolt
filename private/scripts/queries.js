@@ -80,6 +80,14 @@ function getInsertQuestionQuery(question, userID) {
     return {query: query, params: params};
 }
 
+function getDeleteQuestionQuery(questionID) {
+    var query  = "DELETE FROM Questions WHERE ID = @questionID";
+    var params = [
+        {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID}
+    ]
+    return {query: query, params: params};
+}
+
 function getAnswersByQuestionIdQuery(questionID) {
     var query = `SELECT Answers.ID, Answers.Answer, Users.Username 
                 FROM Answers 
@@ -103,13 +111,21 @@ function getNonBannedAnswersByQuestionIdQuery(questionID) {
 }
 
 function getInsertAnswerQuery(answer, questionID, userID) {
-    var query = "INSERT INTO answers (answer, questionid, userid) VALUES ( @answer , @questionID , @userID )";
+    var query = "INSERT INTO Answers (answer, questionid, userid) VALUES ( @answer , @questionID , @userID )";
     var params = [
         {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID},
         {paramName: "userID", paramType: TYPES.Int, paramValue: userID},
         {paramName: "answer", paramType: TYPES.NVarChar, paramValue: answer}
     ]
     return {query: query, params: params}; 
+}
+
+function getDeleteAnswerQuery(answerID) {
+    var query  = "DELETE FROM Answers WHERE ID = @answerID";
+    var params = [
+        {paramName: "answerID", paramType: TYPES.Int, paramValue: answerID}
+    ]
+    return {query: query, params: params};
 }
 
 function getUsernamesBannedStatusQuery() {
@@ -176,10 +192,13 @@ exports.getAllQuestionsQuery = getAllQuestionsQuery;
 exports.getAllNonBannedQuestionsQuery = getAllNonBannedQuestionsQuery;
 exports.getQuestionTextByIdQuery = getQuestionTextByIdQuery;
 exports.getInsertQuestionQuery = getInsertQuestionQuery;
+exports.getDeleteQuestionQuery = getDeleteQuestionQuery;
 
 exports.getAnswersByQuestionIdQuery = getAnswersByQuestionIdQuery;
 exports.getNonBannedAnswersByQuestionIdQuery = getNonBannedAnswersByQuestionIdQuery;
 exports.getInsertAnswerQuery = getInsertAnswerQuery;
+exports.getDeleteAnswerQuery = getDeleteAnswerQuery;
+
 
 exports.getUsernamesBannedStatusQuery = getUsernamesBannedStatusQuery;
 exports.getIdPasswordByUsernameQuery = getIdPasswordByUsernameQuery;

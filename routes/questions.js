@@ -13,8 +13,8 @@ router.get('/get-all-questions/:sessionID', function(req, res, next) {
       res.json(questions);
     }).catch(
     (reason) => {
-          console.log('Handle rejected promise ('+reason+') here.');
-          res.status(500).send('Something broke! ' + reason)
+      console.log('Error retrieving all questions: ' + reason);
+      res.status(500).send('Something broke! ' + reason);
     });  
   }
   else {
@@ -23,18 +23,37 @@ router.get('/get-all-questions/:sessionID', function(req, res, next) {
 });
 
 /* POST a question */
-router.post('/add-question/:sessionID', function(req, res) {
+router.post('/add-question', function(req, res) {
   let question = req.body.question; // the one sent from the AJAX's body
   let userID = req.body.userID;
-  let sessionID = req.params["sessionID"];
+  let sessionID = req.body.sessionID;
 
   if (Number.isInteger(parseInt(userID)) && login.sessionValid(sessionID)) {
     database.insertQuestion(question, userID).then(() => {
-      res.status(200).send("Insert succesful");
+      res.status(200).send("Insert successful");
     })
     .catch((reason) => {
-      console.log('Handle rejected promise ('+reason+') here.');
-      res.status(500).send('Something broke! ' + reason)
+      console.log("Error adding question '" + question + "': " + reason);
+      res.status(500).send('Something broke! ' + reason);
+    });
+  }
+  else {
+    res.status(500).send('Invalid request');
+  }
+});
+
+/* DELETE a question */
+router.post('/remove-question', function(req, res) {
+  let questionID = req.body.questionID;
+  let sessionID = req.body.sessionID;
+
+  if (Number.isInteger(parseInt(questionID)) && login.sessionValid(sessionID) && login.isTeacher(sessionID)) {
+    database.deleteQuestion(questionID).then(() => {
+      res.status(200).send("Delete succesful");
+    })
+    .catch((reason) => {
+      console.log("Error removing question " + questionID + ": " + reason);
+      res.status(500).send('Something broke! ' + reason);
     });
   }
   else {

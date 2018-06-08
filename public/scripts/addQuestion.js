@@ -5,20 +5,26 @@ const addQuestion = function() {
   const questionBox = $('#questionBox');
   const submitQuestionBtn = $('#submitQuestionBtn');
   const submitQuestion = function(question) {
-    let sessionID = sessionStorage.getItem('projectBoltSessionID');
     "use strict";
     $.ajax({
       type: 'post',
       data: question,
-      url: 'questions/add-question/'+sessionID,
+      url: 'questions/add-question',
       success: function(data){
         unfoldingHeader.unfoldHeader(data, "green");
       },
-      error: function(jqXHR, textStatus, errorThrown) {
-        unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
-        console.log('jqXHR: ' + jqXHR);
-        console.log('textStatus: ' + textStatus);
-        console.log('errorThrown: ' + errorThrown);
+      error: function(jqXHR) {
+        /* TODO REVIEW ME. Old implementation was replaced, since the error could have been for anything (not only duplication)
+          The way to check for duplication is shown below. DELETE ME WHEN REVIEWED */
+        // If the server response includes "Violation of UNIQUE KEY"
+        if(global.logAJAXErr(submitQuestion.name, jqXHR) === "duplicatedKey") {
+          // The user is trying to add an already existing question
+          unfoldingHeader.unfoldHeader("This question already exists", "orange");
+        }
+        // More general error
+        else {
+          unfoldingHeader.unfoldHeader("Failed to post your question. Apologies :(", "red");
+        }
       }
     });
   };
@@ -38,28 +44,32 @@ $(document).ready(function() {
   /* ATTACH EVENT LISTENERS
     ============================================================== */
   addQuestion.submitQuestionBtn.on("click", function() {
-
-    //Get UserID
-    "use strict";
-    $.ajax({
-      type: 'get',
-      url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
-      success: function (data) {
-
-        // JSON'ize the question
-        let questionJSON = {
-          question: addQuestion.questionBox.val(),
-          userID: data.userID
-        };
-        // Send the AJAX request
-        addQuestion.submitQuestion(questionJSON);
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        unfoldingHeader.unfoldHeader('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!', "orange");
-        console.log('jqXHR: ' + jqXHR);
-        console.log('textStatus: ' + textStatus);
-        console.log('errorThrown: ' + errorThrown);
-      }
-    });
+    if(global.fieldNotEmpty(addQuestion.questionBox)) {
+      let sessionID = sessionStorage.getItem('projectBoltSessionID');
+      // Get UserID
+      $.ajax({
+        type: 'get',
+        url: 'login/get-userID/' + sessionID,
+        success: function (data) {
+          // JSON'ize the question
+          let questionJSON = {
+            question: addQuestion.questionBox.val(),
+            userID: data.userID,
+            sessionID: sessionID
+          };
+          // Send the AJAX request
+          addQuestion.submitQuestion(questionJSON);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          unfoldingHeader.unfoldHeader('error', "orange");
+          console.log('jqXHR: ' + jqXHR);
+          console.log('textStatus: ' + textStatus);
+          console.log('errorThrown: ' + errorThrown);
+        }
+      });
+    }
+    else {
+      unfoldingHeader.unfoldHeader("Please fill in a question", "red");
+    }
   })
 });

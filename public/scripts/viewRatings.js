@@ -1,34 +1,19 @@
 const viewRatings = function() {
     const updateAllRatings = function updateAllRatings() {
-        let sessionID = sessionStorage.getItem('projectBoltSessionID');
+        console.log("Updating all ratings");
         $('.ui.rating').each(function( index ) {
-            let answerID = $(this).attr("id");
-            let ratingElement = $(this);
-
-            $.getJSON( "rating/get-all-ratings/"+answerID+"/"+sessionID, function() {})
-            .done(function(data) {
-                console.log("Request complete");
-                let totalRating = 0;
-                let ratingCount = data.length;
-                $.each( data, function( key, val ) {
-                    totalRating += val["Rating"];
-                });
-                averageRating = Math.ceil(totalRating / ratingCount);
-                ratingElement.rating('set rating', averageRating);
-            })
-            .fail(function() {
-                console.log( "error");
-            })
+            updateRating($(this));
         });
     };
 
-    const updateRatings = function updateRatings(ratingElement) {
+    const updateRating = function updateRatings(ratingElement) {
         let answerID = ratingElement.attr("id");
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
+        console.log("Acquiring ratings of answerID " + answerID);
         $.getJSON( "rating/get-all-ratings/"+answerID+"/"+sessionID, function() {})
         .done(function(data) {
-            console.log("Request complete");
+            console.log("Ratings recieved of answerID " + answerID);
             let totalRating = 0;
             let ratingCount = data.length;
             $.each( data, function( key, val ) {
@@ -36,14 +21,17 @@ const viewRatings = function() {
             });
             averageRating = Math.ceil(totalRating / ratingCount);
             ratingElement.rating('set rating', averageRating)
+            ratingElement.rating("enable");
         })
-        .fail(function() {
-            console.log( "error");
+        .fail(function(message) {
+            unfoldingHeader.unfoldHeader("Failed acquiring ratings, see console for details", "red", true);
+            console.log("Failed acquiring ratings of answerID " + answerID + ": " + message);
+            ratingElement.rating("enable");
         })
     };
 
     return {
         updateAllRatings: updateAllRatings,
-        updateRatings: updateRatings
+        updateRating: updateRating
     }
 }();

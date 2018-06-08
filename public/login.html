@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="styles/normalize.css">
   <!-- Then load your styles, potentially overriding  properties, where necessary -->
   <link rel="stylesheet" type="text/css" href="styles/login.css">
-  <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet"> <!-- Google font -->
+  <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet"> <!-- Google Barlow font -->
 </head>
 <body>
 
@@ -23,10 +23,10 @@
     <div class="loginContainer">
       <div class="headContainer">
         <div class="thunderLogoContainer">
-          <div class="circleContainer">
-            <div class="circle">
-              <img src="images/thunder.png" alt="Thunder bolt" class="thunderLogo">
-            </div>
+          <div class="thunderLogoImgContainer">
+            <object data="images/thunderLogo.svg" type="image/svg+xml" class="thunderLogo">
+              <img src="images/thunderLogoFallback.png" alt="thunderLogo"> <!-- Fallback if browser can't render the SVG -->
+            </object>
           </div>
         </div>
         <div class="boltAppContainer">

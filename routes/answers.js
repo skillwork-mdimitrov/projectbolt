@@ -40,7 +40,7 @@ router.post('/add-answer', function(req, res) {
       Number.isInteger(parseInt(userID)) && 
       login.sessionValid(sessionID)) {
     database.insertAnswer(answer, questionID, userID).then(() => {
-      res.status(200).send("Insert succesful");
+      res.status(200).send("Insert successful");
     })
     .catch((reason) => {
       console.log('Handle rejected promise ('+reason+') here.');
@@ -50,6 +50,25 @@ router.post('/add-answer', function(req, res) {
   else {
     res.status(500).send('Invalid request');
   }
+});
+
+/* DELETE an answer */
+router.post('/remove-answer', function(req, res) {
+    let answerID = req.body.answerID;
+    let sessionID = req.body.sessionID;
+
+    if (Number.isInteger(parseInt(answerID)) && login.sessionValid(sessionID) && login.isTeacher(sessionID)) {
+        database.deleteAnswer(answerID).then(() => {
+            res.status(200).send("Delete successful");
+    })
+    .catch((reason) => {
+            console.log("Error removing answer " + answerID + ": " + reason);
+        res.status(500).send('Something broke! ' + reason);
+    });
+    }
+    else {
+        res.status(500).send('Invalid request');
+    }
 });
 
 module.exports = router;

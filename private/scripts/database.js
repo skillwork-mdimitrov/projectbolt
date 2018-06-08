@@ -182,6 +182,16 @@ function insertQuestion(question, userID) {
     });   
 }
 
+function deleteQuestion(questionID) {
+    return new Promise((resolve, reject) => {
+        runGenericQuery(queries.getDeleteQuestionQuery(questionID)).then(() => {
+            resolve();
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });   
+}
+
 function getAnswersByQuestionId(questionID) {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getAnswersByQuestionIdQuery(questionID)).then((answers) => {
@@ -198,8 +208,8 @@ function getNonBannedAnswersByQuestionId(questionID) {
             resolve(answers);
         }).catch((reason) => {
             reject(reason);
-        }); 
-    });   
+        });
+    });
 }
 
 function insertAnswer(answer, questionID, userID) {
@@ -209,6 +219,16 @@ function insertAnswer(answer, questionID, userID) {
         }).catch((reason) => {
             reject(reason);
         }); 
+    });
+}
+
+function deleteAnswer(answerID) {
+    return new Promise((resolve, reject) => {
+            runGenericQuery(queries.getDeleteAnswerQuery(answerID)).then(() =>      {
+        resolve();
+            }).catch((reason) => {
+        reject(reason);
+            });
     });
 }
 
@@ -295,10 +315,12 @@ exports.getAllQuestions = getAllQuestions;
 exports.getAllNonBannedQuestions = getAllNonBannedQuestions;
 exports.getQuestionTextById = getQuestionTextById;
 exports.insertQuestion = insertQuestion;
+exports.deleteQuestion = deleteQuestion;
 
 exports.getAnswersByQuestionId = getAnswersByQuestionId;
 exports.getNonBannedAnswersByQuestionId = getNonBannedAnswersByQuestionId;
 exports.insertAnswer = insertAnswer;
+exports.deleteAnswer = deleteAnswer;
 
 exports.getUsernamesBannedStatus = getUsernamesBannedStatus;
 exports.getIdPasswordByUsername = getIdPasswordByUsername;

@@ -8,9 +8,19 @@ const viewQuestions = function () {
 
     let questionsTable = document.getElementById("questionsTable");
 
-    // A row with a question, user and answers
+    // A row with a delete button, question, user and answers
     let tableRow = document.createElement("div");
     tableRow.setAttribute("class", "Table-row");
+
+    // The delete button
+    let rowItemDelete = document.createElement("div");
+    rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1 deleteColumn");
+    rowItemDelete.setAttribute("data-header", "Action");
+    let rowItemDeleteButton = document.createElement("button");
+    rowItemDeleteButton.setAttribute("class", "deleteButton");
+    rowItemDeleteButton.setAttribute("id", questionID);
+    rowItemDeleteButton.textContent = "Delete";
+    rowItemDelete.appendChild(rowItemDeleteButton);
 
     // The question
     let rowItemQuestion = document.createElement("div");
@@ -34,7 +44,8 @@ const viewQuestions = function () {
     rowItemAnswerLink.href = "answers.html?qid=" + questionID;
     rowItemAnswer.appendChild(rowItemAnswerLink);
 
-    // Append the question, user and answer to that table row
+    // Append the delete button, question, user and answer to that table row
+    tableRow.appendChild(rowItemDelete);
     tableRow.appendChild(rowItemQuestion);
     tableRow.appendChild(rowItemUser);
     tableRow.appendChild(rowItemAnswer);
@@ -47,6 +58,7 @@ const viewQuestions = function () {
     addToTable: addToTable
   }
 }();
+
 //  ============================================================== */
 
 $(document).ready(function () {
@@ -59,6 +71,20 @@ $(document).ready(function () {
     $.each(data, function (key, val) {
       viewQuestions.addToTable([val["Question"], val["Username"], val["ID"]]);
     });
+
+    $(".deleteColumn").css("display", "none");
+    $.getJSON("login/is-teacher/"+sessionID, function () {})
+    .done(function (isTeacher) {
+        if (isTeacher) {
+          $(".deleteColumn").css("display", "block");
+        }
+        $('.deleteButton').on("click", function(){
+          removeQuestion.removeQuestion($(this));
+        });
+    })
+    .fail(function () {
+        console.log("error");
+    }) 
   })
   .fail(function () {
     console.log("Get all questions failed");

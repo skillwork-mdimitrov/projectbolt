@@ -4,6 +4,10 @@
  ============================================================== */
 /* Mixins
  ============================================================== */
+/* Mixin to prefix a property
+  @param {String} $property - Property name
+  @param {*} $value - Property value
+  @param {List} $prefixes (()) - List of prefixes to print */
 .fieldBox {
   font-family: "Barlow", sans-serif;
   font-size: 1em;
@@ -17,11 +21,11 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  -webkit-transition: 0.3s time;
-  -moz-transition: 0.3s time;
-  -ms-transition: 0.3s time;
-  -o-transition: 0.3s time;
-  transition: 0.3s time;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
 }
 .fieldBox:focus {
   border-color: #19354E;
@@ -141,23 +145,12 @@ body {
   align-items: center;
   width: 10.5%;
   margin-right: 10px;
-  margin-top: 1px;
+  margin-top: 5.5px;
 }
-.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer {
-  position: relative;
+.mainContainer .loginContainer .headContainer .thunderLogoContainer .thunderLogoImgContainer {
   width: 100%;
-  padding-top: 100%;
 }
-.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer .circle {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: 50%;
-  background-color: #19354E;
-}
-.mainContainer .loginContainer .headContainer .thunderLogoContainer .circleContainer .circle .thunderLogo {
+.mainContainer .loginContainer .headContainer .thunderLogoContainer .thunderLogoImgContainer .thunderLogo {
   width: 100%;
 }
 .mainContainer .loginContainer .headContainer .boltAppContainer {
