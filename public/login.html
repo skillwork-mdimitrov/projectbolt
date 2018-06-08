@@ -11,15 +11,12 @@
   <link rel="stylesheet" type="text/css" href="styles/normalize.css">
   <!-- Then load your styles, potentially overriding  properties, where necessary -->
   <link rel="stylesheet" type="text/css" href="styles/login.css">
+  <link rel="stylesheet" type="text/css" href="styles/loader.css" />
   <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet"> <!-- Google Barlow font -->
 </head>
 <body>
-
-  <div id="loader"></div> <!-- Spinning loader -->
-
   <!-- mainContainer, holds the content of the page -->
-  <div class="mainContainer" id="mainContainer"> <!-- Loader's display none scrapped for now as it interferes with css design -->
-
+  <div class="mainContainer" > <!-- Loader's display none scrapped for now as it interferes with css design -->
     <div class="loginContainer">
       <div class="headContainer">
         <div class="thunderLogoContainer">
@@ -34,7 +31,8 @@
         </div>
       </div>
 
-      <div class="credentialsContainer">
+      <div id="loader"></div> <!-- Spinning loader -->
+      <div class="credentialsContainer" style="display:none;" id="mainContainer">
         <div class="fillInContainer">
           <h3 class="fillIn-Text">Please fill in your username and password</h3>
         </div>
@@ -58,11 +56,6 @@
           </div> <!-- /submitContainer -->
         </div> <!-- /inputsContainer -->
       </div> <!-- /credentialsContainer -->
-
-      <div class="actionsContainer">
-        <p>Lorem ipsum</p>
-      </div>
-
     </div> <!-- /loginContainer -->
   </div> <!-- /mainContainer -->
 

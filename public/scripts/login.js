@@ -31,14 +31,17 @@ const login = function() {
           }
           else
           {
+            global.hideLoader();
             unfoldingHeader.unfoldHeader("Login failed: You are banned", "red", true);
           }  
         })
         .fail(function () {
+          global.hideLoader();
           unfoldingHeader.unfoldHeader("Login failed: "+jqXHR.responseText, "red", true);
         })        
       },
       error: function(jqXHR, textStatus, errorThrown) {
+        global.hideLoader();
         unfoldingHeader.unfoldHeader("Login failed: "+jqXHR.responseText, "red", true);
       }
     });
@@ -98,6 +101,8 @@ $(document).ready(function() {
             username : login.usernameBox.val(),
             password : login.passwordBox.val()
           };
+
+          global.showLoader();
           // Send the AJAX request
           login.login(userdata);
         }
@@ -109,6 +114,8 @@ $(document).ready(function() {
           login.loginBtn.click();
         }
       });
+
+      global.hideLoader();
     }
   })
   .fail(function () {
