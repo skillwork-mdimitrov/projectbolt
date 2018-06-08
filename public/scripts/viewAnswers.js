@@ -315,7 +315,8 @@ $(document).ready(function() {
     /* ATTACH EVENT LISTENERS
     ============================================================== */
 
-    // Navigation bar
+    /* Navigation bar
+    ============================================================== */
     viewAnswers.askQuestionBtn.on("click", () => {
       redirectToIndex.goTo("1");
     });
@@ -328,8 +329,8 @@ $(document).ready(function() {
       global.logout();
     });
 
-    /*View answers in the table
-     ============================================================== */
+    /* View answers in the table
+    ============================================================== */
 
     viewAnswers.addOwnAnswerBtn.on("click", function(){
       viewAnswers.addOwnAnswer.toggleUI();

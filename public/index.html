@@ -44,9 +44,10 @@
 
       <!-- Ask a question AND get suggestions in 1 -->
       <div class="searchContainer" id="searchContainer">
-        <div class="searchBar">
-          <label for="questionBox">Ask a question:</label>
+        <div class="searchBar" id="searchBar">
+          <label for="questionBox" class="askQuestionLabel">Ask a question:</label>
           <img class="magnifyingGlass" src="images/magnifyingGlass.png" alt="searchIcon">
+          <!-- Awesomplete is going to be dynamically created here -->
           <input type="text" name="question" placeholder="Enter your question here..." id="questionBox"><br><br>
           <input type="submit" value="Submit" id="submitQuestionBtn">
         </div>
