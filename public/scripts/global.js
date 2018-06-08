@@ -47,6 +47,16 @@ const global = function() {
     }
   };
 
+  const showLoader = function() {
+    document.getElementById("loader").style.display = "block";
+    document.getElementById("mainContainer").style.display = "none";
+  } 
+
+  const hideLoader = function() {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("mainContainer").style.display = "block";
+  } 
+
   const redirect = function redirect(route) {
     if(window.location.href.includes("projectboltrenew.azurewebsites")) {
       window.location.href = "https://projectboltrenew.azurewebsites.net/"+route;
@@ -96,6 +106,8 @@ const global = function() {
     fieldNotEmpty: fieldNotEmpty,
     fieldIsEmpty: fieldIsEmpty,
     rmElemFromArray: rmElemFromArray,
+    showLoader: showLoader,
+    hideLoader: hideLoader,
     redirect: redirect,
     logout: logout,
     logAJAXErr: logAJAXErr
