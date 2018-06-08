@@ -220,7 +220,10 @@ const viewAnswers = function() {
               .done(function (questionUserID) {
                 $.getJSON("login/get-userID/"+sessionID, function () {})
                 .done(function (userID) {
+                  console.log(questionUserID[0].UserID);
+                  console.log(userID.userID);
                   if (questionUserID[0].UserID !== userID.userID) {
+                    console.log("why is this not executing");
                     $("#addAnswerInput").css("display", "block");
                   }
                 })
