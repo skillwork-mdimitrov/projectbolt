@@ -115,20 +115,24 @@ button#send_message {
 
 p.message {
 	margin: 0px;
-	width: 100%;
 	height: 40px;
 	font-size: 2vh;
 	font-family: 'Comfortaa', sans-serif;
 	padding: 1vh;
 }
 
-.message:nth-child(even) {
+.messageOthers {
+	float: left;
 	background-color: #ffffff;
 	color: black;
+	width: 80%;
 }
 
-.message:nth-child(odd) {
-	background-color: #19354E;
-	color: white;
+.messageYours {
+	float: right;
+	text-align: right;
+	width: 80%;
+	background-color: #ffffff;
+	color: black;
 }
 

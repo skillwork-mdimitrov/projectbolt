@@ -46,7 +46,15 @@ const chat = function() {
 	chatSocket.on("new_message", (data) => {
 		feedback.html('');
 		message.val('');
-		chatroom.append("<p class='message'>" + "[<time class='date' title='"+new Date().toISOString()+"'>"+new Date().toISOString()+"</time>"+"] "+ data.username + ": " + data.message + "</p>")
+		//checking if user is the user typing :)
+		if(data.username == username)
+		{
+			chatroom.append("<p class='messageYours'>" + data.message +" :" + data.username +"</p><br>")
+		}
+		else
+		{
+			chatroom.append("<p class='messageOthers'>" + "[<time class='date' title='"+new Date().toISOString()+"'>"+new Date().toISOString()+"</time>"+"] "+ data.username + ": " + data.message + "</p><br>")
+		}
 		time();
 		bottomChat();
 	});
