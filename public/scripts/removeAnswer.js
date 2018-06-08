@@ -14,12 +14,12 @@ const removeAnswer = function() {
             viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
             viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
             viewAnswers.answersTableUI().hide();
-            viewAnswers.loaderUI.showLoader();
+            global.showLoader();
             // Populate the answers table again (with the new answers)
             viewAnswers.getAnswers().then(function() {
-                // When answers arrive animate them in
-                viewAnswers.loaderUI.hideLoader();
+                // When answers arrive animate them in                
                 viewAnswers.answersTableUI().show();
+                global.hideLoader();
                 viewAnswers.answersTableUI().fadeIn();
             })
             .catch(function(message) {

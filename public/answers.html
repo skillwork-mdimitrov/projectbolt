@@ -18,22 +18,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
 
-  <body>
+  <body>   
+    <!-- Navigation bar -->
+    <header>
+      <nav class="nav">
+        <ul>
+          <li id="askQuestionBtn">Ask a question</li>
+          <li id="questionListBtn">Questions list</li>
+          <li><a href="chat">Chat!</a></li>
+          <li id="logoutBtn" class="logoutBtn">Logout</li>
+        </ul>
+      </nav>
+    </header>
+    
     <div id="loader"></div>
+    
     <!-- Holds everything -->
     <div class="mainContainer" style="display:none;" id="mainContainer">
-
-      <!-- Navigation bar -->
-      <header>
-        <nav class="nav">
-          <ul>
-            <li id="askQuestionBtn">Ask a question</li>
-            <li id="questionListBtn">Questions list</li>
-            <li><a href="chat">Chat!</a></li>
-            <li id="logoutBtn" class="logoutBtn">Logout</li>
-          </ul>
-        </nav>
-      </header>
 
       <h1 id="questionHeading"></h1>
 

@@ -204,34 +204,25 @@ const viewAnswers = function() {
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
         $.getJSON( "answers/"+questionID+"/"+sessionID, function() {})
-            .done(function(data) {
-              console.log("Request complete");
-              $.each( data, function( key, val ) {
-                // First element contains the question text
-                if (key === 0) {
-                  document.getElementById("questionHeading").textContent = val["Question"];
-                }
-                else {
-                  viewAnswers.addToTable([val["Answer"], val["ID"], val["Username"]]);
-                }
-              });
+        .done(function(data) {
+          console.log("Request complete");
+          $.each( data, function( key, val ) {
+            // First element contains the question text
+            if (key === 0) {
+              document.getElementById("questionHeading").textContent = val["Question"];
+            }
+            else {
+              viewAnswers.addToTable([val["Answer"], val["ID"], val["Username"]]);
+            }
+          });
 
-              $.getJSON("questions/get-userid/"+questionID+"/"+sessionID, function () {})
-              .done(function (questionUserID) {
-                $.getJSON("login/get-userID/"+sessionID, function () {})
-                .done(function (userID) {
-                  if (questionUserID[0].UserID !== userID.userID) {
-                    $("#addAnswerInput").css("display", "block");
-                  }
-                })
-                .fail(function () {
-                    console.log("error");
-                });
-              })
-              .fail(function () {
-                  console.log("error");
-              });
-
+          $.getJSON("questions/get-userid/"+questionID+"/"+sessionID, function () {})
+          .done(function (questionUserID) {
+            $.getJSON("login/get-userID/"+sessionID, function () {})
+            .done(function (userID) {
+              if (questionUserID[0].UserID !== userID.userID) {
+                $("#addAnswerInput").css("display", "block");
+              }
               $(".deleteColumn").css("display", "none");
               $.getJSON("login/is-teacher/"+sessionID, function () {})
               .done(function (isTeacher) {
@@ -242,40 +233,42 @@ const viewAnswers = function() {
                 $('.deleteButton').on("click", function(){
                     removeAnswer.removeAnswer($(this));
                 });
+
+                $('.ui.rating').on("click", function(){
+                  addRating.rateAnswer($(this));
+                });
+
+                $('.ui.rating').rating({
+                  maxRating: 5
+                });
+
+                viewRatings.updateAllRatings().then(function() {
+                  resolve("Answers arrived"); // All answers arrived, resolve the promise
+                })
+                .catch(function() {
+                  reject();
+                });
+                
               })
               .fail(function () {
-                  console.log("error");
-              });
-
-              $('.ui.rating').on("click", function(){
-              addRating.rateAnswer($(this));
-              });
-
-              $('.ui.rating').rating({
-                maxRating: 5
-              });
-
-              viewRatings.updateAllRatings();
-              resolve("Answers arrived"); // All answers arrived, resolve the promise
+                reject("error");
+              });                  
             })
-            .fail(function(jqXHR) {
-              global.logAJAXErr(getAnswers.name, jqXHR);
-              unfoldingHeader.unfoldHeader("Failed to obtain the answers. Apologies :(", "orange");
-              reject(`Failed to fetch answers for ↓ \n questionID: ${questionID}, sessionID: ${sessionID}`);
+            .fail(function () {
+              reject("error");
             });
+          })
+          .fail(function () {
+            reject("error");
+          });              
+        })
+        .fail(function(jqXHR) {
+          global.logAJAXErr(getAnswers.name, jqXHR);
+          unfoldingHeader.unfoldHeader("Failed to obtain the answers. Apologies :(", "orange");
+          reject(`Failed to fetch answers for ↓ \n questionID: ${questionID}, sessionID: ${sessionID}`);
+        });
       });
     };
-
-    // Visually manipulate the loader
-    const loaderUI = function() {
-      const showLoader = () => loader.style.display = "block";
-      const hideLoader = () => loader.style.display = "none";
-
-      return {
-        showLoader: showLoader,
-        hideLoader: hideLoader
-      };
-    }(); // IIFE;
 
     // Visually manipulate the answers table
     const answersTableUI = function() {
@@ -312,7 +305,6 @@ const viewAnswers = function() {
         addOwnAnswer: addOwnAnswer, // return functions
         getQuestionID: getQuestionID,
         getAnswers: getAnswers,
-        loaderUI: loaderUI, // return functions
         answersTableUI: answersTableUI // execute first to get the functions
     };
 }();
@@ -363,26 +355,30 @@ $(document).ready(function() {
             };
 
             // Send the AJAX request
-            addAnswer.postAnswer(bodyJSON);
-            viewAnswers.addOwnAnswer.toggleUI();
-            viewAnswers.addAnswerArea.val(''); // Reset textarea
+            addAnswer.postAnswer(bodyJSON).then(function() {
+              viewAnswers.addOwnAnswer.toggleUI();
+              viewAnswers.addAnswerArea.val(''); // Reset textarea
 
-            /* RE-FETCH all the answers
-            ============================================================== */
-            viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
-            viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
-            viewAnswers.answersTableUI().hide();
-            viewAnswers.loaderUI.showLoader();
-            // Populate the answers table again (with the new answers)
-            viewAnswers.getAnswers().then(function() {
-              // When answers arrive animate them in
-              viewAnswers.loaderUI.hideLoader();
-              viewAnswers.answersTableUI().show();
-              viewAnswers.answersTableUI().fadeIn();
+              /* RE-FETCH all the answers
+              ============================================================== */
+              viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
+              viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
+              viewAnswers.answersTableUI().hide();
+              global.showLoader();
+              // Populate the answers table again (with the new answers)
+              viewAnswers.getAnswers().then(function() {
+                // When answers arrive animate them in              
+                viewAnswers.answersTableUI().show();
+                global.hideLoader();
+                viewAnswers.answersTableUI().fadeIn();
+              })
+              .catch(function(reject) {
+                console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
+              });
             })
             .catch(function(reject) {
-              console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
-            });
+              console.log(`postAnswer promise got rejected, reject message: ↓ \n ${reject}`);
+            });            
           }
           else {
             unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
@@ -401,12 +397,12 @@ $(document).ready(function() {
     });
 
     console.log("Sending get answers request");
+    global.showLoader();
     viewAnswers.mkAnswersTableSkeleton(); // Create the answers table skeleton
-    viewAnswers.loaderUI.showLoader();
     // Populate the answers table
     viewAnswers.getAnswers().then(function() {
       // Animate-in the newly arrived answers
-      viewAnswers.loaderUI.hideLoader();
+      global.hideLoader();
       viewAnswers.answersTableUI().fadeIn();
       return true;
     })
