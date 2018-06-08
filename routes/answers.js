@@ -56,16 +56,36 @@ router.post('/add-answer', function(req, res) {
   if (Number.isInteger(parseInt(questionID)) &&
       Number.isInteger(parseInt(userID)) && 
       login.sessionValid(sessionID)) {
-    database.insertAnswer(answer, questionID, userID).then(() => {
-      database.getUsernameByAnswer(questionID, answer).then((username) => {
-        res.status(200).send({ response: "Insert successful", username: username });
-      })
-      .catch((reason) => {
-        res.status(500).send(reason.toString());
-      });
+    database.getUserIdByQuestionId(questionID).then((questionUserID) => {
+      if (questionUserID[0].UserID !== parseInt(userID)) {
+        database.insertAnswer(answer, questionID, userID).then(() => {
+          database.getUsernameByAnswer(questionID, answer).then((username) => {
+            database.getUserIdByQuestionId(questionID).then((questionUserID) => {
+              if (questionUserID[0].UserID !== parseInt(userID)) {
+                res.status(200).send({ response: "Insert successful", username: username });
+              }
+              else {
+                res.status(500).send("Not allowed to answer own questions");
+              }          
+            })
+            .catch((reason) => {
+              res.status(500).send(reason.toString());
+            });
+          })
+          .catch((reason) => {
+            res.status(500).send(reason.toString());
+          });
+        })
+        .catch((reason) => {
+          res.status(500).send(reason.toString())
+        });
+      }
+      else {
+        res.status(500).send("Not allowed to answer own questions");
+      }          
     })
     .catch((reason) => {
-      res.status(500).send(reason.toString())
+      res.status(500).send(reason.toString());
     });
   }
   else {

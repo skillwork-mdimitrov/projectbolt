@@ -61,7 +61,7 @@ router.post('/insert-rating', function(req, res, next) {
                 }); 
             }
             else {
-                res.status(500).send("Rating user equals answer user");
+                res.status(500).send("Not allowed to rate own answers");
             }            
         }).catch((reason) => {
             res.status(500).send(reason.toString());

@@ -216,6 +216,22 @@ const viewAnswers = function() {
                 }
               });
 
+              $.getJSON("questions/get-userid/"+questionID+"/"+sessionID, function () {})
+              .done(function (questionUserID) {
+                $.getJSON("login/get-userID/"+sessionID, function () {})
+                .done(function (userID) {
+                  if (questionUserID[0].UserID !== userID.userID) {
+                    $("#addAnswerInput").css("display", "block");
+                  }
+                })
+                .fail(function () {
+                    console.log("error");
+                });
+              })
+              .fail(function () {
+                  console.log("error");
+              });
+
               $(".deleteColumn").css("display", "none");
               $.getJSON("login/is-teacher/"+sessionID, function () {})
               .done(function (isTeacher) {
@@ -223,16 +239,16 @@ const viewAnswers = function() {
                     $(".deleteColumn").css("display", "block");
                 }
 
-                 $('.deleteButton').on("click", function(){
-                     removeAnswer.removeAnswer($(this));
-                 });
+                $('.deleteButton').on("click", function(){
+                    removeAnswer.removeAnswer($(this));
+                });
               })
-                    .fail(function () {
-                        console.log("error");
-                    });
+              .fail(function () {
+                  console.log("error");
+              });
 
-                $('.ui.rating').on("click", function(){
-                addRating.rateAnswer($(this));
+              $('.ui.rating').on("click", function(){
+              addRating.rateAnswer($(this));
               });
 
               $('.ui.rating').rating({
