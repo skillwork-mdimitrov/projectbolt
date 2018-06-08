@@ -49,7 +49,7 @@ const chat = function() {
 		//checking if user is the user typing :)
 		if(data.username == username)
 		{
-			chatroom.append("<p class='messageYours'>" + data.message +" :" + data.username +"<img style='width: 10vh;' src= ../images/"+data.username+".png alt="+data.username+"Picture"+"/> </p><br>");
+			chatroom.append("<p class='messageYours'>" + data.message +" <img style='width: 10vh;' src= ../images/"+data.username+".png alt="+data.username+"Picture"+"/> </p><br>");
 		}
 		else
 		{
