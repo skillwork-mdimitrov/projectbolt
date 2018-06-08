@@ -52,8 +52,17 @@ router.post('/insert-rating', function(req, res, next) {
         login.sessionValid(sessionID)) {
         let userID = login.getSessionData(sessionID)["userID"];
         
-        database.insertRating(answerID, userID, rating).then(() => {
-            res.status(200).send("Insert rating succesful");
+        database.getUserIdByAnswerId(answerID).then((answerUserID) => {
+            if(answerUserID[0].UserID !== userID) {
+                database.insertRating(answerID, userID, rating).then(() => {
+                    res.status(200).send("Insert rating succesful");
+                }).catch((reason) => {
+                    res.status(500).send(reason.toString());
+                }); 
+            }
+            else {
+                res.status(500).send("Rating user equals answer user");
+            }            
         }).catch((reason) => {
             res.status(500).send(reason.toString());
         }); 

@@ -27,6 +27,25 @@ router.get('/:questionID/:sessionID', function(req, res, next) {
   }     
 });
 
+/* GET the userID from a specific answer */
+router.get('/get-userID/:answerID/:sessionID', function(req, res, next) {
+  let answerID = req.params["answerID"]; 
+  let sessionID = req.params["sessionID"];
+
+  if (Number.isInteger(parseInt(answerID)) && 
+      login.sessionValid(sessionID))
+  {
+    database.getUserIdByAnswerId(answerID).then((userID) => {
+      res.status(200).send(userID);
+    }).catch((reason) => {
+      res.status(500).send(reason.toString());
+    });
+  }
+  else {
+    res.status(500).send('Invalid request');
+  }     
+});
+
 /* POST an answer to a question */
 router.post('/add-answer', function(req, res) {
   let answer = req.body.answer;

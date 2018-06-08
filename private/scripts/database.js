@@ -232,6 +232,16 @@ function getUsernameByAnswer(questionID, answer) {
     });   
 }
 
+function getUserIdByAnswerId(answerID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getUserIdByAnswerIdQuery(answerID)).then((userID) => {
+            resolve(userID);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });   
+}
+
 function getNonBannedAnswersByQuestionId(questionID) {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getNonBannedAnswersByQuestionIdQuery(questionID)).then((answers) => {
@@ -351,6 +361,7 @@ exports.deleteQuestion = deleteQuestion;
 
 exports.getAnswersByQuestionId = getAnswersByQuestionId;
 exports.getUsernameByAnswer = getUsernameByAnswer;
+exports.getUserIdByAnswerId = getUserIdByAnswerId;
 exports.getNonBannedAnswersByQuestionId = getNonBannedAnswersByQuestionId;
 exports.insertAnswer = insertAnswer;
 exports.deleteAnswer = deleteAnswer;

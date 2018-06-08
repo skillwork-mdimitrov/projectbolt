@@ -9,7 +9,7 @@ function getRatingsByAnswerIdQuery(answerID) {
 }
 
 function getNonBannedRatingsByAnswerIdQuery(answerID) {
-    var query  = `SELECT Ratings.Rating 
+    var query  = `SELECT Ratings.Rating
                 FROM Ratings 
                 INNER JOIN Users ON Ratings.UserID=Users.ID 
                 WHERE AnswerID = @answerID AND Users.Banned = 0`;
@@ -127,6 +127,14 @@ function getUsernameByAnswerQuery(questionID, answer) {
     return {query: query, params: params};
 }
 
+function getUserIdByAnswerIdQuery(answerID) {
+    var query = "SELECT UserID FROM Answers WHERE ID = @answerID";
+    var params = [
+        {paramName: "answerID", paramType: TYPES.Int, paramValue: answerID}
+    ]
+    return {query: query, params: params};
+}
+
 function getNonBannedAnswersByQuestionIdQuery(questionID) {
     var query = `SELECT Answers.ID, Answers.Answer, Users.Username 
                 FROM Answers 
@@ -226,6 +234,7 @@ exports.getDeleteQuestionQuery = getDeleteQuestionQuery;
 
 exports.getAnswersByQuestionIdQuery = getAnswersByQuestionIdQuery;
 exports.getUsernameByAnswerQuery = getUsernameByAnswerQuery;
+exports.getUserIdByAnswerIdQuery = getUserIdByAnswerIdQuery;
 exports.getNonBannedAnswersByQuestionIdQuery = getNonBannedAnswersByQuestionIdQuery;
 exports.getInsertAnswerQuery = getInsertAnswerQuery;
 exports.getDeleteAnswerQuery = getDeleteAnswerQuery;
