@@ -14,21 +14,21 @@
     <link rel="stylesheet" type="text/css" href="styles/awesomplete.css" />
     <link rel="stylesheet" type="text/css" href="styles/loader.css" />
   </head>
-  <body>  
-    <div id="loader"></div>
+  <body>         
+    <!-- Navigation bar -->
+    <header>
+      <nav class="nav">
+        <ul>
+          <li id="askQuestionBtn">Ask a question</li>
+          <li id="questionListBtn">Questions list</li>
+          <li><a href="chat">Chat!</a></li>
+          <li id="logoutBtn" class="logoutBtn">Logout</li>
+        </ul>
+      </nav>
+    </header>
 
+    <div id="loader"></div>
     <div class="mainContainer" style="display:none;" id="mainContainer">
-      <!-- Navigation bar -->
-      <header>
-        <nav class="nav">
-          <ul>
-            <li id="askQuestionBtn">Ask a question</li>
-            <li id="questionListBtn">Questions list</li>
-            <li><a href="chat">Chat!</a></li>
-            <li id="logoutBtn" class="logoutBtn">Logout</li>
-          </ul>
-        </nav>
-      </header>
 
       <!-- Questions table -->
       <div id="questionsTable" class="Table">

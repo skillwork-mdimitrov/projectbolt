@@ -6,9 +6,10 @@
         let questionID = deleteButton.attr("id");
         
         $.post("questions/remove-question", { questionID: questionID, sessionID: sessionID }, function() {})
-        .done(function() {
-            unfoldingHeader.unfoldHeader("Removed successfully", "green", true);               
-            viewQuestions.reloadQuestions();
+        .done(function() {              
+            unfoldingHeader.unfoldHeader("Removed successfully", "green", true);  
+            global.showLoader();         
+            viewQuestions.reloadQuestions();              
         })
         .fail(function(message) {
             unfoldingHeader.unfoldHeader("Failed removing question, see console for details", "red", true);   

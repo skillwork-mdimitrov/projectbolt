@@ -83,6 +83,7 @@ const viewQuestions = function () {
           $('.deleteButton').on("click", function(){
             removeQuestion.removeQuestion($(this));
           });
+          global.hideLoader();
       })
       .fail(function () {
           console.log("error");
