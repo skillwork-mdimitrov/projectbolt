@@ -49,10 +49,12 @@ const chat = function() {
 		//checking if user is the user typing :)
 		if(data.username == username)
 		{
+			//ur own message
 			chatroom.append("<p class='messageYours'>" + data.message +" <img style='width: 10vh;' src= ../images/"+data.username+".png alt="+data.username+"Picture"+"/> </p><br>");
 		}
 		else
 		{
+			//someone elses message :)
 			chatroom.append("<p class='messageOthers'>"+"<img style='width: 10vh;' src= ../images/"+data.username+".png alt="+data.username+"Picture/>" + "[<time class='date' title='"+new Date().toISOString()+"'>"+new Date().toISOString()+"</time>"+"] "+ data.username + ": " + data.message + "</p><br>");
 		}
 		time();
