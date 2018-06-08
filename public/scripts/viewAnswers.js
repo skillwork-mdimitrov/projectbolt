@@ -354,6 +354,7 @@ $(document).ready(function() {
               sessionID: sessionStorage.getItem('projectBoltSessionID')
             };
 
+            global.showLoader();
             // Send the AJAX request
             addAnswer.postAnswer(bodyJSON).then(function() {
               viewAnswers.addOwnAnswer.toggleUI();
@@ -363,8 +364,7 @@ $(document).ready(function() {
               ============================================================== */
               viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
               viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
-              viewAnswers.answersTableUI().hide();
-              global.showLoader();
+              viewAnswers.answersTableUI().hide();              
               // Populate the answers table again (with the new answers)
               viewAnswers.getAnswers().then(function() {
                 // When answers arrive animate them in              
