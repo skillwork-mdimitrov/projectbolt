@@ -72,4 +72,7 @@ $(document).ready(function() {
       unfoldingHeader.unfoldHeader("Please fill in a question", "red");
     }
   })
+
+  $('#searchContainer').fadeIn("fast"); // REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE 
+  global.hideLoader();
 });

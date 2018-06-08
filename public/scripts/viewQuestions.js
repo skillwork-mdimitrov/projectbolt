@@ -83,6 +83,8 @@ const viewQuestions = function () {
           $('.deleteButton').on("click", function(){
             removeQuestion.removeQuestion($(this));
           });
+
+          $('#questionsTable').fadeIn("fast", () => $('#questionsTable').css("display", "flex")); //REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE 
           global.hideLoader();
       })
       .fail(function () {

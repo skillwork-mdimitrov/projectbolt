@@ -10,26 +10,11 @@
     <link rel="stylesheet" type="text/css" href="styles/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- Icons -->
     <link rel="stylesheet" type="text/css" href="styles/viewQuestions.css">
-    <link rel="stylesheet" type="text/css" href="styles/searchStyle.css">
-    <link rel="stylesheet" type="text/css" href="styles/awesomplete.css" />
     <link rel="stylesheet" type="text/css" href="styles/loader.css" />
   </head>
-  <body>         
-    <!-- Navigation bar -->
-    <header>
-      <nav class="nav">
-        <ul>
-          <li id="askQuestionBtn">Ask a question</li>
-          <li id="questionListBtn">Questions list</li>
-          <li><a href="chat">Chat!</a></li>
-          <li id="logoutBtn" class="logoutBtn">Logout</li>
-        </ul>
-      </nav>
-    </header>
-
+  <body>     
     <div id="loader"></div>
     <div class="mainContainer" style="display:none;" id="mainContainer">
-
       <!-- Questions table -->
       <div id="questionsTable" class="Table">
         <!-- Headings -->
@@ -41,17 +26,7 @@
         </div>
         <!-- JavaScript will generate rows here -->
       </div>
-
-      <!-- Ask a question AND get suggestions in 1 -->
-      <div class="searchContainer" id="searchContainer">
-        <div class="searchBar">
-          <label for="questionBox">Ask a question:</label>
-          <img class="magnifyingGlass" src="images/magnifyingGlass.png" alt="searchIcon">
-          <input type="text" name="question" placeholder="Enter your question here..." id="questionBox"><br><br>
-          <input type="submit" value="Submit" id="submitQuestionBtn">
-        </div>
-      </div>
-    </div> <!-- Close mainContainer -->
+    </div>
 
     <!-- SCRIPTS, load after the DOM↓
     ============================================================== -->
@@ -60,12 +35,9 @@
     <script src="scripts/global.js"></script>    
     <script src="scripts/loginCheck.js"></script>    
     <script src="scripts/unfoldingHeader.js"></script> <!-- Collapsing header -->
-    <script src="scripts/mainPage.js"></script> <!-- Own script, naming collision when called index.js -->
     <script src="scripts/viewQuestions.js"></script>
-    <script src="scripts/awesomplete.js"></script>
-    <script src="scripts/addQuestion.js"></script>    
     <script src="scripts/removeQuestion.js"></script>    
-    <script src="scripts/stringCompare.js"></script>
     <script src="scripts/notifications.js"></script>
+    <script src="scripts/navigation.js"></script>
   </body>
 </html>

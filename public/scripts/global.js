@@ -58,6 +58,9 @@ const global = function() {
   } 
 
   const redirect = function redirect(route) {
+    if (route === undefined) {
+      route = "";
+    }
     if(window.location.href.includes("projectboltrenew.azurewebsites")) {
       window.location.href = "https://projectboltrenew.azurewebsites.net/"+route;
     }
@@ -70,7 +73,7 @@ const global = function() {
 
   const logout = function logout() { 
     sessionStorage.removeItem("projectBoltSessionID");
-    window.location.reload();
+    redirect("login");
   };
 
   /* Console.log an AJAX request error

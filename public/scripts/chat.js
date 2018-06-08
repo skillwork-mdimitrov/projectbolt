@@ -12,12 +12,6 @@ const chat = function() {
 	const feedback = $("#feedback");
 	const connected = $("#connected");
 	let username; // to be re-assigned later
-
-  // Nav bar
-  const askQuestionBtn = $('#askQuestionBtn');
-  const questionListBtn = $('#questionListBtn');
-  const logoutBtn = $('#logoutBtn');
-  // ============================================================== */
 	
 	// In the chat field, enter will simulate click
 	message.keyup(function(event) {
@@ -79,21 +73,6 @@ const chat = function() {
 	chatSocket.on('typing', (data) => {
 		feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>");
 	});
-
-  /* ATTACH EVENT LISTENERS NAVIGATION BAR
-    ============================================================== */
-  askQuestionBtn.on("click", () => {
-    redirectToIndex.goTo("1");
-  });
-
-  questionListBtn.on("click", () => {
-    redirectToIndex.goTo("2");
-  });
-
-  logoutBtn.on("click", () => {
-    global.logout();
-  });
-	// ============================================================== */
 	
 	// Automatic scroll down to the end of the chat
 	const bottomChat = function() {
