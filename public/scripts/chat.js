@@ -124,6 +124,7 @@ $(document).ready(function () {
 	try{
 		$.getJSON("login/get-username/"+sessionid, function () {})
 		.done(function (data) {
+			global.hideLoader();
 			console.log("Recieved user json");
 			return chat.getUsername(data);
 		});
