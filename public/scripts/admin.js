@@ -44,8 +44,9 @@ const admin = function () {
 
             reloadTable();
 
-            console.log("Sending request");
-            $.getJSON("login/get-usernames-status/"+sessionID).then((userData) => {
+            let getUserDataPromise = $.getJSON("login/get-usernames-status/"+sessionID);
+            global.logPromise(getUserDataPromise, "Requesting user data")
+            getUserDataPromise.then((userData) => {
                 $.each(userData, function (key, value) {
                     addToTable(value);
                 });
@@ -66,7 +67,10 @@ const admin = function () {
         let sessionID = sessionStorage.getItem("projectBoltSessionID");
 
         global.showLoader();
-        $.post("login/"+banButton.attr("action-url"), { userID: userID, sessionID: sessionID }).then((message) => {
+        
+        let banActionPromise = $.post("login/"+banButton.attr("action-url"), { userID: userID, sessionID: sessionID });
+        global.logPromise(banActionPromise, "Sending ban action request");
+        banActionPromise.then((message) => {
             loadUsers().then(() => {
                 global.hideLoader();
                 unfoldingHeader.unfoldHeader(message, "green");
@@ -89,7 +93,8 @@ $(document).ready(function () {
     let isAdminPromise = $.getJSON("login/is-admin/"+sessionID);
     let loadNavigationPromise = navigation.loadNavigation();
     let loadUsersPromise = admin.loadUsers();
-    
+
+    global.logPromise(isAdminPromise, "Requesting user admin status");
     Promise.all([isAdminPromise, loadNavigationPromise, loadUsersPromise]).then((values) => {
         let isAdmin = values[0]; // Return value from isAdminPromise
         if (isAdmin) {            

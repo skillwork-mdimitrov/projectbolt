@@ -105,6 +105,21 @@ const global = function() {
     }
   };
 
+  const getUniqueLogId = function(N) {
+    // Return a random string of N characters
+    return Array(N+1).join((Math.random().toString(36)+'00000000000000000').slice(2, 18)).slice(0, N);   
+  };
+
+  const logPromise = function(promise, message) {
+    let logID = getUniqueLogId(10);
+    console.log(logID + ": " + message);
+    promise.then(() => {
+      console.log(logID + ": Completed");
+    }).catch((reason) => {
+      console.log(logID + ": Failed: " + reason);
+    }); 
+  }
+
   return {
     fieldNotEmpty: fieldNotEmpty,
     fieldIsEmpty: fieldIsEmpty,
@@ -113,7 +128,8 @@ const global = function() {
     hideLoader: hideLoader,
     redirect: redirect,
     logout: logout,
-    logAJAXErr: logAJAXErr
+    logAJAXErr: logAJAXErr,
+    logPromise: logPromise
   };
 }();
 //  ============================================================== */
