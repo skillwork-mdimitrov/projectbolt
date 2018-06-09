@@ -41,39 +41,45 @@ const addQuestion = function() {
 // When everything has loaded
 $(document).ready(function() {
   "use strict";
-  /* ATTACH EVENT LISTENERS
-    ============================================================== */
-  addQuestion.submitQuestionBtn.on("click", function() {
-    if(global.fieldNotEmpty(addQuestion.questionBox)) {
-      let sessionID = sessionStorage.getItem('projectBoltSessionID');
-      // Get UserID
-      $.ajax({
-        type: 'get',
-        url: 'login/get-userID/' + sessionID,
-        success: function (data) {
-          // JSON'ize the question
-          let questionJSON = {
-            question: addQuestion.questionBox.val(),
-            userID: data.userID,
-            sessionID: sessionID
-          };
-          // Send the AJAX request
-          addQuestion.submitQuestion(questionJSON);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-          unfoldingHeader.unfoldHeader('error', "orange");
-          console.log('jqXHR: ' + jqXHR);
-          console.log('textStatus: ' + textStatus);
-          console.log('errorThrown: ' + errorThrown);
-        }
-      });
-    }
-    else {
-      unfoldingHeader.unfoldHeader("Please fill in a question", "red");
-    }
-  })
-  
-  navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
+
+  let loginCheckPromise = loginCheck.checkLogin();
+  let loadNavigationPromise = navigation.loadNavigation();
+
+  Promise.all([loginCheckPromise, loadNavigationPromise]).then(() => {
+    addQuestion.submitQuestionBtn.on("click", function() {
+      if(global.fieldNotEmpty(addQuestion.questionBox)) {
+        let sessionID = sessionStorage.getItem('projectBoltSessionID');
+        // Get UserID
+        $.ajax({
+          type: 'get',
+          url: 'login/get-userID/' + sessionID,
+          success: function (data) {
+            // JSON'ize the question
+            let questionJSON = {
+              question: addQuestion.questionBox.val(),
+              userID: data.userID,
+              sessionID: sessionID
+            };
+            // Send the AJAX request
+            addQuestion.submitQuestion(questionJSON);
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            unfoldingHeader.unfoldHeader('error', "orange");
+            console.log('jqXHR: ' + jqXHR);
+            console.log('textStatus: ' + textStatus);
+            console.log('errorThrown: ' + errorThrown);
+          }
+        });
+      }
+      else {
+        unfoldingHeader.unfoldHeader("Please fill in a question", "red");
+      }
+    })
+    
     global.hideLoader();
+    
+  }).catch(() => {
+    unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
+    setTimeout(function(){ global.logout(); }, 5000);   
   }); 
 });
