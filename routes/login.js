@@ -178,7 +178,7 @@ router.post('/unban-user', function(req, res, next) {
     login.isAdmin(sessionID).then((isAdmin) => {
       if (isAdmin) {
         database.unbanUser(req.body.userID).then(() => {
-          res.status(200).send("Ban succesful");
+          res.status(200).send("Unban succesful");
         }).catch((reason) => {
           res.status(500).send(reason.toString());
         });  

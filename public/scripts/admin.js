@@ -1,108 +1,104 @@
 const admin = function () {
-    const loadUsers = function() {    
-        var sessionID = sessionStorage.getItem("projectBoltSessionID");
-
+    const reloadTable = function() {
         $("#userTable tr").remove();
         
-        var newRow = $("<tr/>");
+        let newRow = $("<tr/>");
         newRow.append($("<th/>").html("User"));
         newRow.append($("<th/>").html("Status"));
         newRow.append($("<th/>").html("Action"));
         $("#userTable").append(newRow);
-
-        console.log("Sending request");
-        $.getJSON("login/get-usernames-status/"+sessionID, function () {})
-        .done(function (data) {
-            console.log("Request complete");
-            $.each(data, function (key, val) {
-                newRow = $("<tr/>");
-
-                newRow.append($("<td/>").html(val.Username));
-                
-                var userSatus = $("<td/>");
-                if (val.Banned) {
-                    userSatus.html("Banned");
-                }
-                else {
-                    userSatus.html("Active");
-                }
-                newRow.append(userSatus);
-                
-                var banButton = $("<button/>");
-                banButton.attr("id", val.ID);
-                if (val.Banned) {
-                    banButton.html("Unban");    
-                }
-                else {
-                    banButton.html("Ban");    
-                }                
-                newRow.append($("<td/>").html(banButton));
-
-                $("#userTable").append(newRow);
-            });
-    
-            $('#userTable :button').on("click", function(){
-                admin.banUser($(this));
-            });
-            
-            global.hideLoader();
-        })
-        .fail(function () {
-            console.log("error");
-        })
     };
 
-    const banUser = function(banButton) {
-        var userID = banButton.attr("id");
-        var buttonText = banButton.text();
-        var sessionID = sessionStorage.getItem("projectBoltSessionID");
+    const addToTable = function(userData) {
+        newRow = $("<tr/>");
 
-        if (buttonText === "Ban") {
-            $.post("login/ban-user", { userID: userID, sessionID: sessionID }, function() {})
-            .done(function() {
-                console.log("Request complete");
-                unfoldingHeader.unfoldHeader("User Banned.", "green");
-                loadUsers();
-            })
-            .fail(function() {
-                console.log( "error");
-            });
+        newRow.append($("<td/>").html(userData.Username));
+        
+        let userSatus = $("<td/>");
+        if (userData.Banned) {
+            userSatus.html("Banned");
         }
-        if (buttonText === "Unban") {
-            $.post("login/unban-user", { userID: userID, sessionID: sessionID }, function() {})
-            .done(function() {
-                console.log("Request complete");
-                unfoldingHeader.unfoldHeader("User Unbanned.", "green");
-                loadUsers();
-            })
-            .fail(function() {
-                console.log( "error");
-            });
+        else {
+            userSatus.html("Active");
         }
+        newRow.append(userSatus);
+        
+        let banButton = $("<button/>");
+        banButton.attr("id", userData.ID);
+        if (userData.Banned) {
+            banButton.html("Unban");
+            banButton.attr("action-url", "unban-user"); 
+        }
+        else {
+            banButton.html("Ban");   
+            banButton.attr("action-url", "ban-user"); 
+        }                
+        newRow.append($("<td/>").html(banButton));
+
+        $("#userTable").append(newRow);
+    }
+
+    const loadUsers = function() {    
+        return new Promise((resolve, reject) => {
+            let sessionID = sessionStorage.getItem("projectBoltSessionID");
+
+            reloadTable();
+
+            console.log("Sending request");
+            $.getJSON("login/get-usernames-status/"+sessionID).then((userData) => {
+                $.each(userData, function (key, value) {
+                    addToTable(value);
+                });
+        
+                $('#userTable :button').on("click", function(){
+                    execute($(this));
+                });                
+                resolve();
+            }).catch((reason) => {
+                reject(reason.responseText);
+            });   
+        });
+    };
+
+    const execute = function(banButton) {
+        let userID = banButton.attr("id");
+        let buttonText = banButton.text();
+        let sessionID = sessionStorage.getItem("projectBoltSessionID");
+
+        global.showLoader();
+        $.post("login/"+banButton.attr("action-url"), { userID: userID, sessionID: sessionID }).then((message) => {
+            loadUsers().then(() => {
+                global.hideLoader();
+                unfoldingHeader.unfoldHeader(message, "green");
+            }).catch((reason) => {
+                unfoldingHeader.unfoldHeader("Failed loading users: " + reason, "red");
+            }); 
+        }).catch((reason) => {
+            unfoldingHeader.unfoldHeader("Failed performing ban action: " + reason.responseText, "red");
+        });   
     };
 
     return {
-        loadUsers: loadUsers,
-        banUser: banUser
+        loadUsers: loadUsers
     }
 }();
 
 $(document).ready(function () {
-    var sessionID = sessionStorage.getItem("projectBoltSessionID");
+    let sessionID = sessionStorage.getItem("projectBoltSessionID");
 
-    $.getJSON("login/is-admin/"+sessionID, function () {})
-    .done(function (isAdmin) {
-        console.log("Request complete");
-        if (isAdmin) {
-            navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
-                admin.loadUsers();    
-            });             
+    let isAdminPromise = $.getJSON("login/is-admin/"+sessionID);
+    let loadNavigationPromise = navigation.loadNavigation();
+    let loadUsersPromise = admin.loadUsers();
+    
+    Promise.all([isAdminPromise, loadNavigationPromise, loadUsersPromise]).then((values) => {
+        let isAdmin = values[0]; // Return value from isAdminPromise
+        if (isAdmin) {            
+            global.hideLoader();
         }
         else {
             global.redirect("");
         }
-    })
-    .fail(function () {
-        console.log("error");
-    })    
+    }).catch((reason) => {
+        console.log(reason);
+    }); 
 });
