@@ -98,21 +98,27 @@ const chat = function() {
 
 // Initial change of username towards active session
 $(document).ready(function () {
-	let sessionid = sessionStorage.getItem("projectBoltSessionID");
-	console.log("Started fetching username json");
-	try{
-		$.getJSON("login/get-username/"+sessionid, function () {})
-		.done(function (data) {
-			navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
+	let loginCheckPromise = loginCheck.checkLogin();
+	let loadNavigationPromise = navigation.loadNavigation();
+
+	Promise.all([loginCheckPromise, loadNavigationPromise]).then(() => {
+		let sessionid = sessionStorage.getItem("projectBoltSessionID");
+		console.log("Started fetching username json");
+		try{
+			$.getJSON("login/get-username/"+sessionid, function () {})
+			.done(function (data) {
 				global.hideLoader();
-			}); 
-			console.log("Recieved user json");
-			return chat.getUsername(data);
-		});
-	}
-	catch (exception)
-	{
-		unfoldingHeader.unfoldHeader("Erro"+exception, "red");
-		return false;
-	}
+				return chat.getUsername(data);
+			});
+		}
+		catch (exception)
+		{
+			global.hideLoader();
+			unfoldingHeader.unfoldHeader("Erro"+exception, "red");
+			return false;
+		}
+	}).catch(() => {
+		unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
+		setTimeout(function(){ global.logout(); }, 5000);   
+	});  	
 });

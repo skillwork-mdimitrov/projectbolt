@@ -110,13 +110,16 @@ const global = function() {
     return Array(N+1).join((Math.random().toString(36)+'00000000000000000').slice(2, 18)).slice(0, N);   
   };
 
-  const logPromise = function(promise, message) {
+  const logPromise = function(promise, sender, message) {
     let logID = getUniqueLogId(10);
-    console.log(logID + ": " + message);
+    console.log(logID + ": " + message + " from " + sender);
     promise.then(() => {
-      console.log(logID + ": Completed");
+      console.log(logID + ": Completed in " + sender);
     }).catch((reason) => {
-      console.log(logID + ": Failed: " + reason);
+      if (typeof reason === 'object') {
+        reason = JSON.stringify(reason);
+      }
+      console.log(logID + ": Error in " + sender + ": " + reason);
     }); 
   }
 

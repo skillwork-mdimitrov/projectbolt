@@ -1,4 +1,6 @@
 const admin = function () {
+    const scriptFilename = "admin.js";
+
     const reloadTable = function() {
         $("#userTable tr").remove();
         
@@ -45,7 +47,7 @@ const admin = function () {
             reloadTable();
 
             let getUserDataPromise = $.getJSON("login/get-usernames-status/"+sessionID);
-            global.logPromise(getUserDataPromise, "Requesting user data")
+            global.logPromise(getUserDataPromise, scriptFilename, "Requesting user data")
             getUserDataPromise.then((userData) => {
                 $.each(userData, function (key, value) {
                     addToTable(value);
@@ -56,7 +58,7 @@ const admin = function () {
                 });                
                 resolve();
             }).catch((reason) => {
-                reject(reason.responseText);
+                reject(reason);
             });   
         });
     };
@@ -69,41 +71,54 @@ const admin = function () {
         global.showLoader();
         
         let banActionPromise = $.post("login/"+banButton.attr("action-url"), { userID: userID, sessionID: sessionID });
-        global.logPromise(banActionPromise, "Sending ban action request");
+        global.logPromise(banActionPromise, scriptFilename, "Sending ban action request");
         banActionPromise.then((message) => {
             loadUsers().then(() => {
                 global.hideLoader();
                 unfoldingHeader.unfoldHeader(message, "green");
-            }).catch((reason) => {
-                unfoldingHeader.unfoldHeader("Failed loading users: " + reason, "red");
+            }).catch(() => {
+                global.hideLoader();
+                unfoldingHeader.unfoldHeader("Failed loading users", "red");
             }); 
-        }).catch((reason) => {
-            unfoldingHeader.unfoldHeader("Failed performing ban action: " + reason.responseText, "red");
+        }).catch(() => {
+            global.hideLoader();
+            unfoldingHeader.unfoldHeader("Failed performing ban action", "red");
         });   
     };
 
     return {
+        scriptFilename: scriptFilename,
         loadUsers: loadUsers
     }
 }();
 
 $(document).ready(function () {
-    let sessionID = sessionStorage.getItem("projectBoltSessionID");
 
-    let isAdminPromise = $.getJSON("login/is-admin/"+sessionID);
+    let loginCheckPromise = loginCheck.checkLogin();
     let loadNavigationPromise = navigation.loadNavigation();
-    let loadUsersPromise = admin.loadUsers();
 
-    global.logPromise(isAdminPromise, "Requesting user admin status");
-    Promise.all([isAdminPromise, loadNavigationPromise, loadUsersPromise]).then((values) => {
-        let isAdmin = values[0]; // Return value from isAdminPromise
-        if (isAdmin) {            
-            global.hideLoader();
-        }
-        else {
-            global.redirect("");
-        }
-    }).catch((reason) => {
-        console.log(reason);
-    }); 
+    Promise.all([loginCheckPromise, loadNavigationPromise]).then(() => {
+        let sessionID = sessionStorage.getItem("projectBoltSessionID");
+
+        let isAdminPromise = $.getJSON("login/is-admin/"+sessionID);
+        global.logPromise(isAdminPromise, admin.scriptFilename, "Requesting user admin status");
+        let loadUsersPromise = admin.loadUsers();
+        
+        Promise.all([isAdminPromise, loadUsersPromise]).then((values) => {
+            let isAdmin = values[0]; // Return value from isAdminPromise
+            if (isAdmin) {            
+                global.hideLoader();
+            }
+            else {
+                unfoldingHeader.unfoldHeader("Unauthorized access (redirecting in 5 seconds)", "red");
+                setTimeout(function(){ global.redirect(""); }, 5000);            
+            }
+        }).catch(() => {
+            unfoldingHeader.unfoldHeader("An error ocurred (redirecting in 5 seconds)", "red");
+            setTimeout(function(){ global.redirect(""); }, 5000);
+        }); 
+    }).catch(() => {
+        unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
+        setTimeout(function(){ global.logout(); }, 5000);   
+    });  
 });

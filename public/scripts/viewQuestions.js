@@ -101,7 +101,13 @@ const viewQuestions = function () {
 }();
 
 $(document).ready(function () {
-  navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
+  let loginCheckPromise = loginCheck.checkLogin();
+  let loadNavigationPromise = navigation.loadNavigation();
+
+  Promise.all([loginCheckPromise, loadNavigationPromise]).then(() => {
     viewQuestions.reloadQuestions();
-  });  
+  }).catch(() => {
+    unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
+    setTimeout(function(){ global.logout(); }, 5000);   
+  }); 
 });
