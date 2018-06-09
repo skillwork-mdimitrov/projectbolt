@@ -13,7 +13,6 @@ const addQuestion = function() {
       success: function(data){
         unfoldingHeader.unfoldHeader(data.response, "green");
         notifications.getNotificationSocket().emit('newQuestion', {question: data.question, questionID: data.questionID[0].ID});
-        viewQuestions.reloadQuestions();  
       },
       error: function(jqXHR) {
         // If the server response includes "Violation of UNIQUE KEY"
