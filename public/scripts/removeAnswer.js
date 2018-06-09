@@ -8,7 +8,7 @@ const removeAnswer = function() {
         console.log("Removing answer " + answerID);
         $.post("answers/remove-answer", { answerID: answerID, sessionID: sessionID }, function() {})
         .done(function() {
-            unfoldingHeader.unfoldHeader("Removed successfully", "green", true);      
+            unfoldingHeader.unfoldHeader("Removed successfully", "green");      
             /* RE-FETCH all the answers
             ============================================================== */
             viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
@@ -23,12 +23,12 @@ const removeAnswer = function() {
                 viewAnswers.answersTableUI().fadeIn();
             })
             .catch(function(message) {
-                unfoldingHeader.unfoldHeader("Failed retrieving answers, see console for details", "red", true);   
+                unfoldingHeader.unfoldHeader("Failed retrieving answers, see console for details", "red");   
                 console.log("Failed retrieving answers " + answerID + ": " + message);
             });
         })
         .fail(function(message) {
-            unfoldingHeader.unfoldHeader("Failed removing answer, see console for details", "red", true);  
+            unfoldingHeader.unfoldHeader("Failed removing answer, see console for details", "red");  
             console.log("Failed removing answer " + answerID + ": " + message.responseText);
         });
     };

@@ -213,9 +213,9 @@ const viewAnswers = function() {
 
           $.getJSON("questions/get-userid/"+questionID+"/"+sessionID, function () {})
           .done(function (questionUserID) {
-            $.getJSON("login/get-userID/"+sessionID, function () {})
+            $.get("login/get-userID/"+sessionID, function () {})
             .done(function (userID) {
-              if (questionUserID[0].UserID !== userID.userID) {
+              if (questionUserID[0].UserID !== parseInt(userID)) {
                 $("#addAnswerInput").css("display", "block");
               }
               $(".deleteColumn").css("display", "none");
@@ -302,86 +302,93 @@ const viewAnswers = function() {
 $(document).ready(function() {
     "use strict";
 
-    /*View answers in the table
-     ============================================================== */
+    let loginCheckPromise = loginCheck.checkLogin();
+    let loadNavigationPromise = navigation.loadNavigation();
+    let initNotificationsPromise = notifications.initNotifications();
 
-    viewAnswers.addOwnAnswerBtn.on("click", function(){
-      viewAnswers.addOwnAnswer.toggleUI();
-    });
+    Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
+      viewAnswers.addOwnAnswerBtn.on("click", function(){
+        viewAnswers.addOwnAnswer.toggleUI();
+      });
 
-    viewAnswers.submitAnswerBtn.on("click", function() {
-      const buttonID = this.id; // for logging purposes
+      viewAnswers.submitAnswerBtn.on("click", function() {
+        const buttonID = this.id; // for logging purposes
 
-      $.ajax({
-        type: 'get',
-        url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
-        success: function (data) {
+        $.ajax({
+          type: 'get',
+          url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
+          success: function (userID) {
 
-          if(global.fieldNotEmpty(viewAnswers.addAnswerArea)) {
+            if(global.fieldNotEmpty(viewAnswers.addAnswerArea)) {
 
-            // JSON'ize the question
-            let bodyJSON = {
-              question: document.getElementById("questionHeading").textContent,
-              questionID: viewAnswers.getQuestionID(),
-              answer: viewAnswers.addAnswerArea.val(),
-              userID: data.userID,
-              sessionID: sessionStorage.getItem('projectBoltSessionID')
-            };
+              // JSON'ize the question
+              let bodyJSON = {
+                question: document.getElementById("questionHeading").textContent,
+                questionID: viewAnswers.getQuestionID(),
+                answer: viewAnswers.addAnswerArea.val(),
+                userID: parseInt(userID),
+                sessionID: sessionStorage.getItem('projectBoltSessionID')
+              };
 
-            global.showLoader();
-            // Send the AJAX request
-            addAnswer.postAnswer(bodyJSON).then(function() {
-              viewAnswers.addOwnAnswer.toggleUI();
-              viewAnswers.addAnswerArea.val(''); // Reset textarea
+              global.showLoader();
+              // Send the AJAX request
+              addAnswer.postAnswer(bodyJSON).then(function() {
+                viewAnswers.addOwnAnswer.toggleUI();
+                viewAnswers.addAnswerArea.val(''); // Reset textarea
 
-              /* RE-FETCH all the answers
-              ============================================================== */
-              viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
-              viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
-              viewAnswers.answersTableUI().hide();              
-              // Populate the answers table again (with the new answers)
-              viewAnswers.getAnswers().then(function() {
-                // When answers arrive animate them in              
-                viewAnswers.answersTableUI().show();
-                global.hideLoader();
-                viewAnswers.answersTableUI().fadeIn();
+                /* RE-FETCH all the answers
+                ============================================================== */
+                viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
+                viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
+                viewAnswers.answersTableUI().hide();              
+                // Populate the answers table again (with the new answers)
+                viewAnswers.getAnswers().then(function() {
+                  // When answers arrive animate them in              
+                  viewAnswers.answersTableUI().show();
+                  global.hideLoader();
+                  viewAnswers.answersTableUI().fadeIn();
+                })
+                .catch(function(reject) {
+                  console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
+                  global.hideLoader();
+                });
               })
               .catch(function(reject) {
-                console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
-              });
-            })
-            .catch(function(reject) {
-              console.log(`postAnswer promise got rejected, reject message: ↓ \n ${reject}`);
-            });            
+                console.log(`postAnswer promise got rejected, reject message: ↓ \n ${reject}`);
+                global.hideLoader();
+              });            
+            }
+            else {
+              unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
+            }
+          },
+          error: function (jqXHR) {
+            unfoldingHeader.unfoldHeader('Invalid session, please logout and login again. Apologies :(', "red");
+            global.logAJAXErr(buttonID, jqXHR);
           }
-          else {
-            unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
-          }
-        },
-        error: function (jqXHR) {
-          unfoldingHeader.unfoldHeader('Invalid session, please logout and login again. Apologies :(', "red");
-          global.logAJAXErr(buttonID, jqXHR);
-        }
+        });
       });
-    });
 
-    viewAnswers.cancelAnswerBtn.on("click", function() {
-      viewAnswers.addAnswerArea.val(''); // Reset textarea
-      viewAnswers.addOwnAnswer.toggleUI();
-    });
+      viewAnswers.cancelAnswerBtn.on("click", function() {
+        viewAnswers.addAnswerArea.val(''); // Reset textarea
+        viewAnswers.addOwnAnswer.toggleUI();
+      });
 
-    console.log("Sending get answers request");
-    global.showLoader();
-    viewAnswers.mkAnswersTableSkeleton(); // Create the answers table skeleton
-    // Populate the answers table
-    viewAnswers.getAnswers().then(function() {
-      // Animate-in the newly arrived answers
-      global.hideLoader();
-      viewAnswers.answersTableUI().fadeIn();
-      return true;
-    })
-    .catch(function(reject) {
-      console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
-      return false;
-    });
+      console.log("Sending get answers request");
+      viewAnswers.mkAnswersTableSkeleton(); // Create the answers table skeleton
+      // Populate the answers table
+      viewAnswers.getAnswers().then(function() {
+        // Animate-in the newly arrived answers
+        global.hideLoader();        
+        viewAnswers.answersTableUI().fadeIn();
+        return true;
+      })
+      .catch(function(reject) {
+        console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
+        return false;
+      });
+    }).catch(() => {
+      unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
+      setTimeout(function(){ global.logout(); }, 5000);   
+    }); 
 });

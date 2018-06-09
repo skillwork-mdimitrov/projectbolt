@@ -8,57 +8,35 @@
  ============================================================== */
 const login = function() {
   "use strict";
-  let usernameBox = $('#userNameBox');
-  let loginBtn = $('#loginButton');
-  let passwordBox = $('#passwordBox');
-  let documentBody = $('body');
+  const scriptFilename = "login.js";
 
-  const login = function(userdata) {
-    $.ajax({
-      type: 'post',
-      data: userdata,
-      url: 'login',
-      success: function(data){
-        sessionStorage.setItem("projectBoltSessionID", data.sessionID);
-        let sessionID = sessionStorage.getItem('projectBoltSessionID');
-        console.log("Checking banned status");
-        $.getJSON("login/get-banned-status/"+sessionID, function () {})
-        .done(function (bannedJSON) {
-          console.log("Request complete");
-          let banned = bannedJSON[0].Banned;
-          if (!banned) {
-            global.redirect("");
-          }
-          else
-          {
-            global.hideLoader();
-            unfoldingHeader.unfoldHeader("Login failed: You are banned", "red", true);
-          }  
-        })
-        .fail(function () {
-          global.hideLoader();
-          unfoldingHeader.unfoldHeader("Login failed: "+jqXHR.responseText, "red", true);
-        })        
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
+  let usernameBox = $('#userNameBox');
+  let passwordBox = $('#passwordBox');
+  let loginBtn = $('#loginButton');
+
+  const login = function() {
+    if(noEmptyFields()) {          
+      global.showLoader();
+
+      let loginPromise = $.post("login", {username: usernameBox.val(), password: passwordBox.val()});
+      global.logPromise(loginPromise, scriptFilename, "Requesting login");
+
+      loginPromise.then((sessionID) => {
+        sessionStorage.setItem("projectBoltSessionID", sessionID);
+        global.redirect("");
+      }).catch(() => {
         global.hideLoader();
-        unfoldingHeader.unfoldHeader("Login failed: "+jqXHR.responseText, "red", true);
-      }
-    });
+        unfoldingHeader.unfoldHeader("Login failed", "red", true);
+      }); 
+    }  
+    else {
+      unfoldingHeader.unfoldHeader("Please fill in your credentials", "orange", true);
+    }  
   };
 
   // Display appropriate message and return a boolean
   const noEmptyFields = function() {
-    if(global.fieldIsEmpty(usernameBox) && global.fieldIsEmpty(passwordBox)) {
-      unfoldingHeader.unfoldHeader("Please fill in your credentials", "orange", true);
-      return false;
-    }
-    else if(global.fieldIsEmpty(usernameBox)) {
-      unfoldingHeader.unfoldHeader("Please fill in your username", "orange", true);
-      return false;
-    }
-    else if(global.fieldIsEmpty(passwordBox)) {
-      unfoldingHeader.unfoldHeader("Please fill in your password", "orange", true);
+    if(global.fieldIsEmpty(usernameBox) || global.fieldIsEmpty(passwordBox)) {
       return false;
     }
     else {
@@ -68,12 +46,9 @@ const login = function() {
 
   // aq namespace will reveal the following properties
   return {
-    usernameBox: usernameBox,
+    scriptFilename: scriptFilename,
     loginBtn: loginBtn,
-    passwordBox: passwordBox,
-    documentBody: documentBody,
-    login: login,
-    noEmptyFields: noEmptyFields
+    login: login
   };
 }();
 //  ============================================================== */
@@ -81,12 +56,13 @@ const login = function() {
 // When everything has loaded
 $(document).ready(function() {
   "use strict";  
-  let currentSessionID = sessionStorage.getItem('projectBoltSessionID');
-  console.log("Sending request");
-  $.getJSON("login/check-session/"+currentSessionID, function () {})
-  .done(function (data) {
-    console.log("Request complete");
-    if (data.sessionValid === true) {      
+  let sessionID = sessionStorage.getItem('projectBoltSessionID');
+  
+  let sessionValidPromise = $.get("login/session-valid/"+sessionID);
+  global.logPromise(sessionValidPromise, login.scriptFilename, "Requesting session valid check");
+
+  sessionValidPromise.then((sessionValid) => {
+    if (sessionValid) {      
       global.redirect("");
     }
     else
@@ -94,31 +70,17 @@ $(document).ready(function() {
       /* ATTACH EVENT LISTENERS
       ============================================================== */
       login.loginBtn.on("click", function() {
-        // No empty fields
-        if(login.noEmptyFields()) {
-          // JSON'ize the data to be send
-          let userdata = {
-            username : login.usernameBox.val(),
-            password : login.passwordBox.val()
-          };
-
-          global.showLoader();
-          // Send the AJAX request
-          login.login(userdata);
-        }
+        login.login();
       });
 
       // Enter button clicked anywhere in the document triggers logging in
-      login.documentBody.keyup(function(event) {
+      $('body').keyup(function(event) {
         if(event.keyCode === 13) {
-          login.loginBtn.click();
+          login.login();
         }
       });
 
       global.hideLoader();
     }
-  })
-  .fail(function () {
-    console.log("error");
   });
 });

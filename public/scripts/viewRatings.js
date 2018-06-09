@@ -42,26 +42,26 @@ const viewRatings = function() {
                 resolve();
             })
             .fail(function(message) {
-                unfoldingHeader.unfoldHeader("Failed acquiring ratings, see console for details", "red", true);
+                unfoldingHeader.unfoldHeader("Failed acquiring ratings, see console for details", "red");
                 console.log("Failed acquiring ratings of answerID " + answerID + ": " + message.responseText);
                 reject();
             })
             .always(function() {
                 $.getJSON( "answers/get-userID/"+answerID+"/"+sessionID, function() {})
                 .done(function(answerUserID) {
-                    $.getJSON( "login/get-userID/"+sessionID, function() {})
+                    $.get( "login/get-userID/"+sessionID, function() {})
                     .done(function(userID) {
-                        if (answerUserID[0].UserID !== userID.userID) {
+                        if (answerUserID[0].UserID !== parseInt(userID)) {
                             ratingElement.rating("enable");
                         }                    
                     })
                     .fail(function(message) {
-                        unfoldingHeader.unfoldHeader("Failed acquiring own user ID, see console for details", "red", true);
+                        unfoldingHeader.unfoldHeader("Failed acquiring own user ID, see console for details", "red");
                         console.log("Failed acquiring own user ID: " + message.responseText);
                     }); 
                 })
                 .fail(function(message) {
-                    unfoldingHeader.unfoldHeader("Failed acquiring answer user ID, see console for details", "red", true);
+                    unfoldingHeader.unfoldHeader("Failed acquiring answer user ID, see console for details", "red");
                     console.log("Failed acquiring user ID from answer " + answerID + ": " + message.responseText);
                 });            
             });

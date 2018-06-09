@@ -1,6 +1,7 @@
 var express = require('express');
 var database = require('../private/scripts/database');
-const login = require('../private/scripts/login');
+var login = require('../private/scripts/login');
+var similarity = require('../private/scripts/similarity');
 var path = require('path');
 var router = express.Router();
 
@@ -11,6 +12,24 @@ router.get('/get-all-questions/:sessionID', function(req, res, next) {
   if (login.sessionValid(sessionID)) {
     database.getAllNonBannedQuestions().then((questions) => {
       res.json(questions);
+    }).catch(
+    (reason) => {
+      res.status(500).send(reason.toString());
+    });  
+  }
+  else {
+    res.status(500).send('Invalid request');
+  }
+});
+
+/* GET a promise */
+router.post('/get-similarity', function(req, res, next) {
+  let query = req.body.query; 
+  let sessionID = req.body.sessionID;
+
+  if (login.sessionValid(sessionID)) {
+    similarity.getQuestionSimilarities(query).then((similarities) => {
+      res.status(200).send(similarities);
     }).catch(
     (reason) => {
       res.status(500).send(reason.toString());
@@ -49,7 +68,7 @@ router.post('/add-question', function(req, res) {
   if (Number.isInteger(parseInt(userID)) && login.sessionValid(sessionID)) {
     database.insertQuestion(question, userID).then(() => {
       database.getQuestionIdByText(question).then((questionID) => {
-        res.status(200).send({ response: "Insert successful", question: question, questionID: questionID });
+        res.status(200).send({ response: "Insert successful", question: question, questionID: questionID[0].ID });
       })
       .catch((reason) => {
         res.status(500).send(reason.toString());

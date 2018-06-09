@@ -1,106 +1,124 @@
 const admin = function () {
-    const loadUsers = function() {    
-        var sessionID = sessionStorage.getItem("projectBoltSessionID");
+    const scriptFilename = "admin.js";
 
+    const reloadTable = function() {
         $("#userTable tr").remove();
         
-        var newRow = $("<tr/>");
+        let newRow = $("<tr/>");
         newRow.append($("<th/>").html("User"));
         newRow.append($("<th/>").html("Status"));
         newRow.append($("<th/>").html("Action"));
         $("#userTable").append(newRow);
-
-        console.log("Sending request");
-        $.getJSON("login/get-usernames-status/"+sessionID, function () {})
-        .done(function (data) {
-            console.log("Request complete");
-            $.each(data, function (key, val) {
-                newRow = $("<tr/>");
-
-                newRow.append($("<td/>").html(val.Username));
-                
-                var userSatus = $("<td/>");
-                if (val.Banned) {
-                    userSatus.html("Banned");
-                }
-                else {
-                    userSatus.html("Active");
-                }
-                newRow.append(userSatus);
-                
-                var banButton = $("<button/>");
-                banButton.attr("id", val.ID);
-                if (val.Banned) {
-                    banButton.html("Unban");    
-                }
-                else {
-                    banButton.html("Ban");    
-                }                
-                newRow.append($("<td/>").html(banButton));
-
-                $("#userTable").append(newRow);
-            });
-    
-            $('#userTable :button').on("click", function(){
-                admin.banUser($(this));
-            });
-            
-            global.hideLoader();
-        })
-        .fail(function () {
-            console.log("error");
-        })
     };
 
-    const banUser = function(banButton) {
-        var userID = banButton.attr("id");
-        var buttonText = banButton.text();
-        var sessionID = sessionStorage.getItem("projectBoltSessionID");
+    const addToTable = function(userData) {
+        newRow = $("<tr/>");
 
-        if (buttonText === "Ban") {
-            $.post("login/ban-user", { userID: userID, sessionID: sessionID }, function() {})
-            .done(function() {
-                console.log("Request complete");
-                unfoldingHeader.unfoldHeader("User Banned.", "green");
-                loadUsers();
-            })
-            .fail(function() {
-                console.log( "error");
-            });
+        newRow.append($("<td/>").html(userData.Username));
+        
+        let userSatus = $("<td/>");
+        if (userData.Banned) {
+            userSatus.html("Banned");
         }
-        if (buttonText === "Unban") {
-            $.post("login/unban-user", { userID: userID, sessionID: sessionID }, function() {})
-            .done(function() {
-                console.log("Request complete");
-                unfoldingHeader.unfoldHeader("User Unbanned.", "green");
-                loadUsers();
-            })
-            .fail(function() {
-                console.log( "error");
-            });
+        else {
+            userSatus.html("Active");
         }
+        newRow.append(userSatus);
+        
+        let banButton = $("<button/>");
+        banButton.attr("id", userData.ID);
+        if (userData.Banned) {
+            banButton.html("Unban");
+            banButton.attr("action-url", "unban-user"); 
+        }
+        else {
+            banButton.html("Ban");   
+            banButton.attr("action-url", "ban-user"); 
+        }                
+        newRow.append($("<td/>").html(banButton));
+
+        $("#userTable").append(newRow);
+    }
+
+    const loadUsers = function() {    
+        return new Promise((resolve, reject) => {
+            let sessionID = sessionStorage.getItem("projectBoltSessionID");
+
+            reloadTable();
+
+            let getUserDataPromise = $.getJSON("login/get-usernames-status/"+sessionID);
+            global.logPromise(getUserDataPromise, scriptFilename, "Requesting user data")
+            getUserDataPromise.then((userData) => {
+                $.each(userData, function (key, value) {
+                    addToTable(value);
+                });
+        
+                $('#userTable :button').on("click", function(){
+                    execute($(this));
+                });                
+                resolve();
+            }).catch((reason) => {
+                reject(reason);
+            });   
+        });
+    };
+
+    const execute = function(banButton) {
+        let userID = banButton.attr("id");
+        let buttonText = banButton.text();
+        let sessionID = sessionStorage.getItem("projectBoltSessionID");
+
+        global.showLoader();
+        
+        let banActionPromise = $.post("login/"+banButton.attr("action-url"), { userID: userID, sessionID: sessionID });
+        global.logPromise(banActionPromise, scriptFilename, "Sending ban action request");
+        banActionPromise.then((message) => {
+            loadUsers().then(() => {
+                global.hideLoader();
+                unfoldingHeader.unfoldHeader(message, "green");
+            }).catch(() => {
+                global.hideLoader();
+                unfoldingHeader.unfoldHeader("Failed loading users", "red");
+            }); 
+        }).catch(() => {
+            global.hideLoader();
+            unfoldingHeader.unfoldHeader("Failed performing ban action", "red");
+        });   
     };
 
     return {
-        loadUsers: loadUsers,
-        banUser: banUser
+        scriptFilename: scriptFilename,
+        loadUsers: loadUsers
     }
 }();
 
 $(document).ready(function () {
-    var sessionID = sessionStorage.getItem("projectBoltSessionID");
+    let loginCheckPromise = loginCheck.checkLogin();
+    let loadNavigationPromise = navigation.loadNavigation();
+    let initNotificationsPromise = notifications.initNotifications();
 
-    $.getJSON("login/is-admin/"+sessionID, function () {})
-    .done(function (isAdmin) {
-        console.log("Request complete");
-        if (isAdmin) {
-            admin.loadUsers();
-        }
-        else {
-            global.redirect("");
-        }
-    })
-    .fail(function () {
-        console.log("error");
-    })    
+    Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
+        let sessionID = sessionStorage.getItem("projectBoltSessionID");
+
+        let isAdminPromise = $.getJSON("login/is-admin/"+sessionID);
+        global.logPromise(isAdminPromise, admin.scriptFilename, "Requesting user admin status");
+        let loadUsersPromise = admin.loadUsers();
+        
+        Promise.all([isAdminPromise, loadUsersPromise]).then((values) => {
+            let isAdmin = values[0]; // Return value from isAdminPromise
+            if (isAdmin) {            
+                global.hideLoader();
+            }
+            else {
+                unfoldingHeader.unfoldHeader("Unauthorized access (redirecting in 5 seconds)", "red");
+                setTimeout(function(){ global.redirect(""); }, 5000);            
+            }
+        }).catch(() => {
+            unfoldingHeader.unfoldHeader("An error ocurred (redirecting in 5 seconds)", "red");
+            setTimeout(function(){ global.redirect(""); }, 5000);
+        }); 
+    }).catch(() => {
+        unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
+        setTimeout(function(){ global.logout(); }, 5000);   
+    });  
 });
