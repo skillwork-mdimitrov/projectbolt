@@ -1,6 +1,8 @@
 /* viewQuestions NAMESPACE
  ============================================================== */
 const viewQuestions = function () {
+  const scriptFilename = "viewQuestions.js";
+
   const addToTable = function (question) {
     let questionText = question[0];
     let questionUser = question[1];
@@ -63,36 +65,38 @@ const viewQuestions = function () {
   };
 
   const reloadQuestions = function () {
-    let sessionID = sessionStorage.getItem('projectBoltSessionID');
-
-    console.log("Sending request");
-    $.getJSON("questions/get-all-questions/"+sessionID, function () {})
-    .done(function (data) {
-      console.log("Request complete");
+    return new Promise((resolve, reject) => {
+      // Remove all from the table except for the headers
       $(".Table-row:not(.Table-header)").remove();
-      $.each(data, function (key, val) {
-        addToTable([val["Question"], val["Username"], val["ID"]]);
-      });
+      let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
-      $(".deleteColumn").css("display", "none");
-      $.getJSON("login/is-teacher/"+sessionID, function () {})
-      .done(function (isTeacher) {
-          if (isTeacher) {
-            $(".deleteColumn").css("display", "flex");
-          }
-          $('.deleteButton').on("click", function(){
-            removeQuestion.removeQuestion($(this));
-          });
-          
-          global.hideLoader();
+      let getAllQuestionsPromise = $.getJSON("questions/get-all-questions/"+sessionID);
+      global.logPromise(getAllQuestionsPromise, scriptFilename, "Requesting all question data");
+      let isTeacherPromise = $.get("login/is-teacher/"+sessionID);
+      global.logPromise(isTeacherPromise, scriptFilename, "Requesting user teacher status");
+
+      Promise.all([getAllQuestionsPromise, isTeacherPromise]).then((values) => {
+        let questionsData = values[0]   // Return value from getAllQuestionsPromise
+        let isTeacher = values[1]       // Return value from isTeacherPromise        
+        
+        $.each(questionsData, function (key, val) {
+          addToTable([val["Question"], val["Username"], val["ID"]]);
+        });
+
+        $(".deleteColumn").css("display", "none");      
+        if (isTeacher) {
+          $(".deleteColumn").css("display", "flex");
+        }
+        $('.deleteButton').on("click", function(){
+          removeQuestion.removeQuestion($(this));
+        });
+        
+        resolve();
+
+      }).catch(() => {
+        reject();
       })
-      .fail(function () {
-          console.log("error");
-      }) 
-    })
-    .fail(function () {
-      console.log("Get all questions failed");
-    })
+    });
   };
 
   return {
@@ -106,7 +110,12 @@ $(document).ready(function () {
   let initNotificationsPromise = notifications.initNotifications();
 
   Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
-    viewQuestions.reloadQuestions();
+    viewQuestions.reloadQuestions().then(() => {
+      global.hideLoader();
+    }).catch(() => {
+      unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
+      setTimeout(function(){ global.logout(); }, 5000);   
+    }); 
   }).catch(() => {
     unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
     setTimeout(function(){ global.logout(); }, 5000);   
