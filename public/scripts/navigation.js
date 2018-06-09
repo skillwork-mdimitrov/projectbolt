@@ -35,7 +35,7 @@ const navigation = function() {
                 }            
             })
             .fail(function (message) {
-                unfoldingHeader.unfoldHeader("Failed determining if admin, see console for details", "red", true);
+                unfoldingHeader.unfoldHeader("Failed determining if admin, see console for details", "red");
                 console.log("Failed determining if admin: " + message.responseText);
             }) 
             .always(function() {

@@ -20,10 +20,10 @@ const addRating = function() {
                 console.log("Requesting update rating on answerID " + answerID);
                 $.post("rating/update-rating", ratingData, function() {})
                 .done(function() {
-                    unfoldingHeader.unfoldHeader("Rating successful", "green", true);                    
+                    unfoldingHeader.unfoldHeader("Rating successful", "green");                    
                 })
                 .fail(function(message) {
-                    unfoldingHeader.unfoldHeader("Failed updating rating, see console for details", "red", true);
+                    unfoldingHeader.unfoldHeader("Failed updating rating, see console for details", "red");
                     console.log("Updating rating failed on answerID " + answerID + ": " + message.responseText);   
                 })
                 .always(function() {
@@ -34,10 +34,10 @@ const addRating = function() {
                 console.log("Requesting insert rating on answerID " + answerID);
                 $.post("rating/insert-rating", ratingData, function() {})
                 .done(function() {
-                    unfoldingHeader.unfoldHeader("Rating successful", "green", true);
+                    unfoldingHeader.unfoldHeader("Rating successful", "green");
                 })
                 .fail(function(message) {
-                    unfoldingHeader.unfoldHeader("Failed inserting rating, see console for details", "red", true);
+                    unfoldingHeader.unfoldHeader("Failed inserting rating, see console for details", "red");
                     console.log("Inserting rating failed on answerID " + answerID + ": " + message.responseText);   
                 })                
                 .always(function() {
@@ -46,7 +46,7 @@ const addRating = function() {
             }
         })
         .fail(function (message) {
-            unfoldingHeader.unfoldHeader("Failed checking rating, see console for details", "red", true);
+            unfoldingHeader.unfoldHeader("Failed checking rating, see console for details", "red");
             console.log("Rating check failed on answerID " + answerID + ": " + message.responseText);   
             ratingElement.rating("enable");
         })

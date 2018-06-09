@@ -42,7 +42,7 @@ const viewRatings = function() {
                 resolve();
             })
             .fail(function(message) {
-                unfoldingHeader.unfoldHeader("Failed acquiring ratings, see console for details", "red", true);
+                unfoldingHeader.unfoldHeader("Failed acquiring ratings, see console for details", "red");
                 console.log("Failed acquiring ratings of answerID " + answerID + ": " + message.responseText);
                 reject();
             })
@@ -56,12 +56,12 @@ const viewRatings = function() {
                         }                    
                     })
                     .fail(function(message) {
-                        unfoldingHeader.unfoldHeader("Failed acquiring own user ID, see console for details", "red", true);
+                        unfoldingHeader.unfoldHeader("Failed acquiring own user ID, see console for details", "red");
                         console.log("Failed acquiring own user ID: " + message.responseText);
                     }); 
                 })
                 .fail(function(message) {
-                    unfoldingHeader.unfoldHeader("Failed acquiring answer user ID, see console for details", "red", true);
+                    unfoldingHeader.unfoldHeader("Failed acquiring answer user ID, see console for details", "red");
                     console.log("Failed acquiring user ID from answer " + answerID + ": " + message.responseText);
                 });            
             });

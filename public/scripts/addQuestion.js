@@ -73,7 +73,7 @@ $(document).ready(function() {
         });
       }
       else {
-        unfoldingHeader.unfoldHeader("Please fill in a question", "red");
+        unfoldingHeader.unfoldHeader("Please fill in a question", "orange");
       }
     })
     

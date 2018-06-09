@@ -28,7 +28,7 @@ const addAnswer = function() {
             resolve();
           })
           .fail(function (message) {
-            unfoldingHeader.unfoldHeader("Failed retrieving question user id, see console for details", "red", true);
+            unfoldingHeader.unfoldHeader("Failed retrieving question user id, see console for details", "red");
             console.log("Failed retrieving question user id: " + message.responseText);   
             reject();
           })

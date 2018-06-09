@@ -54,7 +54,7 @@ const suggestions = function() {
             autoCompleter.list = newSuggestions;
             autoCompleter.evaluate(); 
         }).catch((reason) => {
-            unfoldingHeader.unfoldHeader("Failed aqcuiring new suggestions, see console for details", "red", true);
+            unfoldingHeader.unfoldHeader("Failed aqcuiring new suggestions, see console for details", "red");
             console.log("Failed aqcuiring new suggestions: " + reason);  
         });   
     };
