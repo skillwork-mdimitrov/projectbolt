@@ -12,6 +12,7 @@ const suggestions = function() {
 
     // The element that dynamically shows suggestions to user
     let autoCompleter;
+    let busyUpdatingSuggestions = false;
 
     const initAutoComplete = function() {
         autoCompleter = new Awesomplete(document.getElementById(inputId), {
@@ -29,6 +30,7 @@ const suggestions = function() {
             let sessionID = sessionStorage.getItem('projectBoltSessionID');
             let newSuggestions = [];
             
+            busyUpdatingSuggestions = true;
             let getQuestionSimilaritiesPromise = $.post("questions/get-similarity", { query: query, sessionID: sessionID });
             global.logPromise(getQuestionSimilaritiesPromise, scriptFilename, "Requesting question similarity ratings");
 
@@ -47,15 +49,18 @@ const suggestions = function() {
                 newSuggestions.push("Error retrieving suggestions");
             }).always(() => {
                 resolve(newSuggestions);
+                busyUpdatingSuggestions = false;
             });
         });
     };
 
-    const updateSuggestions = function() {        
-        getNewSuggestions($("#"+inputId).val()).then((newSuggestions) => {
-            autoCompleter.list = newSuggestions;
-            autoCompleter.evaluate(); 
-        });  
+    const updateSuggestions = function() {     
+        if (!busyUpdatingSuggestions) {
+            getNewSuggestions($("#"+inputId).val()).then((newSuggestions) => {
+                autoCompleter.list = newSuggestions;
+                autoCompleter.evaluate(); 
+            });  
+        }           
     };
 
     return {
