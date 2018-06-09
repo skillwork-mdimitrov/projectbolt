@@ -1,5 +1,7 @@
 const navigation = function() {
     const loadNavigation = function() {
+        let sessionID = sessionStorage.getItem('projectBoltSessionID');
+
         let navigationContainer = $("<nav>")
         .attr({ class: "nav" });
 
@@ -14,7 +16,9 @@ const navigation = function() {
         let chatButton = $("<li>")
         .html("Chat")
         .click(function() { global.redirect("chat") });
-
+        let adminButton = $("<li>")
+        .html("Admin")
+        .click(function() { global.redirect("admin") });
         let logoutButton = $("<li>")
         .html("Logout")
         .attr({ class: "logoutBtn" })
@@ -23,10 +27,22 @@ const navigation = function() {
         navigationButtonList.append(askQuestionButton);
         navigationButtonList.append(viewQuestionsButton);
         navigationButtonList.append(chatButton);
-        navigationButtonList.append(logoutButton);
+        $.getJSON("login/is-admin/"+sessionID, function () {})
+        .done(function (isAdmin) {
+            if (isAdmin) {
+                navigationButtonList.append(adminButton);
+            }            
+        })
+        .fail(function (message) {
+            unfoldingHeader.unfoldHeader("Failed determining if admin, see console for details", "red", true);
+            console.log("Failed determining if admin: " + message.responseText);
+        }) 
+        .always(function() {
+            navigationButtonList.append(logoutButton);
 
-        navigationContainer.append(navigationButtonList);
-        $("body").prepend(navigationContainer);
+            navigationContainer.append(navigationButtonList);
+            $("#mainContainer").prepend(navigationContainer);                       
+        });
     }
     
     return {
