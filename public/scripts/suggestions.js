@@ -6,7 +6,7 @@ const suggestions = function() {
     const inputId = "questionBox";
 
     // Minimum similarity before adding to suggestions
-    const minimumSuggestionSimilarity = 0.50;
+    const minimumSuggestionSimilarity = 0.30;
     // Maximum similarity before blocking from insert
     const maximumQuestionSimilarity = 0.80;
 
