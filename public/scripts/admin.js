@@ -45,9 +45,7 @@ const admin = function () {
                 admin.banUser($(this));
             });
             
-            navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
-                global.hideLoader();
-            }); 
+            global.hideLoader();
         })
         .fail(function () {
             console.log("error");
@@ -96,7 +94,9 @@ $(document).ready(function () {
     .done(function (isAdmin) {
         console.log("Request complete");
         if (isAdmin) {
-            admin.loadUsers();
+            navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
+                admin.loadUsers();    
+            });             
         }
         else {
             global.redirect("");

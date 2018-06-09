@@ -84,9 +84,7 @@ const viewQuestions = function () {
             removeQuestion.removeQuestion($(this));
           });
           
-          navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
-            global.hideLoader();
-          });  
+          global.hideLoader();
       })
       .fail(function () {
           console.log("error");
@@ -103,5 +101,7 @@ const viewQuestions = function () {
 }();
 
 $(document).ready(function () {
-  viewQuestions.reloadQuestions();
+  navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
+    viewQuestions.reloadQuestions();
+  });  
 });
