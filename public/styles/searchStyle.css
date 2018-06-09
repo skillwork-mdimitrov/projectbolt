@@ -2,6 +2,10 @@
   background-color: black;
 }
 
+.mainContainer {
+  margin: 10px 10px 10px 10px;
+}
+
 .searchContainer {
   margin-top: 10px;
   width: 100%;
