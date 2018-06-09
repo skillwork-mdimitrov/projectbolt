@@ -2,30 +2,61 @@
  ============================================================== */
 const addQuestion = function() {
   "use strict";
+  const scriptFilename = "addQuestion.js";
   const questionBox = $('#questionBox');
   const submitQuestionBtn = $('#submitQuestionBtn');
-  const submitQuestion = function(question) {
-    "use strict";
-    $.ajax({
-      type: 'post',
-      data: question,
-      url: 'questions/add-question',
-      success: function(data){
-        unfoldingHeader.unfoldHeader(data.response, "green");
-        notifications.getNotificationSocket().emit('newQuestion', {question: data.question, questionID: data.questionID[0].ID});
-      },
-      error: function(jqXHR) {
-        // If the server response includes "Violation of UNIQUE KEY"
-        if(global.logAJAXErr(submitQuestion.name, jqXHR) === "duplicatedKey") {
-          // The user is trying to add an already existing question
-          unfoldingHeader.unfoldHeader("This question already exists", "orange");
+
+  const submitQuestion = function() {
+    if(global.fieldNotEmpty(addQuestion.questionBox)) {
+      let sessionID = sessionStorage.getItem('projectBoltSessionID');
+      let question = addQuestion.questionBox.val();
+      global.showLoader();
+
+      let userIdPromise = $.get("login/get-userID/"+sessionID);
+      global.logPromise(userIdPromise, scriptFilename, "Requesting user ID");
+      let questionWithinConstraintsPromise = suggestions.isWithinSimilarityConstraints(question);
+
+      Promise.all([userIdPromise, questionWithinConstraintsPromise]).then((values) => {
+        let userID = parseInt(values[0])            // Return value from userIdPromise
+        let questionWithinConstraints = values[1]   // Return value from questionWithinConstraintsPromise
+
+        if (questionWithinConstraints) {
+          let questionData = {
+            question: question,
+            userID: userID,
+            sessionID: sessionID
+          };      
+          
+          let addQuestionPromise = $.post("questions/add-question", questionData)
+          global.logPromise(addQuestionPromise, scriptFilename, "Requesting to add a question");
+  
+          addQuestionPromise.then((newQuestionData) => {
+            // Clear the input field
+            questionBox.val("");
+            global.hideLoader();
+            addQuestion.questionBox.focus();
+            unfoldingHeader.unfoldHeader("Question added successfully", "green");
+            notifications.getNotificationSocket().emit('newQuestion', {question: newQuestionData.question, questionID: newQuestionData.questionID});
+          }).catch(() => {
+            global.hideLoader();
+            addQuestion.questionBox.focus();
+            unfoldingHeader.unfoldHeader("Failed adding question", "red");
+          });
         }
-        // More general error
         else {
-          unfoldingHeader.unfoldHeader("Failed to post your question. Apologies :(", "red");
-        }
-      }
-    });
+          global.hideLoader();
+          addQuestion.questionBox.focus();
+          unfoldingHeader.unfoldHeader("A similar question already exists", "orange");
+        }        
+      }).catch(() => {
+        global.hideLoader();
+        addQuestion.questionBox.focus();
+        unfoldingHeader.unfoldHeader("An error ocurred", "red");
+      });
+    }
+    else {
+      unfoldingHeader.unfoldHeader("Please fill in a question", "orange");
+    }
   };
 
   // addQuestion namespace will reveal the following properties
@@ -47,36 +78,17 @@ $(document).ready(function() {
 
   Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
     addQuestion.submitQuestionBtn.on("click", function() {
-      if(global.fieldNotEmpty(addQuestion.questionBox)) {
-        let sessionID = sessionStorage.getItem('projectBoltSessionID');
-        // Get UserID
-        $.ajax({
-          type: 'get',
-          url: 'login/get-userID/' + sessionID,
-          success: function (userID) {
-            // JSON'ize the question
-            let questionJSON = {
-              question: addQuestion.questionBox.val(),
-              userID: parseInt(userID),
-              sessionID: sessionID
-            };
-            // Send the AJAX request
-            addQuestion.submitQuestion(questionJSON);
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            unfoldingHeader.unfoldHeader('error', "orange");
-            console.log('jqXHR: ' + jqXHR);
-            console.log('textStatus: ' + textStatus);
-            console.log('errorThrown: ' + errorThrown);
-          }
-        });
-      }
-      else {
-        unfoldingHeader.unfoldHeader("Please fill in a question", "orange");
-      }
+      addQuestion.submitQuestion();
     })
+
+    addQuestion.questionBox.keyup(function(event) {
+      if(event.keyCode === 13) {
+        addQuestion.submitQuestion();
+      }
+    });
     
     global.hideLoader();
+    addQuestion.questionBox.focus();
     
   }).catch(() => {
     unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");

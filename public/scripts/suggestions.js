@@ -54,6 +54,28 @@ const suggestions = function() {
         });
     };
 
+    const isWithinSimilarityConstraints = function(query) {
+        return new Promise((resolve, reject) => {
+            let sessionID = sessionStorage.getItem('projectBoltSessionID');
+            let newSuggestions = [];
+            
+            busyUpdatingSuggestions = true;
+            let getQuestionSimilaritiesPromise = $.post("questions/get-similarity", { query: query, sessionID: sessionID });
+            global.logPromise(getQuestionSimilaritiesPromise, scriptFilename, "Requesting question similarity ratings");
+
+            getQuestionSimilaritiesPromise.then((similarities) => {                
+                $.each( similarities, function( index, value ) {
+                    if (value.rating > maximumQuestionSimilarity) {
+                        resolve(false);
+                    }                    
+                });  
+                resolve(true);
+            }).catch(() => {    
+                reject();
+            });
+        });
+    }
+
     const updateSuggestions = function() {     
         if (!busyUpdatingSuggestions) {
             getNewSuggestions($("#"+inputId).val()).then((newSuggestions) => {
@@ -68,6 +90,7 @@ const suggestions = function() {
         minimumSuggestionSimilarity: minimumSuggestionSimilarity,
         maximumQuestionSimilarity: maximumQuestionSimilarity,
         initAutoComplete: initAutoComplete,
+        isWithinSimilarityConstraints: isWithinSimilarityConstraints,
         updateSuggestions: updateSuggestions
     }
 }();

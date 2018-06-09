@@ -68,7 +68,7 @@ router.post('/add-question', function(req, res) {
   if (Number.isInteger(parseInt(userID)) && login.sessionValid(sessionID)) {
     database.insertQuestion(question, userID).then(() => {
       database.getQuestionIdByText(question).then((questionID) => {
-        res.status(200).send({ response: "Insert successful", question: question, questionID: questionID });
+        res.status(200).send({ response: "Insert successful", question: question, questionID: questionID[0].ID });
       })
       .catch((reason) => {
         res.status(500).send(reason.toString());
