@@ -1,6 +1,7 @@
 /* suggestions NAMESPACE
  ============================================================== */
 const suggestions = function() {  
+    const scriptFilename = "suggestions.js";
     // ID of the query input field 
     const inputId = "questionBox";
 
@@ -28,8 +29,10 @@ const suggestions = function() {
             let sessionID = sessionStorage.getItem('projectBoltSessionID');
             let newSuggestions = [];
             
-            $.post("questions/get-similarity", { query: query, sessionID: sessionID }, function() {})
-            .done(function(similarities) {
+            let getQuestionSimilaritiesPromise = $.post("questions/get-similarity", { query: query, sessionID: sessionID });
+            global.logPromise(getQuestionSimilaritiesPromise, scriptFilename, "Requesting question similarity ratings");
+
+            getQuestionSimilaritiesPromise.then((similarities) => {
                 // Sort the suggestions in descending order based on similarity rating
                 let sortedSimilarities = similarities.ratings.sort(function(a, b) {
                     return b.rating - a.rating;
@@ -40,12 +43,11 @@ const suggestions = function() {
                         newSuggestions.push(value.target);
                     }                    
                 });  
-                
+            }).catch(() => {    
+                newSuggestions.push("Error retrieving suggestions");
+            }).always(() => {
                 resolve(newSuggestions);
-            })
-            .fail(function(message) {                 
-                reject(message.responseText);
-            })
+            });
         });
     };
 
@@ -53,10 +55,7 @@ const suggestions = function() {
         getNewSuggestions($("#"+inputId).val()).then((newSuggestions) => {
             autoCompleter.list = newSuggestions;
             autoCompleter.evaluate(); 
-        }).catch((reason) => {
-            unfoldingHeader.unfoldHeader("Failed aqcuiring new suggestions, see console for details", "red");
-            console.log("Failed aqcuiring new suggestions: " + reason);  
-        });   
+        });  
     };
 
     return {
