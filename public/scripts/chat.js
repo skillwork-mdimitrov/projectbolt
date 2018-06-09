@@ -103,7 +103,9 @@ $(document).ready(function () {
 	try{
 		$.getJSON("login/get-username/"+sessionid, function () {})
 		.done(function (data) {
-			global.hideLoader();
+			navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
+				global.hideLoader();
+			}); 
 			console.log("Recieved user json");
 			return chat.getUsername(data);
 		});

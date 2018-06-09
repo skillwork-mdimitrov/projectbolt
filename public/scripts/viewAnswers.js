@@ -376,7 +376,9 @@ $(document).ready(function() {
     // Populate the answers table
     viewAnswers.getAnswers().then(function() {
       // Animate-in the newly arrived answers
-      global.hideLoader();
+      navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
+        global.hideLoader();
+      }); 
       viewAnswers.answersTableUI().fadeIn();
       return true;
     })

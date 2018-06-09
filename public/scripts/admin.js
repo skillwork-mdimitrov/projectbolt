@@ -45,7 +45,9 @@ const admin = function () {
                 admin.banUser($(this));
             });
             
-            global.hideLoader();
+            navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
+                global.hideLoader();
+            }); 
         })
         .fail(function () {
             console.log("error");

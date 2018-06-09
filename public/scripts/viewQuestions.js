@@ -83,9 +83,10 @@ const viewQuestions = function () {
           $('.deleteButton').on("click", function(){
             removeQuestion.removeQuestion($(this));
           });
-
-          $('#questionsTable').fadeIn("fast", () => $('#questionsTable').css("display", "flex")); //REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE 
-          global.hideLoader();
+          
+          navigation.loadNavigation().then(() => {  // Wait for the navigation bar to load
+            global.hideLoader();
+          });  
       })
       .fail(function () {
           console.log("error");
