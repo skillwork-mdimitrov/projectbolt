@@ -32,7 +32,7 @@ const login = function() {
           else
           {
             global.hideLoader();
-            unfoldingHeader.unfoldHeader("Login failed: You are banned", "red", true);
+            unfoldingHeader.unfoldHeader("Login failed: Your account has been suspended", "red", true);
           }  
         })
         .fail(function () {
