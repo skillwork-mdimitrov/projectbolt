@@ -21,9 +21,8 @@ const login = function() {
       let loginPromise = $.post("login", {username: usernameBox.val(), password: passwordBox.val()});
       global.logPromise(loginPromise, scriptFilename, "Requesting login");
 
-      loginPromise.then((newSession) => {
-        sessionStorage.setItem("projectBoltSessionID", newSession.sessionID);
-        let sessionID = sessionStorage.getItem('projectBoltSessionID');
+      loginPromise.then((sessionID) => {
+        sessionStorage.setItem("projectBoltSessionID", sessionID);
         global.redirect("");
       }).catch(() => {
         global.hideLoader();

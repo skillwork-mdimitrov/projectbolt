@@ -49,9 +49,9 @@ const viewRatings = function() {
             .always(function() {
                 $.getJSON( "answers/get-userID/"+answerID+"/"+sessionID, function() {})
                 .done(function(answerUserID) {
-                    $.getJSON( "login/get-userID/"+sessionID, function() {})
+                    $.get( "login/get-userID/"+sessionID, function() {})
                     .done(function(userID) {
-                        if (answerUserID[0].UserID !== userID.userID) {
+                        if (answerUserID[0].UserID !== parseInt(userID)) {
                             ratingElement.rating("enable");
                         }                    
                     })

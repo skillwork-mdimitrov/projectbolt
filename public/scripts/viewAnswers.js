@@ -213,9 +213,9 @@ const viewAnswers = function() {
 
           $.getJSON("questions/get-userid/"+questionID+"/"+sessionID, function () {})
           .done(function (questionUserID) {
-            $.getJSON("login/get-userID/"+sessionID, function () {})
+            $.get("login/get-userID/"+sessionID, function () {})
             .done(function (userID) {
-              if (questionUserID[0].UserID !== userID.userID) {
+              if (questionUserID[0].UserID !== parseInt(userID)) {
                 $("#addAnswerInput").css("display", "block");
               }
               $(".deleteColumn").css("display", "none");
@@ -304,8 +304,9 @@ $(document).ready(function() {
 
     let loginCheckPromise = loginCheck.checkLogin();
     let loadNavigationPromise = navigation.loadNavigation();
+    let initNotificationsPromise = notifications.initNotifications();
 
-    Promise.all([loginCheckPromise, loadNavigationPromise]).then(() => {
+    Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
       viewAnswers.addOwnAnswerBtn.on("click", function(){
         viewAnswers.addOwnAnswer.toggleUI();
       });
@@ -316,7 +317,7 @@ $(document).ready(function() {
         $.ajax({
           type: 'get',
           url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
-          success: function (data) {
+          success: function (userID) {
 
             if(global.fieldNotEmpty(viewAnswers.addAnswerArea)) {
 
@@ -325,7 +326,7 @@ $(document).ready(function() {
                 question: document.getElementById("questionHeading").textContent,
                 questionID: viewAnswers.getQuestionID(),
                 answer: viewAnswers.addAnswerArea.val(),
-                userID: data.userID,
+                userID: parseInt(userID),
                 sessionID: sessionStorage.getItem('projectBoltSessionID')
               };
 
@@ -349,10 +350,12 @@ $(document).ready(function() {
                 })
                 .catch(function(reject) {
                   console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
+                  global.hideLoader();
                 });
               })
               .catch(function(reject) {
                 console.log(`postAnswer promise got rejected, reject message: ↓ \n ${reject}`);
+                global.hideLoader();
               });            
             }
             else {

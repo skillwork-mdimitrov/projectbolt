@@ -23,7 +23,7 @@ router.post('/', function(req, res) {
         // Check if passwords match, hash of -1 means hashing failed
         if (hashedPassword !== -1 && hashedPassword === storedPassword) {
           var newSessionID = login.createSession(storedUserID);
-          res.send({'sessionID': newSessionID});  
+          res.send(newSessionID.toString());  
         }
         else
         {
@@ -107,7 +107,7 @@ router.get('/get-userID/:sessionID', function(req, res, next) {
 
   // Check if the session is valid
   if (login.sessionValid(sessionID)) {
-    res.send({'userID': login.getSessionData(sessionID)["userID"]});
+    res.send(login.getSessionData(sessionID)["userID"].toString());
   }
   else {
     res.status(500).send('Invalid session');

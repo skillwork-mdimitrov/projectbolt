@@ -103,8 +103,9 @@ const viewQuestions = function () {
 $(document).ready(function () {
   let loginCheckPromise = loginCheck.checkLogin();
   let loadNavigationPromise = navigation.loadNavigation();
+  let initNotificationsPromise = notifications.initNotifications();
 
-  Promise.all([loginCheckPromise, loadNavigationPromise]).then(() => {
+  Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
     viewQuestions.reloadQuestions();
   }).catch(() => {
     unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");

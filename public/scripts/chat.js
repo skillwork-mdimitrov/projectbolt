@@ -100,8 +100,9 @@ const chat = function() {
 $(document).ready(function () {
 	let loginCheckPromise = loginCheck.checkLogin();
 	let loadNavigationPromise = navigation.loadNavigation();
+	let initNotificationsPromise = notifications.initNotifications();
 
-	Promise.all([loginCheckPromise, loadNavigationPromise]).then(() => {
+	Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
 		let sessionid = sessionStorage.getItem("projectBoltSessionID");
 		console.log("Started fetching username json");
 		try{

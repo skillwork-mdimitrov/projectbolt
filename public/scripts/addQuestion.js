@@ -44,8 +44,9 @@ $(document).ready(function() {
 
   let loginCheckPromise = loginCheck.checkLogin();
   let loadNavigationPromise = navigation.loadNavigation();
+  let initNotificationsPromise = notifications.initNotifications();
 
-  Promise.all([loginCheckPromise, loadNavigationPromise]).then(() => {
+  Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
     addQuestion.submitQuestionBtn.on("click", function() {
       if(global.fieldNotEmpty(addQuestion.questionBox)) {
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
@@ -53,11 +54,11 @@ $(document).ready(function() {
         $.ajax({
           type: 'get',
           url: 'login/get-userID/' + sessionID,
-          success: function (data) {
+          success: function (userID) {
             // JSON'ize the question
             let questionJSON = {
               question: addQuestion.questionBox.val(),
-              userID: data.userID,
+              userID: parseInt(userID),
               sessionID: sessionID
             };
             // Send the AJAX request
