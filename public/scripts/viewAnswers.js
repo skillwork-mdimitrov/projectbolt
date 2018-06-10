@@ -330,6 +330,7 @@ $(document).ready(function() {
                 sessionID: sessionStorage.getItem('projectBoltSessionID')
               };
 
+              // TODO I'll be replacing the loader with the old way as it looks nicer
               global.showLoader();
               // Send the AJAX request
               addAnswer.postAnswer(bodyJSON).then(function() {

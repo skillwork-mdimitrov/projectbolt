@@ -121,7 +121,7 @@ const global = function() {
       }
       console.log(logID + ": Error in " + sender + ": " + reason);
     }); 
-  }
+  };
 
   return {
     fieldNotEmpty: fieldNotEmpty,

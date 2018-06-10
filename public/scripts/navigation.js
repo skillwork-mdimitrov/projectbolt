@@ -11,15 +11,19 @@ const navigation = function() {
             let askQuestionButton = $("<li>")
             .html("Ask a question")
             .click(function() { global.redirect("ask-question") });
+
             let viewQuestionsButton = $("<li>")
             .html("View questions")
             .click(function() { global.redirect() });
+
             let chatButton = $("<li>")
             .html("Chat")
             .click(function() { global.redirect("chat") });
+
             let adminButton = $("<li>")
             .html("Admin")
             .click(function() { global.redirect("admin") });
+
             let logoutButton = $("<li>")
             .html("Logout")
             .attr({ class: "logoutBtn" })
@@ -28,6 +32,7 @@ const navigation = function() {
             navigationButtonList.append(askQuestionButton);
             navigationButtonList.append(viewQuestionsButton);
             navigationButtonList.append(chatButton);
+
             $.getJSON("login/is-admin/"+sessionID, function () {})
             .done(function (isAdmin) {
                 if (isAdmin) {
@@ -46,7 +51,7 @@ const navigation = function() {
                 resolve();               
             });
         });
-    }
+    };
     
     return {
         loadNavigation: loadNavigation
