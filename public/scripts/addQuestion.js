@@ -54,10 +54,7 @@ const addQuestion = function() {
             unfoldingHeader.unfoldHeader("Failed adding question", "red");
           });
         }
-        else {
-          global.hideLoader();
-          addQuestion.questionBox.focus();
-          
+        else {          
           let questionMatchIdPromise = $.post("questions/get-questionid", {question: bestQuestionSimilarity.target, sessionID: sessionID});
           global.logPromise(questionMatchIdPromise, scriptFilename, "Requesting question ID from similar match");
 
@@ -65,8 +62,10 @@ const addQuestion = function() {
             unfoldingHeader.unfoldHeader("A similar question already exists: " + bestQuestionSimilarity.target, "orange", false, "answers.html?qid=" + questionMatchId);
           }).catch(() => {
             unfoldingHeader.unfoldHeader("Failed to retrieve question ID from similar match", "red");
-          });
-          
+          }).always(() => {
+            global.hideLoader();
+            addQuestion.questionBox.focus();
+          });          
         }        
       }).catch(() => {
         global.hideLoader();
