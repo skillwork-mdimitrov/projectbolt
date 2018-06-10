@@ -6,10 +6,10 @@ var router = express.Router();
 
 /* GET all the ratings that are not from banned users*/
 router.get('/get-all-ratings/:answerID/:sessionID', function(req, res, next) {
-    let answerID = req.params["answerID"];
+    let answerID = parseInt(req.params["answerID"]);
     let sessionID = req.params["sessionID"];
 
-    if (Number.isInteger(parseInt(answerID)) && login.sessionValid(sessionID)) {
+    if (Number.isInteger(answerID) && login.sessionValid(sessionID)) {
         database.getNonBannedRatingsByAnswerId(answerID).then((ratings) => {
             res.json(ratings);
         }).catch((reason) => {
@@ -23,10 +23,10 @@ router.get('/get-all-ratings/:answerID/:sessionID', function(req, res, next) {
 
 /* GET the rating regarding a specific answer and user combination */
 router.get('/get-rating-answer-user/:answerID/:sessionID', function(req, res, next) {
-    let answerID = req.params["answerID"];
+    let answerID = parseInt(req.params["answerID"]);
     let sessionID = req.params["sessionID"];
 
-    if (Number.isInteger(parseInt(answerID)) &&
+    if (Number.isInteger(answerID) &&
         login.sessionValid(sessionID)) {
         let userID = login.getSessionData(sessionID)["userID"];
 
@@ -43,12 +43,12 @@ router.get('/get-rating-answer-user/:answerID/:sessionID', function(req, res, ne
 
 /* Insert a rating */
 router.post('/insert-rating', function(req, res, next) {    
-    let answerID = req.body.answerID;
-    let rating = req.body.rating;
+    let answerID = parseInt(req.body.answerID);
+    let rating = parseInt(req.body.rating);
     let sessionID = req.body.sessionID;
 
-    if (Number.isInteger(parseInt(answerID)) &&
-        Number.isInteger(parseInt(rating)) &&
+    if (Number.isInteger(answerID) &&
+        Number.isInteger(rating) &&
         login.sessionValid(sessionID)) {
         let userID = login.getSessionData(sessionID)["userID"];
         
@@ -74,12 +74,12 @@ router.post('/insert-rating', function(req, res, next) {
 
 /* Update a rating */
 router.post('/update-rating', function(req, res, next) {    
-    let answerID = req.body.answerID;
-    let rating = req.body.rating;
+    let answerID = parseInt(req.body.answerID);
+    let rating = parseInt(req.body.rating);
     let sessionID = req.body.sessionID;
 
-    if (Number.isInteger(parseInt(answerID)) &&
-        Number.isInteger(parseInt(rating)) &&
+    if (Number.isInteger(answerID) &&
+        Number.isInteger(rating) &&
         login.sessionValid(sessionID)) {
         let userID = login.getSessionData(sessionID)["userID"];
 

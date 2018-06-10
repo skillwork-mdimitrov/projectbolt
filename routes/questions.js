@@ -43,9 +43,9 @@ router.post('/get-similarity', function(req, res, next) {
 /* GET the user ID from a specific question promise */
 router.get('/get-userid/:questionID/:sessionID', function(req, res, next) {
   let sessionID = req.params["sessionID"];
-  let questionID = req.params["questionID"];
+  let questionID = parseInt(req.params["questionID"]);
 
-  if (Number.isInteger(parseInt(questionID)) && 
+  if (Number.isInteger(questionID) && 
       login.sessionValid(sessionID)) {
     database.getUserIdByQuestionId(questionID).then((userID) => {
       res.status(200).send(userID[0].UserID.toString());
@@ -79,10 +79,10 @@ router.post('/get-questionid', function(req, res) {
 /* POST a question */
 router.post('/add-question', function(req, res) {
   let question = req.body.question; 
-  let userID = req.body.userID;
+  let userID = parseInt(req.body.userID);
   let sessionID = req.body.sessionID;
 
-  if (Number.isInteger(parseInt(userID)) && login.sessionValid(sessionID)) {
+  if (Number.isInteger(userID) && login.sessionValid(sessionID)) {
     database.insertQuestion(question, userID).then(() => {
       database.getQuestionIdByText(question).then((questionID) => {
         res.status(200).send("Insert successful");
@@ -102,10 +102,10 @@ router.post('/add-question', function(req, res) {
 
 /* DELETE a question */
 router.post('/remove-question', function(req, res) {
-  let questionID = req.body.questionID;
+  let questionID = parseInt(req.body.questionID);
   let sessionID = req.body.sessionID;
 
-  if (Number.isInteger(parseInt(questionID)) && login.sessionValid(sessionID) && login.isTeacher(sessionID)) {
+  if (Number.isInteger(questionID) && login.sessionValid(sessionID) && login.isTeacher(sessionID)) {
     database.deleteQuestion(questionID).then(() => {
       res.status(200).send("Delete succesful");
     })

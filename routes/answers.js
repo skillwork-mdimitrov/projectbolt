@@ -6,10 +6,10 @@ var router = express.Router();
 
 /* GET the answers from a specific question (ID) */
 router.get('/:questionID/:sessionID', function(req, res, next) {
-  let questionID = req.params["questionID"]; 
+  let questionID = parseInt(req.params["questionID"]); 
   let sessionID = req.params["sessionID"];
 
-  if (Number.isInteger(parseInt(questionID)) && 
+  if (Number.isInteger(questionID) && 
       login.sessionValid(sessionID))
   {
     database.getQuestionTextById(questionID).then((questionText) => {
@@ -118,10 +118,10 @@ router.post('/add-answer', function(req, res) {
 
 /* DELETE an answer */
 router.post('/remove-answer', function(req, res) {
-    let answerID = req.body.answerID;
+    let answerID = parseInt(req.body.answerID);
     let sessionID = req.body.sessionID;
 
-    if (Number.isInteger(parseInt(answerID)) && login.sessionValid(sessionID)) {
+    if (Number.isInteger(answerID) && login.sessionValid(sessionID)) {
       login.isTeacher(sessionID).then((isTeacher) => {
         if (isTeacher) {
           database.deleteAnswer(answerID).then(() => {
