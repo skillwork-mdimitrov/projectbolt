@@ -65,6 +65,24 @@ router.get('/get-username/:sessionID', function(req, res, next) {
   }    
 });
 
+/* GET first name from session */
+router.get('/get-firstname/:sessionID', function(req, res, next) {  
+  let sessionID = req.params["sessionID"];
+    
+  // Check if the session is valid
+  if (login.sessionValid(sessionID)) {
+    database.getFirstnameById(login.getSessionData(sessionID)["userID"]).then((firstname) => {
+      res.send(firstname[0].FirstName);
+    }).catch(
+    (reason) => {
+      res.status(500).send(reason.toString());
+    });
+  }
+  else {
+    res.status(500).send('Invalid session');
+  }    
+});
+
 /* GET user is admin or not from session ID */
 router.get('/is-admin/:sessionID', function(req, res, next) {  
   let sessionID = req.params["sessionID"];

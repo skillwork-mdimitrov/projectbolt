@@ -14,39 +14,58 @@ const addQuestion = function() {
 
       let userIdPromise = $.get("login/get-userID/"+sessionID);
       global.logPromise(userIdPromise, scriptFilename, "Requesting user ID");
-      let questionWithinConstraintsPromise = suggestions.isWithinSimilarityConstraints(question);
+      let bestQuestionSimilarityPromise = suggestions.getBestQuestionSimilarity(question);
 
-      Promise.all([userIdPromise, questionWithinConstraintsPromise]).then((values) => {
-        let userID = parseInt(values[0])            // Return value from userIdPromise
-        let questionWithinConstraints = values[1]   // Return value from questionWithinConstraintsPromise
+      Promise.all([userIdPromise, bestQuestionSimilarityPromise]).then((values) => {
+        let userID = parseInt(values[0])              // Return value from userIdPromise
+        let bestQuestionSimilarity = values[1]   // Return value from bestQuestionSimilarityPromise
 
-        if (questionWithinConstraints) {
+        if (bestQuestionSimilarity.rating < suggestions.maximumQuestionSimilarity) {
           let questionData = {
             question: question,
             userID: userID,
             sessionID: sessionID
           };      
           
-          let addQuestionPromise = $.post("questions/add-question", questionData)
+          let addQuestionPromise = $.post("questions/add-question", questionData);
           global.logPromise(addQuestionPromise, scriptFilename, "Requesting to add a question");
   
           addQuestionPromise.then((newQuestionData) => {
-            // Clear the input field
-            questionBox.val("");
-            global.hideLoader();
-            addQuestion.questionBox.focus();
-            unfoldingHeader.unfoldHeader("Question added successfully", "green");
-            notifications.getNotificationSocket().emit('newQuestion', {question: newQuestionData.question, questionID: newQuestionData.questionID});
+            let newQuestionIdPromise = $.post("questions/get-questionid", questionData);
+            global.logPromise(newQuestionIdPromise, scriptFilename, "Requesting to add a question");
+
+            newQuestionIdPromise.then((questionID) => {
+              // Clear the input field
+              questionBox.val("");
+              global.hideLoader();
+              addQuestion.questionBox.focus();
+              unfoldingHeader.unfoldHeader("Question added successfully", "green");
+              // Send a notification to all teachers
+              notifications.notificationSocket.emit('newQuestion', {question: questionData.question, questionID: questionID});
+            }).catch(() => { 
+              questionBox.val("");
+              global.hideLoader();
+              addQuestion.questionBox.focus();
+              unfoldingHeader.unfoldHeader("Failed retrieving new question ID", "red");
+            });            
           }).catch(() => {
             global.hideLoader();
             addQuestion.questionBox.focus();
             unfoldingHeader.unfoldHeader("Failed adding question", "red");
           });
         }
-        else {
-          global.hideLoader();
-          addQuestion.questionBox.focus();
-          unfoldingHeader.unfoldHeader("A similar question already exists", "orange");
+        else {          
+          let questionMatchIdPromise = $.post("questions/get-questionid", {question: bestQuestionSimilarity.target, sessionID: sessionID});
+          global.logPromise(questionMatchIdPromise, scriptFilename, "Requesting question ID from similar match");
+
+          questionMatchIdPromise.then((questionMatchId) => {
+            unfoldingHeader.unfoldHeader("A similar question already exists: " + bestQuestionSimilarity.target, "orange", false, "answers.html?qid=" + questionMatchId);
+          }).catch(() => {
+            unfoldingHeader.unfoldHeader("Failed to retrieve question ID from similar match", "red");
+          }).always(() => {
+            global.hideLoader();
+            addQuestion.questionBox.focus();
+          });          
         }        
       }).catch(() => {
         global.hideLoader();
@@ -77,6 +96,8 @@ $(document).ready(function() {
   let initNotificationsPromise = notifications.initNotifications();
 
   Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
+    suggestions.initAutoComplete();
+
     addQuestion.submitQuestionBtn.on("click", function() {
       addQuestion.submitQuestion();
     })

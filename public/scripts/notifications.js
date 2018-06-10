@@ -43,14 +43,10 @@ const notifications = function() {
                 reject();
             });        
         });
-    };    
-
-    const getNotificationSocket = function() {
-        return notificationSocket;
-    };    
+    };     
 
     return {
         initNotifications: initNotifications,
-        getNotificationSocket: getNotificationSocket
+        notificationSocket: notificationSocket
     };
 }();
