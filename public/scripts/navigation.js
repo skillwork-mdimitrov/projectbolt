@@ -1,4 +1,6 @@
 const navigation = function() {
+    const scriptFilename = "navigation.js";
+
     const loadNavigation = function() {
         return new Promise((resolve, reject) => {
             let sessionID = sessionStorage.getItem('projectBoltSessionID');
@@ -25,25 +27,33 @@ const navigation = function() {
             .attr({ class: "logoutBtn" })
             .click(function() { global.logout() });
 
-            navigationButtonList.append(askQuestionButton);
-            navigationButtonList.append(viewQuestionsButton);
-            navigationButtonList.append(chatButton);
-            $.getJSON("login/is-admin/"+sessionID, function () {})
-            .done(function (isAdmin) {
+            let isAdminPromise = $.get("login/is-admin/"+sessionID);
+            global.logPromise(isAdminPromise, scriptFilename, "Requesting admin status")
+            let firstnamePromise = $.get("login/get-firstname/"+sessionID);
+            global.logPromise(firstnamePromise, scriptFilename, "Requesting first name")
+
+            Promise.all([isAdminPromise, firstnamePromise]).then((values) => {
+                let isAdmin = values[0];    // Return value from isAdminPromise
+                let firstname = values[1];  // Return value from firstnamePromise
+
+                let userWelcome = $("<li>")
+                .html("Welcome " + firstname + "!");
+                
+                navigationButtonList.append(userWelcome);   
+                navigationButtonList.append(askQuestionButton);
+                navigationButtonList.append(viewQuestionsButton);
+                navigationButtonList.append(chatButton);   
                 if (isAdmin) {
                     navigationButtonList.append(adminButton);
-                }            
-            })
-            .fail(function (message) {
-                unfoldingHeader.unfoldHeader("Failed determining if admin, see console for details", "red");
-                console.log("Failed determining if admin: " + message.responseText);
-            }) 
-            .always(function() {
+                }           
                 navigationButtonList.append(logoutButton);
 
                 navigationContainer.append(navigationButtonList);
                 $("#mainContainer").prepend(navigationContainer);      
-                resolve();               
+                resolve();  
+            }).catch(() => {
+                unfoldingHeader.unfoldHeader("An error ocurred", "red");
+                reject();
             });
         });
     }
