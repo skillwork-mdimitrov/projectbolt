@@ -100,7 +100,7 @@ $(document).ready(function() {
 
     addQuestion.submitQuestionBtn.on("click", function() {
       addQuestion.submitQuestion();
-    })
+    });
 
     addQuestion.questionBox.keyup(function(event) {
       if(event.keyCode === 13) {

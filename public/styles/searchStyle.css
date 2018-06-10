@@ -1,42 +1,42 @@
-.blackBg {
-  background-color: black;
-}
-
 .mainContainer {
   margin: 10px 10px 10px 10px;
 }
 
-.searchContainer {
+.mainContainer .searchContainer {
   margin-top: 10px;
   width: 100%;
   height: 700px;
 }
 
-.searchContainer .searchBar {
+.mainContainer .searchContainer .searchBar {
   display: flex;
   align-content: center;
   width: 100%;
-  height: 40px;
 }
 
-.searchContainer .searchBar * {
-  width: 100%;
-}
-
-.searchContainer .searchBar .askQuestionLabel {
+.mainContainer .searchContainer .searchBar .askQuestionLabel {
   width: 59px;
 }
 
-.searchContainer .searchBar .magnifyingGlass {
-  width: 50px;
+.mainContainer .searchContainer .searchBar .magnifyingGlassContainer {
+  width: 30px;
 }
 
-.searchContainer input[type=text] {
+.mainContainer .searchContainer .searchBar .magnifyingGlass {
+  width: 100%; /* Fill in the container */
+}
+
+/* questionBox */
+.mainContainer .searchContainer input[type=text] {
   width: 100%;
-  -webkit-transition: width 0.4s ease-in-out;
-  transition: width 0.4s ease-in-out;
 }
 
-#searchBtn {
-  margin-top: 5px;
+.mainContainer .searchContainer .searchBar .submitQuestionBtn {
+  height: 24px;
 }
+
+/* When awesomplete gots dynamically generated, apply the following style */
+.awesomplete {
+  width: 100%;
+}
+

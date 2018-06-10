@@ -12,16 +12,18 @@
         <link rel="stylesheet" type="text/css" href="styles/loader.css" />
         <link rel="stylesheet" type="text/css" href="styles/navigationBar.css" />
     </head>
-    <body>      
+    <body>
         <div id="loader"></div>
-        <div class="mainContainer" style="display:none;" id="mainContainer">      
+        <div class="mainContainer" style="display:none;" id="mainContainer">
             <div class="searchContainer" id="searchContainer">
                 <div class="searchBar">
-                    <label for="questionBox">Ask a question:</label>
-                    <img class="magnifyingGlass" src="images/magnifyingGlass.png" alt="searchIcon">
+                    <div class="magnifyingGlassContainer">
+                        <img class="magnifyingGlass" src="images/magnifyingGlass.png" alt="searchIcon">
+                    </div>
+                    <!-- Awesomplete is going to be generated below -->
                     <input type="text" name="question" placeholder="Enter your question here..." id="questionBox"><br><br>
-                    <input type="submit" value="Submit" id="submitQuestionBtn">
-                </div>      
+                    <input type="submit" value="Submit" class="submitQuestionBtn" id="submitQuestionBtn">
+                </div>
             </div>
         </div> <!-- Close mainContainer -->
 
@@ -29,13 +31,13 @@
         ============================================================== -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script> <!-- SocketIO -->
-        <script src="scripts/global.js"></script>    
-        <script src="scripts/loginCheck.js"></script>    
+        <script src="scripts/global.js"></script>
+        <script src="scripts/loginCheck.js"></script>
         <script src="scripts/unfoldingHeader.js"></script> <!-- Collapsing header -->
         <script src="scripts/external/awesomplete.js"></script>
-        <script src="scripts/addQuestion.js"></script>          
+        <script src="scripts/addQuestion.js"></script>
         <script src="scripts/suggestions.js"></script>
         <script src="scripts/notifications.js"></script>
         <script src="scripts/navigation.js"></script>
-    </body> 
+    </body>
 </html>
