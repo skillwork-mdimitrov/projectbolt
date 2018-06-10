@@ -215,7 +215,7 @@ const viewAnswers = function() {
           .done(function (questionUserID) {
             $.get("login/get-userID/"+sessionID, function () {})
             .done(function (userID) {
-              if (questionUserID[0].UserID !== parseInt(userID)) {
+              if (questionUserID !== parseInt(userID)) {
                 $("#addAnswerInput").css("display", "block");
               }
               $(".deleteColumn").css("display", "none");

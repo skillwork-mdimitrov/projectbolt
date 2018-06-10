@@ -27,16 +27,27 @@ const addQuestion = function() {
             sessionID: sessionID
           };      
           
-          let addQuestionPromise = $.post("questions/add-question", questionData)
+          let addQuestionPromise = $.post("questions/add-question", questionData);
           global.logPromise(addQuestionPromise, scriptFilename, "Requesting to add a question");
   
           addQuestionPromise.then((newQuestionData) => {
-            // Clear the input field
-            questionBox.val("");
-            global.hideLoader();
-            addQuestion.questionBox.focus();
-            unfoldingHeader.unfoldHeader("Question added successfully", "green");
-            notifications.getNotificationSocket().emit('newQuestion', {question: newQuestionData.question, questionID: newQuestionData.questionID});
+            let newQuestionIdPromise = $.post("questions/get-questionid", questionData);
+            global.logPromise(newQuestionIdPromise, scriptFilename, "Requesting to add a question");
+
+            newQuestionIdPromise.then((questionID) => {
+              // Clear the input field
+              questionBox.val("");
+              global.hideLoader();
+              addQuestion.questionBox.focus();
+              unfoldingHeader.unfoldHeader("Question added successfully", "green");
+              // Send a notification to all teachers
+              notifications.notificationSocket.emit('newQuestion', {question: questionData.question, questionID: questionID});
+            }).catch(() => { 
+              questionBox.val("");
+              global.hideLoader();
+              addQuestion.questionBox.focus();
+              unfoldingHeader.unfoldHeader("Failed retrieving new question ID", "red");
+            });            
           }).catch(() => {
             global.hideLoader();
             addQuestion.questionBox.focus();

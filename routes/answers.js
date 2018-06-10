@@ -46,35 +46,58 @@ router.get('/get-userID/:answerID/:sessionID', function(req, res, next) {
   }     
 });
 
+/* Get the answer ID from answer with certain text */
+router.post('/get-answerid', function(req, res) {
+  let answer = req.body.answer; 
+  let sessionID = req.body.sessionID;
+
+  if (login.sessionValid(sessionID)) {
+    database.getAnswerIdByText(answer).then((answerID) => {
+      res.status(200).send(answerID[0].ID.toString());
+    }).catch(() => {
+      res.status(500).send(reason.toString());
+    })
+  }
+  else {
+    res.status(500).send('Invalid request');
+  }
+});
+
+/* Get the username from answer with certain text */
+router.post('/get-username', function(req, res) {
+  let answer = req.body.answer; 
+  let questionID = parseInt(req.body.questionID);
+  let sessionID = req.body.sessionID;
+
+  if (login.sessionValid(sessionID)) {
+    database.getUsernameByAnswer(questionID, answer).then((username) => {
+      console.log(username);
+      res.status(200).send(username.toString());
+    }).catch(() => {
+      res.status(500).send(reason.toString());
+    })
+  }
+  else {
+    res.status(500).send('Invalid request');
+  }
+});
+
 /* POST an answer to a question */
 router.post('/add-answer', function(req, res) {
   let answer = req.body.answer;
-  let questionID = req.body.questionID;
-  let userID = req.body.userID;
+  let questionID = parseInt(req.body.questionID);
+  let userID = parseInt(req.body.userID);
   let sessionID = req.body.sessionID;
 
-  if (Number.isInteger(parseInt(questionID)) &&
-      Number.isInteger(parseInt(userID)) && 
+  if (Number.isInteger(questionID) &&
+      Number.isInteger(userID) && 
       login.sessionValid(sessionID)) {
-    database.getUserIdByQuestionId(questionID).then((questionUserID) => {
-      if (questionUserID[0].UserID !== parseInt(userID)) {
+    database.getUserIdByQuestionId(questionID).then((questionUserIDJSON) => {
+      let questionUserID = questionUserIDJSON[0].UserID;
+
+      if (questionUserID !== userID) {
         database.insertAnswer(answer, questionID, userID).then(() => {
-          database.getUsernameByAnswer(questionID, answer).then((username) => {
-            database.getUserIdByQuestionId(questionID).then((questionUserID) => {
-              if (questionUserID[0].UserID !== parseInt(userID)) {
-                res.status(200).send({ response: "Insert successful", username: username });
-              }
-              else {
-                res.status(500).send("Not allowed to answer own questions");
-              }          
-            })
-            .catch((reason) => {
-              res.status(500).send(reason.toString());
-            });
-          })
-          .catch((reason) => {
-            res.status(500).send(reason.toString());
-          });
+          res.status(200).send("Insert successful");
         })
         .catch((reason) => {
           res.status(500).send(reason.toString())

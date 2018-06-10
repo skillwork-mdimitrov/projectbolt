@@ -242,6 +242,16 @@ function getUserIdByAnswerId(answerID) {
     });   
 }
 
+function getAnswerIdByText(answer) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getAnswerIdByTextQuery(answer)).then((answerID) => {
+            resolve(answerID);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    }); 
+}
+
 function getNonBannedAnswersByQuestionId(questionID) {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getNonBannedAnswersByQuestionIdQuery(questionID)).then((answers) => {
@@ -296,6 +306,16 @@ function getUsernameById(userID) {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getUsernameByIdQuery(userID)).then((username) => {
             resolve(username);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });  
+}
+
+function getFirstnameById(userID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getFirstnameByIdQuery(userID)).then((firstname) => {
+            resolve(firstname);
         }).catch((reason) => {
             reject(reason);
         }); 
@@ -362,6 +382,7 @@ exports.deleteQuestion = deleteQuestion;
 exports.getAnswersByQuestionId = getAnswersByQuestionId;
 exports.getUsernameByAnswer = getUsernameByAnswer;
 exports.getUserIdByAnswerId = getUserIdByAnswerId;
+exports.getAnswerIdByText = getAnswerIdByText;
 exports.getNonBannedAnswersByQuestionId = getNonBannedAnswersByQuestionId;
 exports.insertAnswer = insertAnswer;
 exports.deleteAnswer = deleteAnswer;
@@ -369,6 +390,7 @@ exports.deleteAnswer = deleteAnswer;
 exports.getUsernamesBannedStatus = getUsernamesBannedStatus;
 exports.getIdPasswordByUsername = getIdPasswordByUsername;
 exports.getUsernameById = getUsernameById;
+exports.getFirstnameById = getFirstnameById;
 exports.getUserRoleById = getUserRoleById;
 exports.getUserBannedStatusById = getUserBannedStatusById;
 exports.banUser = banUser;
