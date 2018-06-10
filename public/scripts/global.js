@@ -17,7 +17,7 @@ const global = function() {
     }
   };
 
-  /* @return {true} if the field is IS empty
+  /* @return {true} if the field IS empty
   ============================================================== */
   const fieldIsEmpty = function(field) {
     "use strict";
@@ -50,12 +50,12 @@ const global = function() {
   const showLoader = function() {
     document.getElementById("loader").style.display = "block";
     document.getElementById("mainContainer").style.display = "none";
-  } 
+  };
 
   const hideLoader = function() {
     document.getElementById("loader").style.display = "none";
     document.getElementById("mainContainer").style.display = "block";
-  } 
+  };
 
   const redirect = function redirect(route) {
     if (route === undefined) {

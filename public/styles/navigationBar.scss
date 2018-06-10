@@ -7,7 +7,6 @@ $grey: #8190A5;
 .nav {
   width: 100%;
   font-family: 'Barlow', sans-serif; // to generalize
-  @include prefix(border-radius, 3px, webkit moz);
   background-color: $darkBlue;
 
   ul {

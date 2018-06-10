@@ -33,16 +33,17 @@ const unfoldingHeader = function () {
       }
       else {
         switch (fixedToViewPort) {
+          /* Weird 3rd parameter passed, the position won't be fixed the the viewport
+          ============================================================== */
           case false:
             return false;
-
-            // Weird 3rd parameter passed, the position won't be fixed the the viewport
           case undefined:
             return false;
           case null:
             return false;
 
-            //True passed or any non falsy parameter, folding header will be fixed to the viewport
+          /* True passed or any non falsy parameter, folding header will be fixed to the viewport
+          ============================================================== */
           case true:
             return true;
           default:
@@ -83,6 +84,7 @@ const unfoldingHeader = function () {
       headerInfo.css("transition", "visibility 350ms linear");
     }
 
+    // Select the headers after they were created
     const foldingHeader = $('#foldingHeader');
     const headerInfo = $('#headerInfo');
 
