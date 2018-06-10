@@ -9,12 +9,13 @@ const suggestions = function() {
     const minimumSuggestionSimilarity = 0.30;
     // Maximum similarity before blocking from insert
     const maximumQuestionSimilarity = 0.80;
+    const maximumAnswerSimilarity = 0.75;
 
     // The element that dynamically shows suggestions to user
     let autoCompleter;
     let busyUpdatingSuggestions = false;
 
-    const initAutoComplete = function() {
+    const initAutoComplete = function() {        
         autoCompleter = new Awesomplete(document.getElementById(inputId), {
             minChars: 1,
             sort: false,
@@ -22,6 +23,13 @@ const suggestions = function() {
             {
                 return true;    // This disables the filter functionality
             }
+        });
+
+        $("#"+inputId).on("input", function() {
+            if ($("#"+inputId).val().length > 0)
+            {
+                updateSuggestions();
+            }        
         });
     };
 
@@ -54,7 +62,7 @@ const suggestions = function() {
         });
     };
 
-    const isWithinSimilarityConstraints = function(query) {
+    const isWithinQuestionSimilarityConstraints = function(query) {
         return new Promise((resolve, reject) => {
             let sessionID = sessionStorage.getItem('projectBoltSessionID');
             let newSuggestions = [];
@@ -66,6 +74,28 @@ const suggestions = function() {
             getQuestionSimilaritiesPromise.then((similarities) => {                
                 $.each( similarities, function( index, value ) {
                     if (value.rating > maximumQuestionSimilarity) {
+                        resolve(false);
+                    }                    
+                });  
+                resolve(true);
+            }).catch(() => {    
+                reject();
+            });
+        });
+    }
+
+    const isWithinAnswerSimilarityConstraints = function(query, questionID) {
+        return new Promise((resolve, reject) => {
+            let sessionID = sessionStorage.getItem('projectBoltSessionID');
+            let newSuggestions = [];
+            
+            busyUpdatingSuggestions = true;
+            let getAnswerSimilaritiesPromise = $.post("answers/get-similarity", { query: query, questionID: questionID, sessionID: sessionID });
+            global.logPromise(getAnswerSimilaritiesPromise, scriptFilename, "Requesting answer similarity ratings");
+
+            getAnswerSimilaritiesPromise.then((similarities) => {                
+                $.each( similarities, function( index, value ) {
+                    if (value.rating > maximumAnswerSimilarity) {
                         resolve(false);
                     }                    
                 });  
@@ -90,21 +120,8 @@ const suggestions = function() {
         minimumSuggestionSimilarity: minimumSuggestionSimilarity,
         maximumQuestionSimilarity: maximumQuestionSimilarity,
         initAutoComplete: initAutoComplete,
-        isWithinSimilarityConstraints: isWithinSimilarityConstraints,
+        isWithinQuestionSimilarityConstraints: isWithinQuestionSimilarityConstraints,
+        isWithinAnswerSimilarityConstraints: isWithinAnswerSimilarityConstraints,
         updateSuggestions: updateSuggestions
     }
 }();
-
-$(document).ready(function() {
-    suggestions.initAutoComplete();
-
-    // On every addition to the input field, update the suggestions
-    $("#"+suggestions.inputId).on("input", function() {
-        if ($("#"+suggestions.inputId).val().length > 0)
-        {
-            suggestions.updateSuggestions();
-        }        
-    });
-});
-
-

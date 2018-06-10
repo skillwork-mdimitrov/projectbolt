@@ -1,6 +1,7 @@
 var express = require('express');
 var database = require('../private/scripts/database');
 const login = require('../private/scripts/login');
+var similarity = require('../private/scripts/similarity');
 var path = require('path');
 var router = express.Router();
 
@@ -142,6 +143,25 @@ router.post('/remove-answer', function(req, res) {
     else {
       res.status(500).send('Invalid request');
     }
+});
+
+/* GET similarity ratings from all the questions promise */
+router.post('/get-similarity', function(req, res, next) {
+  let query = req.body.query; 
+  let questionID = parseInt(req.body.questionID);
+  let sessionID = req.body.sessionID;
+
+  if (Number.isInteger(questionID) && login.sessionValid(sessionID)) {
+    similarity.getAnswerSimilarities(query, questionID).then((similarities) => {
+      res.status(200).send(similarities);
+    }).catch(
+    (reason) => {
+      res.status(500).send(reason.toString());
+    });  
+  }
+  else {
+    res.status(500).send('Invalid request');
+  }
 });
 
 module.exports = router;

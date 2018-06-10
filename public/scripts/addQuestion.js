@@ -14,7 +14,7 @@ const addQuestion = function() {
 
       let userIdPromise = $.get("login/get-userID/"+sessionID);
       global.logPromise(userIdPromise, scriptFilename, "Requesting user ID");
-      let questionWithinConstraintsPromise = suggestions.isWithinSimilarityConstraints(question);
+      let questionWithinConstraintsPromise = suggestions.isWithinQuestionSimilarityConstraints(question);
 
       Promise.all([userIdPromise, questionWithinConstraintsPromise]).then((values) => {
         let userID = parseInt(values[0])            // Return value from userIdPromise
@@ -88,6 +88,8 @@ $(document).ready(function() {
   let initNotificationsPromise = notifications.initNotifications();
 
   Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
+    suggestions.initAutoComplete();
+
     addQuestion.submitQuestionBtn.on("click", function() {
       addQuestion.submitQuestion();
     })

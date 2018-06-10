@@ -22,7 +22,7 @@ router.get('/get-all-questions/:sessionID', function(req, res, next) {
   }
 });
 
-/* GET a promise */
+/* GET similarity ratings from all the questions promise */
 router.post('/get-similarity', function(req, res, next) {
   let query = req.body.query; 
   let sessionID = req.body.sessionID;

@@ -13,34 +13,47 @@ const addAnswer = function() {
   // AJAX post answer
   const postAnswer = function (bodyJSON){
     return new Promise(function(resolve, reject) {
-      let addAnswerPromise = $.post("answers/add-answer", bodyJSON);
-      global.logPromise(addAnswerPromise, scriptFilename, "Requesting to add new answer");
+      let answerWithinConstraintsPromise = suggestions.isWithinAnswerSimilarityConstraints(bodyJSON.answer, bodyJSON.questionID);
 
-      addAnswerPromise.then(() => {
-        let questionUserIdPromise = $.get("questions/get-userid/"+bodyJSON.questionID+"/"+bodyJSON.sessionID);
-        global.logPromise(questionUserIdPromise, scriptFilename, "Requesting user ID from question");
-        let firstnamePromise = $.get("login/get-firstname/"+bodyJSON.sessionID);
-        global.logPromise(firstnamePromise, scriptFilename, "Requesting user first name");
+      answerWithinConstraintsPromise.then((answerWithinConstraints) => {
+        if (answerWithinConstraints) {
+          let addAnswerPromise = $.post("answers/add-answer", bodyJSON);
+          global.logPromise(addAnswerPromise, scriptFilename, "Requesting to add new answer");
 
-        Promise.all([questionUserIdPromise, firstnamePromise]).then((values) => {
-          let questionUserID = parseInt(values[0]);   // Return value from questionUserIdPromise
-          let firstname = values[1];                  // Return value from firstnamePromise
+          addAnswerPromise.then(() => {
+            let questionUserIdPromise = $.get("questions/get-userid/"+bodyJSON.questionID+"/"+bodyJSON.sessionID);
+            global.logPromise(questionUserIdPromise, scriptFilename, "Requesting user ID from question");
+            let firstnamePromise = $.get("login/get-firstname/"+bodyJSON.sessionID);
+            global.logPromise(firstnamePromise, scriptFilename, "Requesting user first name");
 
-          notifications.notificationSocket.emit('newAnswer', {question: bodyJSON.question, 
-                                                              questionID: bodyJSON.questionID, 
-                                                              userID: questionUserID,
-                                                              username: firstname});  
-          
-          unfoldingHeader.unfoldHeader("Answer added successfully", "green");
-          resolve();
-        }).catch(() => {
-          unfoldingHeader.unfoldHeader("Failed retrieving question user id", "red");
+            Promise.all([questionUserIdPromise, firstnamePromise]).then((values) => {
+              let questionUserID = parseInt(values[0]);   // Return value from questionUserIdPromise
+              let firstname = values[1];                  // Return value from firstnamePromise
+
+              notifications.notificationSocket.emit('newAnswer', {question: bodyJSON.question, 
+                                                                  questionID: bodyJSON.questionID, 
+                                                                  userID: questionUserID,
+                                                                  username: firstname});  
+              
+              unfoldingHeader.unfoldHeader("Answer added successfully", "green");
+              resolve();
+            }).catch(() => {
+              unfoldingHeader.unfoldHeader("Failed retrieving question user id", "red");
+              reject();
+            });
+          }).catch(() => {
+            unfoldingHeader.unfoldHeader("Failed adding new answer", "red");        
+            reject();
+          });
+        }
+        else {
+          unfoldingHeader.unfoldHeader("Similar answer already exists", "orange");        
           reject();
-        });
+        }        
       }).catch(() => {
-        unfoldingHeader.unfoldHeader("Failed adding new answer", "red");        
+        unfoldingHeader.unfoldHeader("Failed retrieving answer similarity ratings", "red");
         reject();
-      });
+      });      
     });
   };
 

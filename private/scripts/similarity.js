@@ -16,8 +16,18 @@ function getQuestionSimilarities(searchQuery) {
     });
 }
 
-function getAnswerSimilarities(searchQuery) {
+function getAnswerSimilarities(searchQuery, questionID) {
     return new Promise((resolve, reject) => {
+        database.getAnswersByQuestionId(questionID).then((answers) => {
+            var answersArray = [];
+            answers.forEach(function(answer) {
+                answersArray.push(answer.Answer);
+            });
+
+            resolve(stringSimilarity.findBestMatch(searchQuery, answersArray));
+        }).catch((reason) => {
+            reject(reason);
+        });  
     });
 }
 
