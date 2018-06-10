@@ -150,9 +150,9 @@ router.post('/get-similarity', function(req, res, next) {
   let query = req.body.query; 
   let questionID = parseInt(req.body.questionID);
   let sessionID = req.body.sessionID;
-
+  
   if (Number.isInteger(questionID) && login.sessionValid(sessionID)) {
-    similarity.getAnswerSimilarities(query, questionID).then((similarities) => {
+    similarity.getAnswerSimilarities(query, questionID).then((similarities) => {      
       res.status(200).send(similarities);
     }).catch(
     (reason) => {

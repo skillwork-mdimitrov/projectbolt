@@ -62,44 +62,30 @@ const suggestions = function() {
         });
     };
 
-    const isWithinQuestionSimilarityConstraints = function(query) {
+    const getBestQuestionSimilarity = function(query) {
         return new Promise((resolve, reject) => {
             let sessionID = sessionStorage.getItem('projectBoltSessionID');
-            let newSuggestions = [];
             
-            busyUpdatingSuggestions = true;
             let getQuestionSimilaritiesPromise = $.post("questions/get-similarity", { query: query, sessionID: sessionID });
             global.logPromise(getQuestionSimilaritiesPromise, scriptFilename, "Requesting question similarity ratings");
 
-            getQuestionSimilaritiesPromise.then((similarities) => {                
-                $.each( similarities, function( index, value ) {
-                    if (value.rating > maximumQuestionSimilarity) {
-                        resolve(false);
-                    }                    
-                });  
-                resolve(true);
+            getQuestionSimilaritiesPromise.then((similarities) => {     
+                resolve(similarities.bestMatch);                
             }).catch(() => {    
                 reject();
             });
         });
     }
 
-    const isWithinAnswerSimilarityConstraints = function(query, questionID) {
+    const getBestAnswerSimilarity = function(query, questionID) {
         return new Promise((resolve, reject) => {
             let sessionID = sessionStorage.getItem('projectBoltSessionID');
-            let newSuggestions = [];
             
-            busyUpdatingSuggestions = true;
             let getAnswerSimilaritiesPromise = $.post("answers/get-similarity", { query: query, questionID: questionID, sessionID: sessionID });
             global.logPromise(getAnswerSimilaritiesPromise, scriptFilename, "Requesting answer similarity ratings");
 
             getAnswerSimilaritiesPromise.then((similarities) => {                
-                $.each( similarities, function( index, value ) {
-                    if (value.rating > maximumAnswerSimilarity) {
-                        resolve(false);
-                    }                    
-                });  
-                resolve(true);
+                resolve(similarities.bestMatch);
             }).catch(() => {    
                 reject();
             });
@@ -119,9 +105,10 @@ const suggestions = function() {
         inputId: inputId,
         minimumSuggestionSimilarity: minimumSuggestionSimilarity,
         maximumQuestionSimilarity: maximumQuestionSimilarity,
+        maximumAnswerSimilarity: maximumAnswerSimilarity,
         initAutoComplete: initAutoComplete,
-        isWithinQuestionSimilarityConstraints: isWithinQuestionSimilarityConstraints,
-        isWithinAnswerSimilarityConstraints: isWithinAnswerSimilarityConstraints,
+        getBestQuestionSimilarity: getBestQuestionSimilarity,
+        getBestAnswerSimilarity: getBestAnswerSimilarity,
         updateSuggestions: updateSuggestions
     }
 }();

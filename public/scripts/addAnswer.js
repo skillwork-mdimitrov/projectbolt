@@ -13,10 +13,10 @@ const addAnswer = function() {
   // AJAX post answer
   const postAnswer = function (bodyJSON){
     return new Promise(function(resolve, reject) {
-      let answerWithinConstraintsPromise = suggestions.isWithinAnswerSimilarityConstraints(bodyJSON.answer, bodyJSON.questionID);
+      let bestAnswerSimilarityPromise = suggestions.getBestAnswerSimilarity(bodyJSON.answer, bodyJSON.questionID);
 
-      answerWithinConstraintsPromise.then((answerWithinConstraints) => {
-        if (answerWithinConstraints) {
+      bestAnswerSimilarityPromise.then((bestAnswerSimilarity) => {
+        if (bestAnswerSimilarity.rating < suggestions.maximumAnswerSimilarity) {
           let addAnswerPromise = $.post("answers/add-answer", bodyJSON);
           global.logPromise(addAnswerPromise, scriptFilename, "Requesting to add new answer");
 
@@ -47,7 +47,7 @@ const addAnswer = function() {
           });
         }
         else {
-          unfoldingHeader.unfoldHeader("Similar answer already exists", "orange");        
+          unfoldingHeader.unfoldHeader("Similar answer already exists: " + bestAnswerSimilarity.target, "orange");        
           reject();
         }        
       }).catch(() => {
