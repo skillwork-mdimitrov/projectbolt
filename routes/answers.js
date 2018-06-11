@@ -145,6 +145,34 @@ router.post('/remove-answer', function(req, res) {
     }
 });
 
+/* VERIFY an answer */
+router.post('/verify-answer', function(req, res) {
+  let answerID = parseInt(req.body.answerID);
+  let sessionID = req.body.sessionID;
+
+  if (Number.isInteger(answerID) && login.sessionValid(sessionID)) {
+    login.isTeacher(sessionID).then((isTeacher) => {
+      if (isTeacher) {
+        database.verifyAnswer(answerID).then(() => {
+          res.status(200).send("Verified successfully");
+        })
+            .catch((reason) => {
+              res.status(500).send(reason.toString());
+            });
+      }
+      else {
+        res.status(500).send('Invalid request');
+      }
+    })
+        .catch((reason) => {
+          res.status(500).send(reason.toString());
+        });
+  }
+  else {
+    res.status(500).send('Invalid request');
+  }
+});
+
 /* GET similarity ratings from all the questions promise */
 router.post('/get-similarity', function(req, res, next) {
   let query = req.body.query; 

@@ -282,6 +282,16 @@ function deleteAnswer(answerID) {
     });
 }
 
+function verifyAnswer(answerID) {
+  return new Promise((resolve, reject) => {
+    runGenericQuery(queries.getVerifyAnswerQuery(answerID)).then(() =>      {
+      resolve();
+    }).catch((reason) => {
+      reject(reason);
+    });
+  });
+}
+
 function getUsernamesBannedStatus() {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getUsernamesBannedStatusQuery()).then((userData) => {
@@ -386,6 +396,7 @@ exports.getAnswerIdByText = getAnswerIdByText;
 exports.getNonBannedAnswersByQuestionId = getNonBannedAnswersByQuestionId;
 exports.insertAnswer = insertAnswer;
 exports.deleteAnswer = deleteAnswer;
+exports.verifyAnswer = verifyAnswer;
 
 exports.getUsernamesBannedStatus = getUsernamesBannedStatus;
 exports.getIdPasswordByUsername = getIdPasswordByUsername;

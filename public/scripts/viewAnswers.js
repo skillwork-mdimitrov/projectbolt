@@ -33,7 +33,7 @@ const viewAnswers = function() {
       const tableHeader = document.createElement("div");
       tableHeader.setAttribute("class", "Table-row Table-header");
 
-      // Delete answers column
+      // Delete/Verify answers column
       const deleteAnswersColumn = document.createElement("div");
       deleteAnswersColumn.setAttribute("class", "Table-row-item u-Flex-grow1 deleteColumn");
       deleteAnswersColumn.textContent = "Action";
@@ -75,6 +75,7 @@ const viewAnswers = function() {
         let answerText = answer[0];
         let answerID = answer[1];
         let username = answer[2];
+        let verified = answer[3];
 
         // Select the table to append rows to
         const answersTable = document.getElementById("answersTable");
@@ -105,11 +106,30 @@ const viewAnswers = function() {
         rowItemDeleteButton.setAttribute("id", answerID);
         rowItemDelete.appendChild(rowItemDeleteButton);
 
+        // The verify button
+        const rowItemVerifyButton = document.createElement("button");
+        rowItemVerifyButton.setAttribute("class", "verifyButton fa fa-close");
+        rowItemVerifyButton.setAttribute("id", answerID);
+
+        //append to row
+        rowItemDelete.appendChild(rowItemDeleteButton);
+        if(!verified){
+          rowItemDelete.appendChild(rowItemVerifyButton);
+        }
+
         // The answer
         const rowItemAnswer = document.createElement("div");
         rowItemAnswer.setAttribute("class", "Table-row-item u-Flex-grow9");
         rowItemAnswer.setAttribute("data-header", "Answer");
-        rowItemAnswer.textContent = answerText;
+
+        //TO DO:: Add verified icon before the text
+        if(verified){
+          rowItemAnswer.textContent = "Verified Answer: " + answerText;
+        }
+        else{
+          rowItemAnswer.textContent = answerText;
+        }
+
 
         // The user
         const rowUser = document.createElement("div");
@@ -126,7 +146,7 @@ const viewAnswers = function() {
         /* APPENDS
         ============================================================== */
 
-        // Append the delete button, answer, user and rating to that table row
+        // Append the delete button, verify button, answer, user and rating to that table row
         tableRow.appendChild(rowItemDelete);
         tableRow.appendChild(rowItemAnswer);
         tableRow.appendChild(rowUser);
@@ -207,7 +227,7 @@ const viewAnswers = function() {
               document.getElementById("questionHeading").textContent = val["Question"];
             }
             else {
-              viewAnswers.addToTable([val["Answer"], val["ID"], val["Username"]]);
+              viewAnswers.addToTable([val["Answer"], val["ID"], val["Username"], val["Verified"]]);
             }
           });
 
@@ -227,6 +247,10 @@ const viewAnswers = function() {
 
                 $('.deleteButton').on("click", function(){
                     removeAnswer.removeAnswer($(this));
+                });
+
+                $('.verifyButton').on("click", function(){
+                  verifyAnswer.verifyAnswer($(this));
                 });
 
                 $('.ui.rating').on("click", function(){

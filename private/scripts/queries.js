@@ -144,7 +144,7 @@ function getAnswerIdByTextQuery(answer) {
 }
 
 function getNonBannedAnswersByQuestionIdQuery(questionID) {
-    var query = `SELECT Answers.ID, Answers.Answer, Users.Username 
+    var query = `SELECT Answers.ID, Answers.Answer, Answers.Verified, Users.Username 
                 FROM Answers 
                 INNER JOIN Users ON Answers.UserID=Users.ID 
                 WHERE QuestionID in ( @questionID ) AND Users.Banned = 0`;
@@ -170,6 +170,14 @@ function getDeleteAnswerQuery(answerID) {
         {paramName: "answerID", paramType: TYPES.Int, paramValue: answerID}
     ]
     return {query: query, params: params};
+}
+
+function getVerifyAnswerQuery(answerID) {
+  var query  = "UPDATE Answers SET Verified = 'true' WHERE ID = @answerID";
+  var params = [
+    {paramName: "answerID", paramType: TYPES.Int, paramValue: answerID}
+  ]
+  return {query: query, params: params};
 }
 
 function getUsernamesBannedStatusQuery() {
@@ -255,6 +263,7 @@ exports.getAnswerIdByTextQuery = getAnswerIdByTextQuery;
 exports.getNonBannedAnswersByQuestionIdQuery = getNonBannedAnswersByQuestionIdQuery;
 exports.getInsertAnswerQuery = getInsertAnswerQuery;
 exports.getDeleteAnswerQuery = getDeleteAnswerQuery;
+exports.getVerifyAnswerQuery = getVerifyAnswerQuery;
 
 exports.getUsernamesBannedStatusQuery = getUsernamesBannedStatusQuery;
 exports.getIdPasswordByUsernameQuery = getIdPasswordByUsernameQuery;
