@@ -103,12 +103,14 @@ const viewAnswers = function() {
         // The delete button
         const rowItemDeleteButton = document.createElement("button");
         rowItemDeleteButton.setAttribute("class", "deleteButton fa fa-close");
+        rowItemDeleteButton.setAttribute("title", "Delete");
         rowItemDeleteButton.setAttribute("id", answerID);
         rowItemDelete.appendChild(rowItemDeleteButton);
 
         // The verify button
         const rowItemVerifyButton = document.createElement("button");
-        rowItemVerifyButton.setAttribute("class", "verifyButton fa fa-close");
+        rowItemVerifyButton.setAttribute("class", "verifyButton fa fa-check");
+        rowItemVerifyButton.setAttribute("title", "Verify");
         rowItemVerifyButton.setAttribute("id", answerID);
 
         //append to row
