@@ -188,11 +188,12 @@ const viewAnswers = function() {
           }
         };
 
-        const toggleUI = function() {
+        const toggleUI = () => new Promise(function (resolve) {
           toggleContainer();
           toggleButtons()
-              .then(changeText);
-        };
+              .then(changeText)
+              .then((function(){resolve("answers UI toggled")}))
+        });
 
         return {
           toggleUI: toggleUI
@@ -291,7 +292,7 @@ const viewAnswers = function() {
       });
     };
 
-    // Visually manipulate the loader
+    // Visually manipulate the loader, intentionally local for animation purposes
     const loaderUI = function() {
       const showLoader = () => loader.style.display = "block";
       const hideLoader = () => loader.style.display = "none";
@@ -370,21 +371,21 @@ $(document).ready(function() {
 
               // Send the AJAX request
               addAnswer.postAnswer(bodyJSON).then(function() {
-                viewAnswers.addOwnAnswer.toggleUI();
-                viewAnswers.addAnswerArea.val(''); // Reset textarea
-
-                /* RE-FETCH all the answers
-                ============================================================== */
-                viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
-                viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
-                viewAnswers.answersTableUI().hide();
-                viewAnswers.loaderUI.showLoader();
-                // Populate the answers table again (with the new answers)
-                viewAnswers.getAnswers().then(function() {
-                  // When answers arrive animate them in
-                  viewAnswers.loaderUI.hideLoader();
-                  viewAnswers.answersTableUI().show();
-                  viewAnswers.answersTableUI().fadeIn();
+                viewAnswers.addOwnAnswer.toggleUI().then(function() {
+                  viewAnswers.addAnswerArea.val(''); // Reset textarea
+                  /* RE-FETCH all the answers
+                  ============================================================== */
+                  viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
+                  viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
+                  viewAnswers.answersTableUI().hide();
+                  viewAnswers.loaderUI.showLoader();
+                  // Populate the answers table again (with the new answers)
+                  viewAnswers.getAnswers().then(function() {
+                    // When answers arrive animate them in
+                    viewAnswers.loaderUI.hideLoader();
+                    viewAnswers.answersTableUI().show();
+                    viewAnswers.answersTableUI().fadeIn();
+                  })
                 })
                 .catch(function(reject) {
                   console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
