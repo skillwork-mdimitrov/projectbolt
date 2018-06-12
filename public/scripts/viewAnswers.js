@@ -411,8 +411,9 @@ $(document).ready(function() {
         console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
         return false;
       });
-    }).catch(() => {
+    })
+    .catch(() => {
       unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
-      setTimeout(function(){ global.logout(); }, 5000);   
-    }); 
+      setTimeout(function(){ global.logout(); }, 5000);
+    });
 });
