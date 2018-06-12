@@ -8,7 +8,7 @@ const verifyAnswer = function() {
     console.log("Verifying answer " + answerID);
     $.post("answers/verify-answer", { answerID: answerID, sessionID: sessionID }, function() {})
         .done(function() {
-          unfoldingHeader.unfoldHeader("Verified successfully", "green");
+          unfoldingHeader.unfoldHeader("Verified successfully", "green", true);
           /* RE-FETCH all the answers
           ============================================================== */
           viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)

@@ -15,9 +15,6 @@ const viewAnswers = function() {
     const submitAnswerBtn = $('#submitAnswerBtn');
     const cancelAnswerBtn = $('#cancelAnswerBtn');
 
-    // Vanilla JS
-    const loader = document.getElementById("loader");
-
     // Make the answers table with the heading columns
     const mkAnswersTableSkeleton = function() {
 
@@ -292,17 +289,6 @@ const viewAnswers = function() {
       });
     };
 
-    // Visually manipulate the loader, intentionally local for animation purposes
-    const loaderUI = function() {
-      const showLoader = () => loader.style.display = "block";
-      const hideLoader = () => loader.style.display = "none";
-
-      return {
-        showLoader: showLoader,
-        hideLoader: hideLoader
-      };
-    }(); // IIFE;
-
     // Visually manipulate the answers table
     const answersTableUI = function() {
       const table = document.getElementById("answersTable");
@@ -333,7 +319,6 @@ const viewAnswers = function() {
         addOwnAnswer: addOwnAnswer, // return functions
         getQuestionID: getQuestionID,
         getAnswers: getAnswers,
-        loaderUI: loaderUI, // returns functions
         answersTableUI: answersTableUI // execute first to get the functions
     };
 }();
@@ -378,11 +363,11 @@ $(document).ready(function() {
                   viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
                   viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
                   viewAnswers.answersTableUI().hide();
-                  viewAnswers.loaderUI.showLoader();
+                  global.showLoader();
                   // Populate the answers table again (with the new answers)
                   viewAnswers.getAnswers().then(function() {
                     // When answers arrive animate them in
-                    viewAnswers.loaderUI.hideLoader();
+                    global.hideLoader();
                     viewAnswers.answersTableUI().show();
                     viewAnswers.answersTableUI().fadeIn();
                   })

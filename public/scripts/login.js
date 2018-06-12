@@ -16,7 +16,7 @@ const login = function() {
 
   const login = function() {
     if(noEmptyFields()) {          
-      global.showLoader();
+      global.showLoader(true);
 
       let loginPromise = $.post("login", {username: usernameBox.val(), password: passwordBox.val()});
       global.logPromise(loginPromise, scriptFilename, "Requesting login");
@@ -26,7 +26,7 @@ const login = function() {
         global.redirect("");
       }).catch(() => {
         global.hideLoader();
-        unfoldingHeader.unfoldHeader("Login failed", "red", true);
+        unfoldingHeader.unfoldHeader("Login failed", "red");
       }); 
     }  
     else {

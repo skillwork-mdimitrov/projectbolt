@@ -47,14 +47,16 @@ const global = function() {
     }
   };
 
-  const showLoader = function() {
+  const showLoader = function(hideMainContent) {
+    if (hideMainContent === true) {
+      document.getElementById("mainContainer").style.display = "none";
+    }
     document.getElementById("loader").style.display = "block";
-    document.getElementById("mainContainer").style.display = "none";
   };
 
   const hideLoader = function() {
-    document.getElementById("loader").style.display = "none";
     document.getElementById("mainContainer").style.display = "block";
+    document.getElementById("loader").style.display = "none";
   };
 
   const redirect = function redirect(route) {

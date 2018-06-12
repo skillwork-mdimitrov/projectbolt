@@ -10,18 +10,18 @@
         let removeQuestionPromise = $.post("questions/remove-question", { questionID: questionID, sessionID: sessionID });
         global.logPromise(removeQuestionPromise, scriptFilename, "Requesting removal of question");
 
-        global.showLoader();
+        global.showLoader(true);
         removeQuestionPromise.then(() => {
             viewQuestions.reloadQuestions().then(() => {
                 global.hideLoader();
-                unfoldingHeader.unfoldHeader("Removed question successfully", "green"); 
+                unfoldingHeader.unfoldHeader("Removed question successfully", "green");
             }).catch(() => {
                 global.hideLoader();
                 unfoldingHeader.unfoldHeader("Failed reloading questions", "red");
             });
         }).catch(() => {
             global.hideLoader();
-            unfoldingHeader.unfoldHeader("Failed removing question", "red");   
+            unfoldingHeader.unfoldHeader("Failed removing question", "red");
         });
     };
   

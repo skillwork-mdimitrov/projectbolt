@@ -68,17 +68,17 @@ const admin = function () {
         let buttonText = banButton.text();
         let sessionID = sessionStorage.getItem("projectBoltSessionID");
 
-        global.showLoader();
+        global.showLoader(true);
         
         let banActionPromise = $.post("login/"+banButton.attr("action-url"), { userID: userID, sessionID: sessionID });
         global.logPromise(banActionPromise, scriptFilename, "Sending ban action request");
         banActionPromise.then((message) => {
             loadUsers().then(() => {
                 global.hideLoader();
-                unfoldingHeader.unfoldHeader(message, "green");
+                unfoldingHeader.unfoldHeader(message, "green", true);
             }).catch(() => {
                 global.hideLoader();
-                unfoldingHeader.unfoldHeader("Failed loading users", "red");
+                unfoldingHeader.unfoldHeader("Failed loading users", "red", true);
             }); 
         }).catch(() => {
             global.hideLoader();

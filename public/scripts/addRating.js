@@ -20,7 +20,7 @@ const addRating = function() {
                 console.log("Requesting update rating on answerID " + answerID);
                 $.post("rating/update-rating", ratingData, function() {})
                 .done(function() {
-                    unfoldingHeader.unfoldHeader("Rating successful", "green");                    
+                    unfoldingHeader.unfoldHeader("Rating successful", "green");
                 })
                 .fail(function(message) {
                     unfoldingHeader.unfoldHeader("Failed updating rating, see console for details", "red");

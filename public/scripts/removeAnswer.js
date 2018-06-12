@@ -8,7 +8,7 @@ const removeAnswer = function() {
         console.log("Removing answer " + answerID);
         $.post("answers/remove-answer", { answerID: answerID, sessionID: sessionID }, function() {})
         .done(function() {
-            unfoldingHeader.unfoldHeader("Removed successfully", "green");      
+            unfoldingHeader.unfoldHeader("Removed successfully", "green", true);
             /* RE-FETCH all the answers
             ============================================================== */
             viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
