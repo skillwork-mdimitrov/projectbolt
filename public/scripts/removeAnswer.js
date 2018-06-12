@@ -16,9 +16,9 @@ const removeAnswer = function() {
             global.showLoader();
             // Populate the answers table again (with the new answers)
             viewAnswers.getAnswers().then(function() {
-                // When answers arrive animate them in                
-                viewAnswers.answersTableUI().show();
+                // When answers arrive animate them in
                 global.hideLoader();
+                viewAnswers.answersTableUI().show();
                 viewAnswers.answersTableUI().fadeIn();
             })
             .catch(function(message) {

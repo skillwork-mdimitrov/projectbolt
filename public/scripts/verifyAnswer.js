@@ -18,8 +18,8 @@ const verifyAnswer = function() {
           // Populate the answers table again (with the new answers)
           viewAnswers.getAnswers().then(function() {
             // When answers arrive animate them in
-            viewAnswers.answersTableUI().show();
             global.hideLoader();
+            viewAnswers.answersTableUI().show();
             viewAnswers.answersTableUI().fadeIn();
           })
               .catch(function(message) {
