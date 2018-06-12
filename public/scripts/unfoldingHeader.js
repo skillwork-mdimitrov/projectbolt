@@ -1,13 +1,20 @@
+/* JSHint quality control
+ ============================================================== */
+/*jshint esversion: 6*/
+/*jslint devel: true*/
+/*globals unfoldingHeader, global, $:false*/
+
 /* unfoldingHeader NAMESPACE
  ============================================================== */
 const unfoldingHeader = function () {
+  "use strict";
 
   /* LEGEND
   * GREEN/RED/ORANGE/GRAY collapsing header
   * REQUIREMENTS: ↓
   ** No elements with id #foldingHeader
   ** Place the unfoldingHeader script, before the script that's going to call it
-  ** You've used css browser reset: * { margin: 0 } in your CSS (if you want it to look properly)
+  ** You've used css browser reset: * { margin: 0 } in your CSS or link href to normalize.css (if you want it to look properly)
   * EXAMPLES: ↓
   ** <script src="scripts/unfoldingHeader.js"></script> // in the HTML, before the scripts using it
   ** <script src="yourScript.js></script>
@@ -16,7 +23,7 @@ const unfoldingHeader = function () {
   ** unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
   ** unfoldingHeader.unfoldHeader("Warning, password too short", "orange");
  ============================================================== */
-  const unfoldHeader = function(textToDisplay, color, fixedToViewPort) {
+  const unfoldHeader = function(textToDisplay, color, fixedToViewPort, redirectUrl) {
     // If 3rd parameter is passed, position is expected to be relative to the view port
     const isFixed = function() {
       // No 3rd parameter is passed, the position won't be fixed the the viewport
@@ -26,18 +33,17 @@ const unfoldingHeader = function () {
       }
       else {
         switch (fixedToViewPort) {
+          /* Weird 3rd parameter passed, the position won't be fixed the the viewport
+          ============================================================== */
           case false:
             return false;
-            /* Weird 3rd parameter passed, the position won't be fixed the the viewport
-             ============================================================== */
           case undefined:
             return false;
           case null:
             return false;
-            // ============================================================== */
 
-            /* True passed or any non falsy parameter, folding header will be fixed to the viewport
-           ============================================================== */
+          /* True passed or any non falsy parameter, folding header will be fixed to the viewport
+          ============================================================== */
           case true:
             return true;
           default:
@@ -48,6 +54,7 @@ const unfoldingHeader = function () {
 
     // Create a folding header if it doesn't exists
     if($("#foldingHeader").length === 0) {
+
       /* Create, style and append the folding header
        ============================================================== */
       $("body").prepend("<div id='foldingHeader'></div>");
@@ -77,11 +84,16 @@ const unfoldingHeader = function () {
       headerInfo.css("transition", "visibility 350ms linear");
     }
 
-    const foldingHeader = $('#foldingHeader'); // it's now created, select it
-    const headerInfo = $('#headerInfo'); // it's now created, select it
+    // Select the headers after they were created
+    const foldingHeader = $('#foldingHeader');
+    const headerInfo = $('#headerInfo');
 
     // If the 3rd parameter is omitted or false, unfoldingHeader will decide if to push content down or not
     if(isFixed() === false) {
+      // Reset the foldingHeader if some other instance created it
+      foldingHeader.css("position", "static");
+
+      // Decide to push content down or not based on vertical scrollbar value
       if(window.scrollY !== 0) {
         foldingHeader.css("position", "fixed");
       }
@@ -113,16 +125,24 @@ const unfoldingHeader = function () {
     // Show the folding header text
     headerInfo.css("visibility", "visible");
 
+    if (redirectUrl !== undefined) {
+      let viewButton = $('<button/>', {
+        text: "View",
+        click: function () { global.redirect(redirectUrl) }
+      });
+      headerInfo.append(viewButton);
+    }    
+
     // Hide the header after 5 seconds
     setTimeout(function() {
       foldingHeader.css("height", "0"); // unfold it
       headerInfo.css("visibility", "hidden"); // hide the text
-    }, 5000)
+    }, 5000);
   };
 
   return {
     unfoldHeader: unfoldHeader
-  }
+  };
 }();
-//  ============================================================== */
+
 

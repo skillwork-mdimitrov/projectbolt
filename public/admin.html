@@ -3,19 +3,26 @@
   <head>
     <meta charset="UTF-8">
     <title>Bolt - Administration</title>
-    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="shortcut icon" href="images/thunder.png">
+    <link rel="stylesheet" type="text/css" href="styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="styles/loader.css" />
+    <link rel="stylesheet" type="text/css" href="styles/navigationBar.css" />
   </head>
   <body>  
     <div id="loader"></div>
-    <div style="display:none;" id="mainContainer">
+    <!-- CSS to be removed from inline -->
+    <div style="display:none; margin: 10px 10px 10px 10px" id="mainContainer">
         <table id="userTable"></table>
     </div>
     <!-- SCRIPTS, load after the DOM↓
     ============================================================== -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script> <!-- SocketIO -->
     <script src="scripts/unfoldingHeader.js"></script>
     <script src="scripts/global.js"></script>    
     <script src="scripts/loginCheck.js"></script>   
     <script src="scripts/admin.js"></script>    
+    <script src="scripts/notifications.js"></script>
+    <script src="scripts/navigation.js"></script>
   </body>
 </html>

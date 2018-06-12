@@ -172,6 +172,26 @@ function getQuestionTextById(questionID) {
     }); 
 }
 
+function getQuestionIdByText(question) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getQuestionIdByTextQuery(question)).then((questionID) => {
+            resolve(questionID);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    }); 
+}
+
+function getUserIdByQuestionId(questionID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getUserIdByQuestionIdQuery(questionID)).then((userID) => {
+            resolve(userID);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    }); 
+}
+
 function insertQuestion(question, userID) {
     return new Promise((resolve, reject) => {
         runGenericQuery(queries.getInsertQuestionQuery(question, userID)).then(() => {
@@ -200,6 +220,36 @@ function getAnswersByQuestionId(questionID) {
             reject(reason);
         }); 
     });   
+}
+
+function getUsernameByAnswer(questionID, answer) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getUsernameByAnswerQuery(questionID, answer)).then((username) => {
+            resolve(username);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });   
+}
+
+function getUserIdByAnswerId(answerID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getUserIdByAnswerIdQuery(answerID)).then((userID) => {
+            resolve(userID);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });   
+}
+
+function getAnswerIdByText(answer) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getAnswerIdByTextQuery(answer)).then((answerID) => {
+            resolve(answerID);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    }); 
 }
 
 function getNonBannedAnswersByQuestionId(questionID) {
@@ -232,6 +282,16 @@ function deleteAnswer(answerID) {
     });
 }
 
+function verifyAnswer(answerID) {
+  return new Promise((resolve, reject) => {
+    runGenericQuery(queries.getVerifyAnswerQuery(answerID)).then(() =>      {
+      resolve();
+    }).catch((reason) => {
+      reject(reason);
+    });
+  });
+}
+
 function getUsernamesBannedStatus() {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getUsernamesBannedStatusQuery()).then((userData) => {
@@ -256,6 +316,16 @@ function getUsernameById(userID) {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getUsernameByIdQuery(userID)).then((username) => {
             resolve(username);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    });  
+}
+
+function getFirstnameById(userID) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getFirstnameByIdQuery(userID)).then((firstname) => {
+            resolve(firstname);
         }).catch((reason) => {
             reject(reason);
         }); 
@@ -314,17 +384,24 @@ exports.updateRating = updateRating;
 exports.getAllQuestions = getAllQuestions;
 exports.getAllNonBannedQuestions = getAllNonBannedQuestions;
 exports.getQuestionTextById = getQuestionTextById;
+exports.getQuestionIdByText = getQuestionIdByText;
+exports.getUserIdByQuestionId = getUserIdByQuestionId;
 exports.insertQuestion = insertQuestion;
 exports.deleteQuestion = deleteQuestion;
 
 exports.getAnswersByQuestionId = getAnswersByQuestionId;
+exports.getUsernameByAnswer = getUsernameByAnswer;
+exports.getUserIdByAnswerId = getUserIdByAnswerId;
+exports.getAnswerIdByText = getAnswerIdByText;
 exports.getNonBannedAnswersByQuestionId = getNonBannedAnswersByQuestionId;
 exports.insertAnswer = insertAnswer;
 exports.deleteAnswer = deleteAnswer;
+exports.verifyAnswer = verifyAnswer;
 
 exports.getUsernamesBannedStatus = getUsernamesBannedStatus;
 exports.getIdPasswordByUsername = getIdPasswordByUsername;
 exports.getUsernameById = getUsernameById;
+exports.getFirstnameById = getFirstnameById;
 exports.getUserRoleById = getUserRoleById;
 exports.getUserBannedStatusById = getUserBannedStatusById;
 exports.banUser = banUser;

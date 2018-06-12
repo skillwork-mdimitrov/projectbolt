@@ -2,7 +2,7 @@ const addRating = function() {
     const rateAnswer = function rateAnswer(ratingElement) {
         ratingElement.rating("disable");
         let answerID = ratingElement.attr("id");
-        let rating = $('#'+answerID).rating('get rating');
+        let rating = $("#"+answerID+".star").rating('get rating');
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
         let ratingData = {
@@ -20,32 +20,34 @@ const addRating = function() {
                 console.log("Requesting update rating on answerID " + answerID);
                 $.post("rating/update-rating", ratingData, function() {})
                 .done(function() {
-                    unfoldingHeader.unfoldHeader("Rating successful", "green", true);
-                    viewRatings.updateRating(ratingElement);
+                    unfoldingHeader.unfoldHeader("Rating successful", "green");                    
                 })
                 .fail(function(message) {
-                    unfoldingHeader.unfoldHeader("Failed updating rating, see console for details", "red", true);
-                    console.log("Updating rating failed on answerID " + answerID + ": " + message);   
-                    ratingElement.rating("enable");
+                    unfoldingHeader.unfoldHeader("Failed updating rating, see console for details", "red");
+                    console.log("Updating rating failed on answerID " + answerID + ": " + message.responseText);   
+                })
+                .always(function() {
+                    viewRatings.updateRating(ratingElement);
                 });
-                }
+            }
             else {
                 console.log("Requesting insert rating on answerID " + answerID);
                 $.post("rating/insert-rating", ratingData, function() {})
                 .done(function() {
-                    unfoldingHeader.unfoldHeader("Rating successful", "green", true);
-                    viewRatings.updateRating(ratingElement);
+                    unfoldingHeader.unfoldHeader("Rating successful", "green");
                 })
-                .fail(function() {
-                    unfoldingHeader.unfoldHeader("Failed inserting rating, see console for details", "red", true);
-                    console.log("Inserting rating failed on answerID " + answerID + ": " + message);   
-                    ratingElement.rating("enable");
-                });
+                .fail(function(message) {
+                    unfoldingHeader.unfoldHeader("Failed inserting rating, see console for details", "red");
+                    console.log("Inserting rating failed on answerID " + answerID + ": " + message.responseText);   
+                })                
+                .always(function() {
+                    viewRatings.updateRating(ratingElement);
+                });              
             }
         })
         .fail(function (message) {
-            unfoldingHeader.unfoldHeader("Failed checking rating, see console for details", "red", true);
-            console.log("Rating check failed on answerID " + answerID + ": " + message);   
+            unfoldingHeader.unfoldHeader("Failed checking rating, see console for details", "red");
+            console.log("Rating check failed on answerID " + answerID + ": " + message.responseText);   
             ratingElement.rating("enable");
         })
     };

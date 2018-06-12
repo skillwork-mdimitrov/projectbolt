@@ -1,53 +1,38 @@
-$.holdReady(true);
-
 const loginCheck = function() {
+  const scriptFilename = "loginCheck.js";
+
   const checkLogin = function() {
-    let sessionID = sessionStorage.getItem('projectBoltSessionID');
-    console.log("Sending request");
-    $.getJSON("login/check-session/"+sessionID, function () {})
-    .done(function (data) {
-      console.log("Request complete");
-      if (data.sessionValid) {
-        console.log("Checking banned status");
-        $.getJSON("login/get-banned-status/"+sessionID, function () {})
-        .done(function (bannedJSON) {
-          console.log("Request complete");
-          let banned = bannedJSON[0].Banned;
+    return new Promise((resolve, reject) => {
+      let sessionID = sessionStorage.getItem('projectBoltSessionID');
+
+      let sessionValidPromise = $.get("login/session-valid/"+sessionID);
+      global.logPromise(sessionValidPromise, scriptFilename, "Requesting session valid check");
+      let bannedStatusPromise = $.get("login/get-banned-status/"+sessionID);
+      global.logPromise(bannedStatusPromise, scriptFilename, "Requesting user ban status");
+
+      Promise.all([sessionValidPromise, bannedStatusPromise]).then((values) => {
+        let sessionValid = values[0]; // Return value from sessionValidPromise
+        let banned = values[1];       // Return value from bannedStatusPromise
+
+        if (sessionValid) {
           if (!banned) {
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("mainContainer").style.display = "block"; // CHECK LATER
-            $.holdReady(false);
+            resolve();
           }
-          else
-          {
-            sessionStorage.removeItem("projectBoltSessionID");
-            unfoldingHeader.unfoldHeader("Your account has been suspended.", "red", true);
-            setTimeout(function(){global.redirect("login")}, 3000);
-          }  
-        })
-        .fail(function () {
-            console.log("Ajax request failed");
-        })
-      }
-      else
-      {
-        sessionStorage.removeItem("projectBoltSessionID");
-        global.redirect("login");
-      }        
-    })
-    .fail(function () {
-      console.log("Ajax request failed");
-      sessionStorage.removeItem("projectBoltSessionID");
-      global.redirect("login");
-    })    
+          else {
+            global.logout();
+          }
+        }
+        else {
+          global.logout();
+        }
+      }).catch(() => {
+        global.logout();
+      });   
+    });
   };
 
-  // loginCheck namespace will reveal the following properties
   return {
+    scriptFilename: scriptFilename,
     checkLogin: checkLogin
   }
 }();
-//  ============================================================== */
-
-console.log("Checking for valid login");
-loginCheck.checkLogin();  

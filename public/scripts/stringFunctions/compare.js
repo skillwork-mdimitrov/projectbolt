@@ -1,87 +1,7 @@
-/* stringCompare NAMESPACE
+/* generic comparing strings NAMESPACE
  ============================================================== */
-const stringCompare = function() {
-    let questionBox = $("#questionBox");
-    let autoCompleter;
-    let queryTimeout = false;
-    let questionSet = [];    
-//TO DO: Comment the main function Jasper :)
-    const retrieveAndEvaluate = function(searchQuery)
-    {
-        sanitizedQuery = sanitize(searchQuery);
-        var questionSimilarityMapping = new Map();
-        var sessionID = sessionStorage.getItem('projectBoltSessionID');
-
-        console.log("Retrieving all questions");
-        $.getJSON( "questions/get-all-questions/"+sessionID, function() {})
-        .done(function(data) {
-            console.log("All questions receieved");
-            $.each( data, function( key, val ) {
-                questionSet.push(val["Question"]);
-            });
-
-            $.each( questionSet, function( index, value ) {
-                mapSimilarities(value, searchQuery, sanitizedQuery, questionSimilarityMapping);
-            });
-
-            questionSimilarityMapping[Symbol.iterator] = function* () {
-                yield* [...this.entries()].sort((a, b) =>  b[1] - a[1]);
-            }
-
-            var optionsArray = []
-            for (let [key, value] of questionSimilarityMapping) {
-                optionsArray.push(key);
-            }
-            stringCompare.autoCompleter.list = optionsArray;
-            stringCompare.autoCompleter.evaluate();
-        })
-        .fail(function(message) {
-            unfoldingHeader.unfoldHeader("Failed retrieving questions, see console for details", "red", true);
-            console.log("Failed retrieving all questions: " + message);
-        })
-    }
-
-    const evaluateQuery = function(searchQuery)
-    {
-        if (queryTimeout)
-        {
-            sanitizedQuery = sanitize(searchQuery);
-            var questionSimilarityMapping = new Map();
-
-            $.each( questionSet, function( index, value ) {
-                mapSimilarities(value, searchQuery, sanitizedQuery, questionSimilarityMapping);
-            });
-
-            questionSimilarityMapping[Symbol.iterator] = function* () {
-                yield* [...this.entries()].sort((a, b) =>  b[1] - a[1]);
-            }
-
-            var optionsArray = []
-            for (let [key, value] of questionSimilarityMapping) {
-                optionsArray.push(key);
-            }
-            stringCompare.autoCompleter.list = optionsArray;
-            stringCompare.autoCompleter.evaluate();
-        }
-        else
-        {
-            queryTimeout = true;
-            retrieveAndEvaluate(searchQuery);
-            setTimeout( function() { queryTimeout = false; }, 1000);
-        }
-    }
-
-    //Check if the question is similar to one other previous asked questions
-    const mapSimilarities = function(question, originalQuery, sanitizedQuery, questionSimilarityMapping)
-    {
-        var questionSimilarity = getSimilarity(question, originalQuery, sanitizedQuery);
-        if (questionSimilarity > 25)
-        {
-            questionSimilarityMapping.set(question, questionSimilarity);  
-        }        
-    }
-
-    const getSimilarity = function(question, originalQuery, sanitizedQuery)
+ const compare = function() {
+    const getCombinedSimularity = function(question, query)
     {
         var similarity = 0;
         var sanitizedQuestion = sanitize(question);
@@ -299,11 +219,7 @@ const stringCompare = function() {
     }
 
     return {
-        questionBox: questionBox,
-        retrieveAndEvaluate: retrieveAndEvaluate,
-        evaluateQuery: evaluateQuery,
-        mapSimilarities: mapSimilarities,
-        getSimilarity: getSimilarity,
+        getSimilarity: getCombinedSimularity,
         sanitize: sanitize,
         getStringLengthSimilarity: getStringLengthSimilarity,
         getCharacterOccurenceSimilarity: getCharacterOccurenceSimilarity,
@@ -313,25 +229,3 @@ const stringCompare = function() {
         getSentenceOccurenceSimilarity: getSentenceOccurenceSimilarity
     }
 }();
-//  ============================================================== */
-
-$(document).ready(function() {
-    var input = document.getElementById("questionBox");
-    stringCompare.autoCompleter = new Awesomplete(input, {
-        minChars: 1,
-        sort: false,
-        filter: function (text, input)
-        {
-            return true;
-        }
-    });
-
-    stringCompare.questionBox.on("input", function() {
-        if (stringCompare.questionBox.val().length > 0)
-        {
-            stringCompare.evaluateQuery(stringCompare.questionBox.val());
-        }        
-    });
-});
-
-

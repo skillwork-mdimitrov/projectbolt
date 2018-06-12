@@ -2,7 +2,7 @@
  ============================================================== */
 /*jshint esversion: 6*/
 /*jslint devel: true*/
-/*globals unfoldingHeader, global, $, URLSearchParams, removeAnswer, viewRatings, addRating, addAnswer:false*/
+/*globals unfoldingHeader, global, $, URLSearchParams, removeAnswer, viewRatings, addRating, addAnswer, redirectToIndex:false*/
 
 /* viewAnswers NAMESPACE
  ============================================================== */
@@ -20,6 +20,7 @@ const viewAnswers = function() {
 
     // Make the answers table with the heading columns
     const mkAnswersTableSkeleton = function() {
+
       /* CREATES
       ============================================================== */
 
@@ -32,9 +33,9 @@ const viewAnswers = function() {
       const tableHeader = document.createElement("div");
       tableHeader.setAttribute("class", "Table-row Table-header");
 
-      // Delete answers column
+      // Delete/Verify answers column
       const deleteAnswersColumn = document.createElement("div");
-      deleteAnswersColumn.setAttribute("class", "Table-row-item u-Flex-grow1");
+      deleteAnswersColumn.setAttribute("class", "Table-row-item u-Flex-grow1 deleteColumn");
       deleteAnswersColumn.textContent = "Action";
 
       // Answers column
@@ -74,6 +75,7 @@ const viewAnswers = function() {
         let answerText = answer[0];
         let answerID = answer[1];
         let username = answer[2];
+        let verified = answer[3];
 
         // Select the table to append rows to
         const answersTable = document.getElementById("answersTable");
@@ -85,21 +87,51 @@ const viewAnswers = function() {
         const tableRow = document.createElement("div");
         tableRow.setAttribute("class", "Table-row");
 
-        //The delete button
+        /* DELETES
+        ============================================================== */
+        // The delete div
         const rowItemDelete = document.createElement("div");
-        rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1");
+        rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1 deleteColumn");
         rowItemDelete.setAttribute("data-header", "Action");
+
+        // The delete div style
+        rowItemDelete.style.display = "flex";
+        rowItemDelete.style.justifyContent = "center";
+        rowItemDelete.style.alignContent = "center";
+        // ============================================================== */
+
+        // The delete button
         const rowItemDeleteButton = document.createElement("button");
-        rowItemDeleteButton.setAttribute("class", "deleteButton");
+        rowItemDeleteButton.setAttribute("class", "deleteButton fa fa-close");
+        rowItemDeleteButton.setAttribute("title", "Delete");
         rowItemDeleteButton.setAttribute("id", answerID);
-        rowItemDeleteButton.textContent = "Delete";
         rowItemDelete.appendChild(rowItemDeleteButton);
+
+        // The verify button
+        const rowItemVerifyButton = document.createElement("button");
+        rowItemVerifyButton.setAttribute("class", "verifyButton fa fa-check");
+        rowItemVerifyButton.setAttribute("title", "Verify");
+        rowItemVerifyButton.setAttribute("id", answerID);
+
+        //append to row
+        rowItemDelete.appendChild(rowItemDeleteButton);
+        if(!verified){
+          rowItemDelete.appendChild(rowItemVerifyButton);
+        }
 
         // The answer
         const rowItemAnswer = document.createElement("div");
         rowItemAnswer.setAttribute("class", "Table-row-item u-Flex-grow9");
         rowItemAnswer.setAttribute("data-header", "Answer");
-        rowItemAnswer.textContent = answerText;
+
+        //TO DO:: Add verified icon before the text
+        if(verified){
+          rowItemAnswer.textContent = "Verified Answer: " + answerText;
+        }
+        else{
+          rowItemAnswer.textContent = answerText;
+        }
+
 
         // The user
         const rowUser = document.createElement("div");
@@ -116,7 +148,7 @@ const viewAnswers = function() {
         /* APPENDS
         ============================================================== */
 
-        // Append the delete button, answer, user and rating to that table row
+        // Append the delete button, verify button, answer, user and rating to that table row
         tableRow.appendChild(rowItemDelete);
         tableRow.appendChild(rowItemAnswer);
         tableRow.appendChild(rowUser);
@@ -189,18 +221,25 @@ const viewAnswers = function() {
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
         $.getJSON( "answers/"+questionID+"/"+sessionID, function() {})
-            .done(function(data) {
-              console.log("Request complete");
-              $.each( data, function( key, val ) {
-                // First element contains the question text
-                if (key === 0) {
-                  document.getElementById("questionHeading").textContent = val["Question"];
-                }
-                else {
-                  viewAnswers.addToTable([val["Answer"], val["ID"], val["Username"]]);
-                }
-              });
+        .done(function(data) {
+          console.log("Request complete");
+          $.each( data, function( key, val ) {
+            // First element contains the question text
+            if (key === 0) {
+              document.getElementById("questionHeading").textContent = val["Question"];
+            }
+            else {
+              viewAnswers.addToTable([val["Answer"], val["ID"], val["Username"], val["Verified"]]);
+            }
+          });
 
+          $.getJSON("questions/get-userid/"+questionID+"/"+sessionID, function () {})
+          .done(function (questionUserID) {
+            $.get("login/get-userID/"+sessionID, function () {})
+            .done(function (userID) {
+              if (questionUserID !== parseInt(userID)) {
+                $("#addAnswerInput").css("display", "block");
+              }
               $(".deleteColumn").css("display", "none");
               $.getJSON("login/is-teacher/"+sessionID, function () {})
               .done(function (isTeacher) {
@@ -208,43 +247,49 @@ const viewAnswers = function() {
                     $(".deleteColumn").css("display", "block");
                 }
 
-                 $('.deleteButton').on("click", function(){
-                     removeAnswer.removeAnswer($(this));
-                 });
-              })
-                    .fail(function () {
-                        console.log("error");
-                    });
+                $('.deleteButton').on("click", function(){
+                    removeAnswer.removeAnswer($(this));
+                });
+
+                $('.verifyButton').on("click", function(){
+                  verifyAnswer.verifyAnswer($(this));
+                });
 
                 $('.ui.rating').on("click", function(){
-                addRating.rateAnswer($(this));
-              });
+                  addRating.rateAnswer($(this));
+                });
 
-              $('.ui.rating').rating({
-                maxRating: 5
-              });
+                $('.ui.rating').rating({
+                  maxRating: 5
+                });
 
-              viewRatings.updateAllRatings();
-              resolve("Answers arrived"); // All answers arrived, resolve the promise
+                viewRatings.updateAllRatings().then(function() {
+                  resolve("Answers arrived"); // All answers arrived, resolve the promise
+                })
+                .catch(function() {
+                  reject();
+                });
+                
+              })
+              .fail(function () {
+                reject("error");
+              });                  
             })
-            .fail(function(jqXHR) {
-              global.logAJAXErr(getAnswers.name, jqXHR);
-              unfoldingHeader.unfoldHeader("Failed to obtain the answers. Apologies :(", "orange");
-              reject(`Failed to fetch answers for ↓ \n questionID: ${questionID}, sessionID: ${sessionID}`);
+            .fail(function () {
+              reject("error");
             });
+          })
+          .fail(function () {
+            reject("error");
+          });              
+        })
+        .fail(function(jqXHR) {
+          global.logAJAXErr(getAnswers.name, jqXHR);
+          unfoldingHeader.unfoldHeader("Failed to obtain the answers. Apologies :(", "orange");
+          reject(`Failed to fetch answers for ↓ \n questionID: ${questionID}, sessionID: ${sessionID}`);
+        });
       });
     };
-
-    // Visually manipulate the loader
-    const loaderUI = function() {
-      const showLoader = () => loader.style.display = "block";
-      const hideLoader = () => loader.style.display = "none";
-
-      return {
-        showLoader: showLoader,
-        hideLoader: hideLoader
-      };
-    }(); // IIFE;
 
     // Visually manipulate the answers table
     const answersTableUI = function() {
@@ -263,7 +308,7 @@ const viewAnswers = function() {
 
     // Made publicly available
     return {
-        // DOM elements that need to be accessed outside the namespace
+       // DOM elements that need to be accessed outside the namespace
         addOwnAnswerBtn: addOwnAnswerBtn,
         submitAnswerBtn: submitAnswerBtn,
         cancelAnswerBtn: cancelAnswerBtn,
@@ -276,88 +321,101 @@ const viewAnswers = function() {
         addOwnAnswer: addOwnAnswer, // return functions
         getQuestionID: getQuestionID,
         getAnswers: getAnswers,
-        loaderUI: loaderUI, // return functions
         answersTableUI: answersTableUI // execute first to get the functions
     };
 }();
-//  ============================================================== */
 
 $(document).ready(function() {
     "use strict";
-    /* ATTACH EVENT LISTENERS
-    ============================================================== */
-    viewAnswers.addOwnAnswerBtn.on("click", function(){
-      viewAnswers.addOwnAnswer.toggleUI();
-    });
 
-    viewAnswers.submitAnswerBtn.on("click", function() {
-      const buttonID = this.id; // for logging purposes
+    let loginCheckPromise = loginCheck.checkLogin();
+    let loadNavigationPromise = navigation.loadNavigation();
+    let initNotificationsPromise = notifications.initNotifications();
 
-      $.ajax({
-        type: 'get',
-        url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
-        success: function (data) {
-
-          if(global.fieldNotEmpty(viewAnswers.addAnswerArea)) {
-
-            // JSON'ize the question
-            let bodyJSON = {
-              questionID: viewAnswers.getQuestionID(),
-              answer: viewAnswers.addAnswerArea.val(),
-              userID: data.userID,
-              sessionID: sessionStorage.getItem('projectBoltSessionID')
-            };
-
-            // Send the AJAX request
-            addAnswer.postAnswer(bodyJSON);
-            viewAnswers.addOwnAnswer.toggleUI();
-            viewAnswers.addAnswerArea.val(''); // Reset textarea
-
-            /* RE-FETCH all the answers
-            ============================================================== */
-            viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
-            viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
-            viewAnswers.answersTableUI().hide();
-            viewAnswers.loaderUI.showLoader();
-            // Populate the answers table again (with the new answers)
-            viewAnswers.getAnswers().then(function() {
-              // When answers arrive animate them in
-              viewAnswers.loaderUI.hideLoader();
-              viewAnswers.answersTableUI().show();
-              viewAnswers.answersTableUI().fadeIn();
-            })
-            .catch(function(reject) {
-              console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
-            });
-          }
-          else {
-            unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
-          }
-        },
-        error: function (jqXHR) {
-          unfoldingHeader.unfoldHeader('Invalid session, please logout and login again. Apologies :(', "red");
-          global.logAJAXErr(buttonID, jqXHR);
-        }
+    Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
+      viewAnswers.addOwnAnswerBtn.on("click", function(){
+        viewAnswers.addOwnAnswer.toggleUI();
       });
-    });
 
-    viewAnswers.cancelAnswerBtn.on("click", function() {
-      viewAnswers.addAnswerArea.val(''); // Reset textarea
-      viewAnswers.addOwnAnswer.toggleUI();
-    });
+      viewAnswers.submitAnswerBtn.on("click", function() {
+        const buttonID = this.id; // for logging purposes
 
-    console.log("Sending get answers request");
-    viewAnswers.mkAnswersTableSkeleton(); // Create the answers table skeleton
-    viewAnswers.loaderUI.showLoader();
-    // Populate the answers table
-    viewAnswers.getAnswers().then(function() {
-      // Animate-in the newly arrived answers
-      viewAnswers.loaderUI.hideLoader();
-      viewAnswers.answersTableUI().fadeIn();
-      return true;
-    })
-    .catch(function(reject) {
-      console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
-      return false;
-    });
+        $.ajax({
+          type: 'get',
+          url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
+          success: function (userID) {
+
+            if(global.fieldNotEmpty(viewAnswers.addAnswerArea)) {
+
+              // JSON'ize the question
+              let bodyJSON = {
+                question: document.getElementById("questionHeading").textContent,
+                questionID: viewAnswers.getQuestionID(),
+                answer: viewAnswers.addAnswerArea.val(),
+                userID: parseInt(userID),
+                sessionID: sessionStorage.getItem('projectBoltSessionID')
+              };
+
+              // TODO I'll be replacing the loader with the old way as it looks nicer
+              global.showLoader();
+              // Send the AJAX request
+              addAnswer.postAnswer(bodyJSON).then(function() {
+                viewAnswers.addOwnAnswer.toggleUI();
+                viewAnswers.addAnswerArea.val(''); // Reset textarea
+
+                /* RE-FETCH all the answers
+                ============================================================== */
+                viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
+                viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
+                viewAnswers.answersTableUI().hide();              
+                // Populate the answers table again (with the new answers)
+                viewAnswers.getAnswers().then(function() {
+                  // When answers arrive animate them in              
+                  viewAnswers.answersTableUI().show();
+                  global.hideLoader();
+                  viewAnswers.answersTableUI().fadeIn();
+                })
+                .catch(function(reject) {
+                  console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
+                  global.hideLoader();
+                });
+              })
+              .catch(function(reject) {
+                console.log(`postAnswer promise got rejected, reject message: ↓ \n ${reject}`);
+                global.hideLoader();
+              });            
+            }
+            else {
+              unfoldingHeader.unfoldHeader("Please fill in an answer", "red");
+            }
+          },
+          error: function (jqXHR) {
+            unfoldingHeader.unfoldHeader('Invalid session, please logout and login again. Apologies :(', "red");
+            global.logAJAXErr(buttonID, jqXHR);
+          }
+        });
+      });
+
+      viewAnswers.cancelAnswerBtn.on("click", function() {
+        viewAnswers.addAnswerArea.val(''); // Reset textarea
+        viewAnswers.addOwnAnswer.toggleUI();
+      });
+
+      console.log("Sending get answers request");
+      viewAnswers.mkAnswersTableSkeleton(); // Create the answers table skeleton
+      // Populate the answers table
+      viewAnswers.getAnswers().then(function() {
+        // Animate-in the newly arrived answers
+        global.hideLoader();        
+        viewAnswers.answersTableUI().fadeIn();
+        return true;
+      })
+      .catch(function(reject) {
+        console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
+        return false;
+      });
+    }).catch(() => {
+      unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
+      setTimeout(function(){ global.logout(); }, 5000);   
+    }); 
 });

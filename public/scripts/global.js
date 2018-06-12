@@ -17,7 +17,7 @@ const global = function() {
     }
   };
 
-  /* @return {true} if the field is IS empty
+  /* @return {true} if the field IS empty
   ============================================================== */
   const fieldIsEmpty = function(field) {
     "use strict";
@@ -47,18 +47,33 @@ const global = function() {
     }
   };
 
+  const showLoader = function() {
+    document.getElementById("loader").style.display = "block";
+    document.getElementById("mainContainer").style.display = "none";
+  };
+
+  const hideLoader = function() {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("mainContainer").style.display = "block";
+  };
+
   const redirect = function redirect(route) {
-    if(window.location.href.includes("localhost")) {
-      window.location.href = "http://localhost:3000/"+route;
+    if (route === undefined) {
+      route = "";
+    }
+    if(window.location.href.includes("projectboltrenew.azurewebsites")) {
+      window.location.href = "https://projectboltrenew.azurewebsites.net/"+route;
     }
     else {
-      window.location.href = "https://projectboltrenew.azurewebsites.net/"+route;
+      let portIndex = window.location.href.indexOf(":3000");
+      let baseUrl = window.location.href.substring(0, portIndex)
+      window.location.href = baseUrl+":3000/"+route;
     }
   };
 
   const logout = function logout() { 
     sessionStorage.removeItem("projectBoltSessionID");
-    window.location.reload();
+    redirect("login");
   };
 
   /* Console.log an AJAX request error
@@ -90,13 +105,34 @@ const global = function() {
     }
   };
 
+  const getUniqueLogId = function(N) {
+    // Return a random string of N characters
+    return Array(N+1).join((Math.random().toString(36)+'00000000000000000').slice(2, 18)).slice(0, N);   
+  };
+
+  const logPromise = function(promise, sender, message) {
+    let logID = getUniqueLogId(10);
+    console.log(logID + ": " + message + " from " + sender);
+    promise.then(() => {
+      console.log(logID + ": Completed in " + sender);
+    }).catch((reason) => {
+      if (typeof reason === 'object') {
+        reason = JSON.stringify(reason);
+      }
+      console.log(logID + ": Error in " + sender + ": " + reason);
+    }); 
+  };
+
   return {
     fieldNotEmpty: fieldNotEmpty,
     fieldIsEmpty: fieldIsEmpty,
     rmElemFromArray: rmElemFromArray,
+    showLoader: showLoader,
+    hideLoader: hideLoader,
     redirect: redirect,
     logout: logout,
-    logAJAXErr: logAJAXErr
-  }
+    logAJAXErr: logAJAXErr,
+    logPromise: logPromise
+  };
 }();
 //  ============================================================== */

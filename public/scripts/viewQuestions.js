@@ -1,6 +1,8 @@
 /* viewQuestions NAMESPACE
  ============================================================== */
 const viewQuestions = function () {
+  const scriptFilename = "viewQuestions.js";
+
   const addToTable = function (question) {
     let questionText = question[0];
     let questionUser = question[1];
@@ -12,14 +14,22 @@ const viewQuestions = function () {
     let tableRow = document.createElement("div");
     tableRow.setAttribute("class", "Table-row");
 
-    // The delete button
+    /* Delete
+    ============================================================== */
+    // The delete div
     let rowItemDelete = document.createElement("div");
     rowItemDelete.setAttribute("class", "Table-row-item u-Flex-grow1 deleteColumn");
     rowItemDelete.setAttribute("data-header", "Action");
+
+    // The delete div style
+    rowItemDelete.style.display = "flex";
+    rowItemDelete.style.justifyContent = "center";
+    rowItemDelete.style.alignContent = "center";
+
+    // The delete button
     let rowItemDeleteButton = document.createElement("button");
-    rowItemDeleteButton.setAttribute("class", "deleteButton");
+    rowItemDeleteButton.setAttribute("class", "deleteButton fa fa-close");
     rowItemDeleteButton.setAttribute("id", questionID);
-    rowItemDeleteButton.textContent = "Delete";
     rowItemDelete.appendChild(rowItemDeleteButton);
 
     // The question
@@ -54,39 +64,60 @@ const viewQuestions = function () {
     questionsTable.appendChild(tableRow);
   };
 
-  return {
-    addToTable: addToTable
-  }
-}();
+  const reloadQuestions = function () {
+    return new Promise((resolve, reject) => {
+      // Remove all from the table except for the headers
+      $(".Table-row:not(.Table-header)").remove();
+      let sessionID = sessionStorage.getItem('projectBoltSessionID');
 
-//  ============================================================== */
+      let getAllQuestionsPromise = $.getJSON("questions/get-all-questions/"+sessionID);
+      global.logPromise(getAllQuestionsPromise, scriptFilename, "Requesting all question data");
+      let isTeacherPromise = $.get("login/is-teacher/"+sessionID);
+      global.logPromise(isTeacherPromise, scriptFilename, "Requesting user teacher status");
 
-$(document).ready(function () {
-  let sessionID = sessionStorage.getItem('projectBoltSessionID');
+      Promise.all([getAllQuestionsPromise, isTeacherPromise]).then((values) => {
+        let questionsData = values[0]   // Return value from getAllQuestionsPromise
+        let isTeacher = values[1]       // Return value from isTeacherPromise        
+        
+        $.each(questionsData, function (key, val) {
+          addToTable([val["Question"], val["Username"], val["ID"]]);
+        });
 
-  console.log("Sending request");
-  $.getJSON("questions/get-all-questions/"+sessionID, function () {})
-  .done(function (data) {
-    console.log("Request complete");
-    $.each(data, function (key, val) {
-      viewQuestions.addToTable([val["Question"], val["Username"], val["ID"]]);
-    });
-
-    $(".deleteColumn").css("display", "none");
-    $.getJSON("login/is-teacher/"+sessionID, function () {})
-    .done(function (isTeacher) {
+        $(".deleteColumn").css("display", "none");      
         if (isTeacher) {
-          $(".deleteColumn").css("display", "block");
+          $(".deleteColumn").css("display", "flex");
         }
         $('.deleteButton').on("click", function(){
           removeQuestion.removeQuestion($(this));
         });
-    })
-    .fail(function () {
-        console.log("error");
-    }) 
-  })
-  .fail(function () {
-    console.log("Get all questions failed");
-  })
+        
+        resolve();
+
+      }).catch(() => {
+        reject();
+      })
+    });
+  };
+
+  return {
+    reloadQuestions: reloadQuestions
+  }
+}();
+
+$(document).ready(function () {
+  let loginCheckPromise = loginCheck.checkLogin();
+  let loadNavigationPromise = navigation.loadNavigation();
+  let initNotificationsPromise = notifications.initNotifications();
+
+  Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
+    viewQuestions.reloadQuestions().then(() => {
+      global.hideLoader();
+    }).catch(() => {
+      unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
+      setTimeout(function(){ global.logout(); }, 5000);   
+    }); 
+  }).catch(() => {
+    unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
+    setTimeout(function(){ global.logout(); }, 5000);   
+  }); 
 });

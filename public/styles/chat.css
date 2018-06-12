@@ -1,136 +1,135 @@
-@mixin vertical-align {
-    position: relative;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-  }
+/* Navigation bar
+ ============================================================== */
+.nav {
+	width: 100%;
+	font-family: "Barlow", sans-serif;
+	background-color: #19354E;
+}
+.nav ul {
+	display: flex;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.nav ul li {
+	display: inline-block;
+	padding: 10px 20px;
+	text-decoration: none;
+	color: white;
+	cursor: pointer;
+}
+.nav ul li:hover {
+	background-color: #8190A5;
+}
+.nav ul li a {
+	color: inherit;
+	text-decoration: inherit;
+}
+.nav ul .logoutBtn {
+	justify-self: flex-end;
+	margin-left: auto;
+}
+/* ============================================================== */
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	margin: 0px;
+	height: 100%;
+	flex-direction: column;
+	display: flex;
+}
+
+header {
+	text-align: center;
+	height: 10vh;
+}
+
+h1 {
+	font-family: 'Comfortaa', sans-serif;
+	margin: 0px;
+}
+
+.mainContainer {
+	margin: 10px 10px 10px 10px; /* So it isn't shoved in the top left corner */
+}
+
+section#change_username_div {
+	height: 4vh;
+}
+
+div#change_username, section#input_zone {
   
-  * {
-      box-sizing: border-box;
-  }
+}
+
+div#change_username {
+	height: 4vh;
+	display: inline-block;
   
-  html {
-      height: 100%;
-  }
-  
-  body {
-      margin: 0px;
-      height: 100%;
-	  flex-direction: column;
-	  display: flex;
-  }
-  
-  header {
-      text-align: center;
-	  height: 20vh;
-  }
-  
-  h1 {
-      font-family: 'Comfortaa', sans-serif;
-      margin: 0px;
-  }
-  section#change_username_div
-  {
-	  height: 4vh;
-  }
-  div#change_username, section#input_zone {
-      border: 5px outset #DCBE50;
-  }
-  
-  div#change_username {
-      height: 4vh;
-      display: inline-block;
-      background-color: #DCBE50;
-  }
-  
-  section#chatroom {
-	border: 5px inset #DCBE50;
-	/*height: 40%;*/
+}
+
+section#chatroom {
+	background-color: #eeeeee;
 	height: 60vh;
-	border: #DCBE50 solid 1px;
 	overflow-y: auto;
-  }
-  
-  section#input_zone {
-      height: 7%;
-      text-align: center;
-      background-color: #DCBE50;
-	  flex-shrink: 0;
-  }
-  section#connectedUsers
-  {
-	  flex-shrink: 0;
-  }
-  
-  .vertical-align {
-      position: relative;
-      top: 50%;
-      -webkit-transform: translateY(-50%);
-      -ms-transform: translateY(-50%);
-      transform: translateY(-50%);
-  }
-  
-  input#username {
-      font-family: 'Comfortaa', sans-serif;
-  }
-  
-  input#message {
-      display: inline-block;
-      width: 88%;
-      height: 70%;
-      font-family: 'Comfortaa', sans-serif;
-      font-size: 2vh;
-  }
-  
-  button#send_message {
-      display: inline-block;
-      height: 70%;
-      width: 10%;
-  }
-  
-  p.message {
-      margin: 0px;
-      width: 100%;
-      height: 40px;
-      font-size: 2vh;
-      font-family: 'Comfortaa', sans-serif;
-      padding: 1vh;
-  }
-  .thunderLogoContainer
-  {
-    max-width: 500px;
-    margin: auto;
-	}
-  
-  .message:nth-child(even) {
-      background-color: #E5E9F2;
-	  color: black;
-  }
-  
-	.message:nth-child(odd) {
-		background-color: #19354E;
-		color: white;
-	}
-	.thunderLogoContainer {
-		justify-content: center;
-		align-items: center;
-		width: 10.5%;
-	}
-	.thunderLogoContainer .circleContainer {
-		position: relative;
-		width: 100%;
-		padding-top: 100%;
-	}
-	.thunderLogoContainer .circleContainer .circle {
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		border-radius: 50%;
-		background-color: #19354E;
-	}
-	.thunderLogoContainer .circleContainer .circle .thunderLogo {
-		width: 100%;
-	}
+}
+
+section#input_zone {
+	height: 7%;
+	text-align: center;
+	flex-shrink: 0;
+}
+section#connectedUsers {
+	flex-shrink: 0;
+}
+
+input#username {
+	font-family: 'Comfortaa', sans-serif;
+}
+
+input#message {
+	display: inline-block;
+	width: 88%;
+	height: 70%;
+	font-family: 'Comfortaa', sans-serif;
+	font-size: 2vh;
+	background-color: #eeeeee;
+}
+
+button#send_message {
+	display: inline-block;
+	height: 70%;
+	width: 10%;
+	background-color: #19354E;
+	color: white;
+}
+
+p.message {
+	margin: 0px;
+	height: 40px;
+	font-size: 2vh;
+	font-family: 'Comfortaa', sans-serif;
+	padding: 1vh;
+}
+
+.messageOthers {
+	float: left;
+	background-color: #ffffff;
+	color: black;
+	width: 80%;
+}
+
+.messageYours {
+	float: right;
+	text-align: right;
+	width: 80%;
+	background-color: #ffffff;
+	color: black;
+}
+

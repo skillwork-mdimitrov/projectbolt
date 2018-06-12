@@ -1,0 +1,28 @@
+/* Mixin to prefix a property
+  @param {String} $property - Property name
+  @param {*} $value - Property value
+  @param {List} $prefixes (()) - List of prefixes to print
+  Example: @include prefix(transform, rotate(45deg), webkit ms) */
+@mixin prefix($property, $value, $prefixes: ()) {
+  @each $prefix in $prefixes {
+    #{'-' + $prefix + '-' + $property}: $value;
+  }
+
+  // Output standard non-prefixed declaration
+  #{$property}: $value;
+}
+
+// Google's Barlow font.
+// Include link to the Google font in your html
+@mixin barlowFont($fontSize) {
+  font-family: 'Barlow', sans-serif;
+  font-size: $fontSize;
+}
+
+@mixin absoluteZero {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
