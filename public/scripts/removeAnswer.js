@@ -4,7 +4,6 @@ const removeAnswer = function() {
     const removeAnswer = function(deleteButton) {
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
         let answerID = deleteButton.attr("id");
-
         console.log("Removing answer " + answerID);
         $.post("answers/remove-answer", { answerID: answerID, sessionID: sessionID }, function() {})
         .done(function() {

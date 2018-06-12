@@ -246,10 +246,12 @@ const viewAnswers = function() {
                 }
 
                 $('.deleteButton').on("click", function(){
+                    global.showLoader();
                     removeAnswer.removeAnswer($(this));
                 });
 
                 $('.verifyButton').on("click", function(){
+                  global.showLoader();
                   verifyAnswer.verifyAnswer($(this));
                 });
 
@@ -337,14 +339,13 @@ $(document).ready(function() {
 
       viewAnswers.submitAnswerBtn.on("click", function() {
         const buttonID = this.id; // for logging purposes
-
         $.ajax({
           type: 'get',
           url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
+          // Session check AJAX request
           success: function (userID) {
-
             if(global.fieldNotEmpty(viewAnswers.addAnswerArea)) {
-
+              global.showLoader();
               // JSON'ize the question
               let bodyJSON = {
                 question: document.getElementById("questionHeading").textContent,
@@ -354,8 +355,9 @@ $(document).ready(function() {
                 sessionID: sessionStorage.getItem('projectBoltSessionID')
               };
 
-              // Send the AJAX request
+              // Send post answer AJAX request
               addAnswer.postAnswer(bodyJSON).then(function() {
+                global.hideLoader();
                 viewAnswers.addOwnAnswer.toggleUI().then(function() {
                   viewAnswers.addAnswerArea.val(''); // Reset textarea
                   /* RE-FETCH all the answers
