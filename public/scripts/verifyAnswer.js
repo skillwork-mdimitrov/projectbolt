@@ -22,10 +22,10 @@ const verifyAnswer = function() {
             viewAnswers.answersTableUI().show();
             viewAnswers.answersTableUI().fadeIn();
           })
-              .catch(function(message) {
-                unfoldingHeader.unfoldHeader("Failed retrieving answers, see console for details", "red");
-                console.log("Failed retrieving answers " + answerID + ": " + message);
-              });
+          .catch(function(message) {
+            unfoldingHeader.unfoldHeader("Failed retrieving answers, see console for details", "red");
+            console.log("Failed retrieving answers " + answerID + ": " + message);
+          });
         })
         .fail(function(message) {
           unfoldingHeader.unfoldHeader("Failed removing answer, see console for details", "red");

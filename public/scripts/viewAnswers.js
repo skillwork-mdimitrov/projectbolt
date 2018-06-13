@@ -357,6 +357,8 @@ $(document).ready(function() {
 
               // Send post answer AJAX request
               addAnswer.postAnswer(bodyJSON).then(function() {
+                /* UI
+                ============================================================== */
                 global.hideLoader();
                 viewAnswers.addOwnAnswer.toggleUI().then(function() {
                   viewAnswers.addAnswerArea.val(''); // Reset textarea
@@ -374,6 +376,7 @@ $(document).ready(function() {
                     viewAnswers.answersTableUI().fadeIn();
                   })
                 })
+                // ============================================================== */
                 .catch(function(reject) {
                   console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
                   global.hideLoader();
@@ -395,12 +398,17 @@ $(document).ready(function() {
         });
       });
 
+      /* Cancel submitting answer button
+      ============================================================== */
       viewAnswers.cancelAnswerBtn.on("click", function() {
         viewAnswers.addAnswerArea.val(''); // Reset textarea
         viewAnswers.addOwnAnswer.toggleUI();
       });
 
       console.log("Sending get answers request");
+
+      /* The initial build and population of the Answers table
+      ============================================================== */
       viewAnswers.mkAnswersTableSkeleton(); // Create the answers table skeleton
       // Populate the answers table
       viewAnswers.getAnswers().then(function() {
@@ -413,7 +421,9 @@ $(document).ready(function() {
         console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
         return false;
       });
+      // ============================================================== */
     })
+    // Promise.all catch
     .catch(() => {
       unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
       setTimeout(function(){ global.logout(); }, 5000);

@@ -20,7 +20,9 @@ const addQuestion = function() {
         let userID = parseInt(values[0]);             // Return value from userIdPromise
         let bestQuestionSimilarity = values[1];       // Return value from bestQuestionSimilarityPromise
 
+        // If question is unique
         if (bestQuestionSimilarity.rating < suggestions.maximumQuestionSimilarity) {
+          // JSON'ize the input to be send
           let questionData = {
             question: question,
             userID: userID,

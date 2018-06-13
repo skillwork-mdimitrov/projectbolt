@@ -2,6 +2,7 @@
  ============================================================== */
 const viewQuestions = function () {
   const scriptFilename = "viewQuestions.js";
+  let questionsVisited = [];
 
   const addToTable = function (question) {
     let questionText = question[0];
@@ -52,6 +53,10 @@ const viewQuestions = function () {
     rowItemAnswerLink.textContent = "Answers";
     rowItemAnswerLink.title = "Answers";
     rowItemAnswerLink.href = "answers.html?qid=" + questionID;
+    // Register where the user is going
+    $(rowItemAnswerLink).on("click", function() {
+      // TODO: SOMEWHERE HERE I'LL STORE THE QUESTION ID THE USER IS GOING FOR
+    });
     rowItemAnswer.appendChild(rowItemAnswerLink);
 
     // Append the delete button, question, user and answer to that table row
@@ -76,9 +81,9 @@ const viewQuestions = function () {
       global.logPromise(isTeacherPromise, scriptFilename, "Requesting user teacher status");
 
       Promise.all([getAllQuestionsPromise, isTeacherPromise]).then((values) => {
-        let questionsData = values[0]   // Return value from getAllQuestionsPromise
-        let isTeacher = values[1]       // Return value from isTeacherPromise        
-        
+        let questionsData = values[0];   // Return value from getAllQuestionsPromise
+        let isTeacher = values[1];       // Return value from isTeacherPromise
+
         $.each(questionsData, function (key, val) {
           addToTable([val["Question"], val["Username"], val["ID"]]);
         });
