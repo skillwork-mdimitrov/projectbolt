@@ -38,3 +38,6 @@ jspm_packages
 
 # remove idea
 .idea
+
+# local sync
+.stfolder
