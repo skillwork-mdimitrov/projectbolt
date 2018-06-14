@@ -262,9 +262,9 @@ function getNonBannedAnswersByQuestionId(questionID) {
     });
 }
 
-function insertAnswer(answer, questionID, userID) {
+function insertAnswer(answer, questionID, userID, date) {
     return new Promise((resolve, reject) => {
-        runGenericQuery(queries.getInsertAnswerQuery(answer, questionID, userID)).then(() => {
+			runGenericQuery(queries.getInsertAnswerQuery(answer, questionID, userID, date)).then(() => {
             resolve();
         }).catch((reason) => {
             reject(reason);

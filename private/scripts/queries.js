@@ -154,12 +154,13 @@ function getNonBannedAnswersByQuestionIdQuery(questionID) {
     return {query: query, params: params};
 }
 
-function getInsertAnswerQuery(answer, questionID, userID) {
-    var query = "INSERT INTO Answers (answer, questionid, userid) VALUES ( @answer , @questionID , @userID )";
+function getInsertAnswerQuery(answer, questionID, userID, date) {
+    var query = "INSERT INTO Answers (answer, questionid, userid, date) VALUES ( @answer , @questionID , @userID , @date)";
     var params = [
         {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID},
         {paramName: "userID", paramType: TYPES.Int, paramValue: userID},
-        {paramName: "answer", paramType: TYPES.NVarChar, paramValue: answer}
+        {paramName: "answer", paramType: TYPES.NVarChar, paramValue: answer},
+		{paramName: "date", paramType: TYPES.NVarChar, paramValue: date}
     ]
     return {query: query, params: params}; 
 }

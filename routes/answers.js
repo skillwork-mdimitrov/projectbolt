@@ -88,16 +88,37 @@ router.post('/add-answer', function(req, res) {
   let answer = req.body.answer;
   let questionID = parseInt(req.body.questionID);
   let userID = parseInt(req.body.userID);
-  let sessionID = req.body.sessionID;
+  let sessionID = req.body.sessionID; 
 
   if (Number.isInteger(questionID) &&
       Number.isInteger(userID) && 
       login.sessionValid(sessionID)) {
     database.getUserIdByQuestionId(questionID).then((questionUserIDJSON) => {
       let questionUserID = questionUserIDJSON[0].UserID;
-
       if (questionUserID !== userID) {
-        database.insertAnswer(answer, questionID, userID).then(() => {
+		if (!Date.prototype.toSQLString) {
+			//Run function if the default doesn't exist
+			(function() {
+				//Padding out the month / date / hours and minutes
+				function pad(number) {
+					if (number < 10) {
+						return '0' + number;
+					}
+					return number;
+				}
+				//generating output string
+				Date.prototype.toSQLOString = function() {
+					return pad(this.getUTCMonth() + 1) +
+						'-' + pad(this.getUTCDate()) +
+						'-' + this.getUTCFullYear() +
+						' ' + pad(this.getUTCHours()) +
+						':' + pad(this.getUTCMinutes());
+				};
+			}());
+		}
+		//save date
+		let date = (new Date()).toSQLOString();
+        database.insertAnswer(answer, questionID, userID, date).then(() => {
           res.status(200).send("Insert successful");
         })
         .catch((reason) => {
