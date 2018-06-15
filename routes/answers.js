@@ -203,10 +203,12 @@ router.post('/get-similarity', function(req, res, next) {
   if (Number.isInteger(questionID) && login.sessionValid(sessionID)) {
     similarity.getAnswerSimilarities(query, questionID).then((similarities) => {      
       res.status(200).send(similarities);
-    }).catch(
-    (reason) => {
+    }).catch((reason) => {
       res.status(500).send(reason.toString());
     });  
+  }
+  else {
+    res.status(500).send('Invalid request');
   }
 });
 
@@ -216,11 +218,14 @@ router.post('/user-answer-number', function(req, res) {
   let sessionID = req.body.sessionID;
 
   if (login.sessionValid(sessionID)) {
-    database.getUsersPostedAnsersByMonth(monthStart, monthEnd).then((userAnswerNumber) => {
+    database.getUsersPostedAnsersByMonth(monthStart, monthEnd).then((userPostedAnsers) => {
 		  res.status(200).send(userPostedAnsers);
-		}).catch(() => {
+		}).catch((reason) => {
       res.status(500).send(reason.toString());
     })
+  }
+  else {
+    res.status(500).send('Invalid request');
   }
 });
 
