@@ -117,7 +117,7 @@ $(document).ready(function () {
   Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
     viewQuestions.reloadQuestions().then(() => {
       global.hideLoader();
-	  userOfTheMonth.
+	  userOfTheMonth.getUserOfTheMonth();
     }).catch(() => {
       unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
       setTimeout(function(){ global.logout(); }, 5000);   
