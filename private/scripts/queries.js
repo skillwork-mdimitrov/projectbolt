@@ -243,6 +243,22 @@ function getUnbanUserQuery(userID) {
     return {query: query, params: params};
 }
 
+function getUsersPostedAnsersByMonth(monthStart, monthEnd) {
+    var query = `
+				SELECT dbo.Answers.UserID, COUNT(*) AS Answers
+				FROM dbo.Answers
+				WHERE dbo.Answers.Date between @monthStart and @monthEnd
+				GROUP BY dbo.Answers.UserID 
+				`;
+				console.out(query);
+				return;
+    var params = [
+		{paramName: "monthStart", paramType: TYPES.NVarChar, paramValue: monthStart},
+        {paramName: "monthEnd", paramType: TYPES.NVarChar, paramValue: monthEnd}
+    ]
+    return {query: query, params: params};
+}
+
 exports.getRatingsByAnswerIdQuery = getRatingsByAnswerIdQuery;
 exports.getNonBannedRatingsByAnswerIdQuery = getNonBannedRatingsByAnswerIdQuery;
 exports.getRatingByAnswerIdAndUserIdQuery = getRatingByAnswerIdAndUserIdQuery;
@@ -274,3 +290,4 @@ exports.getUserRoleByIdQuery = getUserRoleByIdQuery;
 exports.getUserBannedStatusByIdQuery = getUserBannedStatusByIdQuery;
 exports.getBanUserQuery = getBanUserQuery;
 exports.getUnbanUserQuery = getUnbanUserQuery;
+exports.getUsersPostedAnsersByMonth = getUsersPostedAnsersByMonth;
