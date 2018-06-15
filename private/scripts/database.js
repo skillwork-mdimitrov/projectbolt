@@ -262,6 +262,16 @@ function getNonBannedAnswersByQuestionId(questionID) {
     });
 }
 
+function getVisitsForAllQuestions(questionID) {
+  return new Promise((resolve, reject) => {
+    getJsonDataSet(queries.getVisitsForAllQuestionsQuery(questionID)).then((visits) => {
+      resolve(visits);
+    }).catch((reason) => {
+      reject(reason);
+    });
+  });
+}
+
 function insertAnswer(answer, questionID, userID, date) {
     return new Promise((resolve, reject) => {
 			runGenericQuery(queries.getInsertAnswerQuery(answer, questionID, userID, date)).then(() => {
@@ -270,6 +280,16 @@ function insertAnswer(answer, questionID, userID, date) {
             reject(reason);
         }); 
     });
+}
+
+function insertVisits(questionID, date) {
+    return new Promise((resolve, reject) => {
+        runGenericQuery(queries.getInsertVisitsQuery(questionID, date)).then(() => {
+            resolve("Visits successfully tracked");
+        }).catch((reason) => {
+            reject(reason);
+        })
+    })
 }
 
 function deleteAnswer(answerID) {
@@ -404,7 +424,9 @@ exports.getUsernameByAnswer = getUsernameByAnswer;
 exports.getUserIdByAnswerId = getUserIdByAnswerId;
 exports.getAnswerIdByText = getAnswerIdByText;
 exports.getNonBannedAnswersByQuestionId = getNonBannedAnswersByQuestionId;
+exports.getVisitsForAllQuestions = getVisitsForAllQuestions;
 exports.insertAnswer = insertAnswer;
+exports.insertVisits = insertVisits;
 exports.deleteAnswer = deleteAnswer;
 exports.verifyAnswer = verifyAnswer;
 

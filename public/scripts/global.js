@@ -88,10 +88,13 @@ const global = function() {
   const logout = function logout() { 
     sessionStorage.removeItem("projectBoltSessionID");
 
-    // TODO THINK ABOUT THIS
+    sendStatistics();
+
     // Reset the visited pages
-    sessionStorage.removeItem("questionsVisited");
-    questionsVisited.length = 0;
+    (function resetVisitedPage() {
+      sessionStorage.removeItem("questionsVisited");
+      questionsVisited.length = 0;
+    })();
 
     redirect("login");
   };
@@ -143,18 +146,18 @@ const global = function() {
     }); 
   };
 
-
-  /* @return {true} if user is going away from our domain
-  ============================================================== */
-  const leavingSite = function() {
-    let leaving = true;
-    if(window.location.href.includes("projectboltrenew.azurewebsites")) {
-      leaving = false;
-    }
-    else if(window.location.href.includes("localhost")) {
-      leaving = false;
-    }
-    return leaving;
+  // TODO Date ranges will be added, so visits only for a desired period can be extracted
+  // FOR MICHELA ↓
+  // AJAX retrieve all questions (their id's) and their number of visits
+  const getQuestionStats = function() {
+    $.getJSON("/allQuestionsStats", function(resolve) {
+      // Log the questionID and visits
+      console.log(resolve);
+    })
+    .fail(function(jqXHR) {
+      global.logAJAXErr(getQuestionStats.name, jqXHR);
+      unfoldingHeader.unfoldHeader("Failed obtaining the question statistics", "orange");
+    })
   };
 
   // @return {unique []}
@@ -180,7 +183,7 @@ const global = function() {
       mm = '0' + mm;
     }
 
-    // Extend if needed, adjust today = mm +'/'+ dd +'/'+ yyyy to change the format
+    // Extend if needed, add parameters and adjust today = mm +'/'+ dd +'/'+ yyyy to change the format
     today = yyyy + "/" + mm + "/" + dd;
     return today;
   };
@@ -188,10 +191,11 @@ const global = function() {
   const sendStatistics = () => {
     // @return {true} if the user has visited some questions
     const statsNotEmpty = () => questionsVisited.length > 0;
-    // @return [] of unique values only (so user can't spam the same question)7
+    // @return [] of unique values only (so user can't spam the same question)
     const getUniqueVisited = () => rmArrDuplicates(questionsVisited);
 
     // JSON'ize and stringify the body to be send
+    // TODO: Maybe add the sessionID as well
     const JSONstringifyBody = () => {
       return {
         visited: JSON.stringify(getUniqueVisited()),
@@ -206,19 +210,10 @@ const global = function() {
     return false;
   };
 
-  // Pages with global.js will fire this event when user is about to leave the page
-  window.onbeforeunload = function () {
-    if (leavingSite()) {
-      // TODO Send AJAX with the clicks statistics here
-      console.log("hey dojo");
-    }
-  };
-
   return {
     trackQuestionsVisited: trackQuestionsVisited,
-    questionsVisited: questionsVisited,
-    // TODO remove from here most likely
-    sendStatistics: sendStatistics,
+    getQuestionStats: getQuestionStats,
+
     fieldNotEmpty: fieldNotEmpty,
     fieldIsEmpty: fieldIsEmpty,
     rmElemFromArray: rmElemFromArray,

@@ -165,6 +165,15 @@ function getInsertAnswerQuery(answer, questionID, userID, date) {
     return {query: query, params: params}; 
 }
 
+function getInsertVisitsQuery(questionID, date) {
+    var query = "INSERT INTO VisitsStats (QuestionID, VisitDate) VALUES ( @questionID, @date );";
+    var params = [
+      {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID},
+      {paramName: "date", paramType: TYPES.Date, paramValue: date}
+    ];
+  return {query: query, params: params}
+}
+
 function getDeleteAnswerQuery(answerID) {
     var query  = "DELETE FROM Answers WHERE ID = @answerID";
     var params = [
@@ -193,7 +202,15 @@ function getIdPasswordByUsernameQuery(username) {
         {paramName: "username", paramType: TYPES.NVarChar, paramValue: username}
     ]
     return {query: query, params: params};
-} 
+}
+
+function getVisitsForAllQuestionsQuery() {
+    var query = "SELECT QuestionID, COUNT(QuestionID) AS NumberOfVisits\n" +
+        "FROM VisitsStats\n" +
+        "GROUP BY QuestionID;";
+    var params = [];
+    return {query: query, params: params};
+}
 
 function getUsernameByIdQuery(userID) {
     var query = "SELECT Username FROM Users WHERE ID = @userID";
@@ -275,10 +292,12 @@ exports.getDeleteQuestionQuery = getDeleteQuestionQuery;
 
 exports.getAnswersByQuestionIdQuery = getAnswersByQuestionIdQuery;
 exports.getUsernameByAnswerQuery = getUsernameByAnswerQuery;
+exports.getVisitsForAllQuestionsQuery = getVisitsForAllQuestionsQuery;
 exports.getUserIdByAnswerIdQuery = getUserIdByAnswerIdQuery;
 exports.getAnswerIdByTextQuery = getAnswerIdByTextQuery;
 exports.getNonBannedAnswersByQuestionIdQuery = getNonBannedAnswersByQuestionIdQuery;
 exports.getInsertAnswerQuery = getInsertAnswerQuery;
+exports.getInsertVisitsQuery = getInsertVisitsQuery;
 exports.getDeleteAnswerQuery = getDeleteAnswerQuery;
 exports.getVerifyAnswerQuery = getVerifyAnswerQuery;
 
