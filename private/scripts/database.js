@@ -372,6 +372,16 @@ function unbanUser(userID) {
     });
 }
 
+function getUsersPostedAnsersByMonth(monthStart, monthEnd) {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getUsernamesBannedStatusQuery(monthStart, monthEnd)).then((userPostedAnsers) => {
+            resolve(userPostedAnsers);
+        }).catch((reason) => {
+            reject(reason);
+        }); 
+    }); 
+}
+
 exports.runGenericQuery = runGenericQuery;
 exports.getJsonDataSet = getJsonDataSet;
 
@@ -406,3 +416,4 @@ exports.getUserRoleById = getUserRoleById;
 exports.getUserBannedStatusById = getUserBannedStatusById;
 exports.banUser = banUser;
 exports.unbanUser = unbanUser;
+exports.getUsersPostedAnsersByMonth = getUsersPostedAnsersByMonth;
