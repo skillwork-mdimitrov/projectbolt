@@ -208,8 +208,19 @@ router.post('/get-similarity', function(req, res, next) {
       res.status(500).send(reason.toString());
     });  
   }
-  else {
-    res.status(500).send('Invalid request');
+});
+
+router.post('/user-answer-number', function(req, res) {
+  let monthStart = req.body.monthStart; 
+  let monthEnd = req.body.monthEnd;
+  let sessionID = req.body.sessionID;
+
+  if (login.sessionValid(sessionID)) {
+    database.getUsersPostedAnsersByMonth(monthStart, monthEnd).then((userAnswerNumber) => {
+		  res.status(200).send(userPostedAnsers);
+		}).catch(() => {
+      res.status(500).send(reason.toString());
+    })
   }
 });
 
