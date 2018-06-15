@@ -208,9 +208,6 @@ router.post('/get-similarity', function(req, res, next) {
       res.status(500).send(reason.toString());
     });  
   }
-  else {
-    res.status(500).send('Invalid request', function(req, res, next);
-  }
 });
 
 router.post('/user-answer-number', function(req, res) {
@@ -224,9 +221,6 @@ router.post('/user-answer-number', function(req, res) {
 		}).catch(() => {
       res.status(500).send(reason.toString());
     })
-  }
-  else {
-    res.status(500).send('Invalid request');
   }
 });
 
