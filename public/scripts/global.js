@@ -3,6 +3,18 @@
  * A script for abstract, reusable functions                 */
 
 const global = function() {
+  // Initially create an empty array, if "questionsVisited" session exists, the array is filled with the contents of the session
+  let questionsVisited = sessionStorage.getItem("questionsVisited") ? JSON.parse(sessionStorage.getItem('questionsVisited')) : [];
+
+  // Register to which question the user is going
+  const trackQuestionsVisited = (indicator, questionID) => {
+    // indicator needs to be a jQuery object
+    indicator.on("click", () => {
+      // Store the questionID visited
+      questionsVisited.push(questionID);
+      sessionStorage.setItem("questionsVisited", JSON.stringify(questionsVisited)); // store the array in the session (to persists through pages)
+    })
+  };
 
   /* @return {true} if the field is NOT empty
   ============================================================== */
@@ -68,13 +80,19 @@ const global = function() {
     }
     else {
       let portIndex = window.location.href.indexOf(":3000");
-      let baseUrl = window.location.href.substring(0, portIndex)
+      let baseUrl = window.location.href.substring(0, portIndex);
       window.location.href = baseUrl+":3000/"+route;
     }
   };
 
   const logout = function logout() { 
     sessionStorage.removeItem("projectBoltSessionID");
+
+    // TODO THINK ABOUT THIS
+    // Reset the visited pages
+    sessionStorage.removeItem("questionsVisited");
+    questionsVisited.length = 0;
+
     redirect("login");
   };
 
@@ -125,7 +143,82 @@ const global = function() {
     }); 
   };
 
+
+  /* @return {true} if user is going away from our domain
+  ============================================================== */
+  const leavingSite = function() {
+    let leaving = true;
+    if(window.location.href.includes("projectboltrenew.azurewebsites")) {
+      leaving = false;
+    }
+    else if(window.location.href.includes("localhost")) {
+      leaving = false;
+    }
+    return leaving;
+  };
+
+  // @return {unique []}
+  const rmArrDuplicates = (arrArg) => {
+    return arrArg.filter((elem, pos, arr) => {
+      return arr.indexOf(elem) === pos;
+    });
+  };
+
+  /* @return {date: YYYY-MM-DD}
+  ============================================================== */
+  const getTodaysDate = function() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; // January is 0
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+      dd = '0' + dd;
+    }
+
+    if(mm<10) {
+      mm = '0' + mm;
+    }
+
+    // Extend if needed, adjust today = mm +'/'+ dd +'/'+ yyyy to change the format
+    today = yyyy + "/" + mm + "/" + dd;
+    return today;
+  };
+
+  const sendStatistics = () => {
+    // @return {true} if the user has visited some questions
+    const statsNotEmpty = () => questionsVisited.length > 0;
+    // @return [] of unique values only (so user can't spam the same question)7
+    const getUniqueVisited = () => rmArrDuplicates(questionsVisited);
+
+    // JSON'ize and stringify the body to be send
+    const JSONstringifyBody = () => {
+      return {
+        visited: JSON.stringify(getUniqueVisited()),
+        date: JSON.stringify(getTodaysDate())
+      };
+    };
+
+    if(statsNotEmpty()) {
+      $.post("/sendStatistics", JSONstringifyBody());
+      return true;
+    }
+    return false;
+  };
+
+  // Pages with global.js will fire this event when user is about to leave the page
+  window.onbeforeunload = function () {
+    if (leavingSite()) {
+      // TODO Send AJAX with the clicks statistics here
+      console.log("hey dojo");
+    }
+  };
+
   return {
+    trackQuestionsVisited: trackQuestionsVisited,
+    questionsVisited: questionsVisited,
+    // TODO remove from here most likely
+    sendStatistics: sendStatistics,
     fieldNotEmpty: fieldNotEmpty,
     fieldIsEmpty: fieldIsEmpty,
     rmElemFromArray: rmElemFromArray,
