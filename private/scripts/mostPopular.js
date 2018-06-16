@@ -15,7 +15,7 @@ function getMostPopularQuestions(amount)
         database.getAllQuestionsForPopular().then((questions) => {
 
             // Step 1: Give each question a score
-            // The question already contains all the
+            // The question already contains all the answerCounts, visits and ratings
             questions.forEach(async (question) => {
                 question.score = getScore(question);
             });
@@ -33,7 +33,6 @@ function getMostPopularQuestions(amount)
     });
 }
 
-// TODO Base on visited aswell
 /// <summary>Calculates a popularity score based of a question based on the amount of answers, rating and visits</summary>
 /// <param name="question" type="Question">The question to calculate the score for</param>
 /// <returns type="Number">The popularity score of the question</returns>
