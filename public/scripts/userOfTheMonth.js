@@ -66,15 +66,14 @@ const userOfTheMonth = function () {
 			{
 				//now work with the given array ^^
 				let userOfTheMonthID = userPostedAnsers[0].UserID
-				console.log(userOfTheMonthID);
+				//console.log(userOfTheMonthID);
 				return userOfTheMonthID;
 			};
 			let ansernumberUser = $.post("answers/user-answer-number", postData);
 			//Waiting for the promise and taking action
 			global.logPromise(ansernumberUser, scriptFilename, "Requesting user answer stats");
 			ansernumberUser.then((userPostedAnsers) => {
-				resolve(userPostedAnsers);
-				loop(userPostedAnsers);
+				resolve(loop(userPostedAnsers));
 			}).catch((reason) => {
 				reject(reason);
 			});

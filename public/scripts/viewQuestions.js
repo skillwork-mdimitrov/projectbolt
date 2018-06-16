@@ -121,6 +121,7 @@ $(document).ready(function () {
     viewQuestions.reloadQuestions().then(() => {
       global.hideLoader();
 	    userOfTheMonth.getUserOfTheMonth().then((someData) => {
+			console.log(someData);
       }).catch((reason) => {
         console.log(reason);
       }); 
