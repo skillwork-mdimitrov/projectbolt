@@ -55,10 +55,18 @@ function getAllQuestionsQuery() {
 }
 
 function getAllQuestionsForPopular() {
-    var query = "SELECT Questions.ID, COUNT(Answers.ID) AS AnswerCount " +
+    var query = "SELECT  Questions.ID, " +
+                "MAX(Questions.Question) AS Question, " +
+                "COUNT(DISTINCT Answers.ID) AS AnswerCount, " +
+                "COUNT(DISTINCT VisitsStats.VisitID) AS VisitCount, " +
+                "MAX(Users.Username) AS Username, " +
+                "SUM(DISTINCT Ratings.Rating) AS TotalRating " +
                 "FROM Questions " +
-                "INNER JOIN Answers ON Answers.questionID = Questions.ID " +
-                "GROUP BY Questions.ID";
+                "LEFT JOIN Answers ON Answers.questionID = Questions.ID " +
+                "LEFT JOIN VisitsStats ON VisitsStats.questionID = Questions.ID " +
+                "LEFT JOIN Users ON Questions.UserID = Users.ID " +
+                "LEFT JOIN Ratings ON Ratings.AnswerID = Answers.ID " +
+                "GROUP BY Questions.ID;";
     var params = []
     return {query: query, params: params};
 }

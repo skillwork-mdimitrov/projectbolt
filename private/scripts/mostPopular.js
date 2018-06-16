@@ -1,5 +1,11 @@
 var database = require('./database');
 
+var multipliers = {
+    answerMultiplier: 5,
+    visitMultiplier: 0.5,
+    ratingMultiplier: 2
+};
+
 /// <summary>Returns the most popular questions based on the amount of answers, rating and visits.</summary>
 /// <param name="amount" type="Number">How much questions need to be returned</param>
 /// <returns type="Number">A promise that returns a list of most popular questions. The amount is depending on the parameter</returns>
@@ -9,25 +15,18 @@ function getMostPopularQuestions(amount)
         database.getAllQuestionsForPopular().then((questions) => {
 
             // Step 1: Give each question a score
-            // Here the questions list will be looped and each question will get a popularity score
-            let scoredQuestions;
+            // The question already contains all the
             questions.forEach(async (question) => {
-
-                // Use amount of answers, ratings and clicks
                 question.score = getScore(question);
             });
 
-            console.log(questions);
-
             // Step 2: Sorting the questions
             // Here the questions will get sorted based on their popularity scores (from high to low)
-            // TODO Sort all the questions from high to low score
-            if (scoredQuestions.score >= )
-
+            let sortedQuestions = questions.sort(compare);
 
             // Step 3: Return the most popular questions
-            // Return the 10 most popular ones (based on the 'amount' parameter
-            resolve(questions);
+            // Return the x most popular ones (based on the 'amount' parameter)
+            resolve(sortedQuestions.slice(0, amount));
         }).catch((reason) => {
                 reject(reason);
         });
@@ -40,9 +39,15 @@ function getMostPopularQuestions(amount)
 /// <returns type="Number">The popularity score of the question</returns>
 function getScore(question)
 {
-    // TODO Here you calculate the score and return it
+    return (question.AnswerCount * multipliers.answerMultiplier) +
+           (question.VisitCount * multipliers.visitMultiplier) +
+           (question.TotalRating * multipliers.ratingMultiplier);
+}
 
-    return 121;
+// The compare function (from high to low)
+function compare(a, b)
+{
+    return b.score - a.score;
 }
 
 exports.getMostPopularQuestions = getMostPopularQuestions;
