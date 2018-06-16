@@ -77,14 +77,15 @@ const viewQuestions = function () {
       global.logPromise(isTeacherPromise, scriptFilename, "Requesting user teacher status");
 
       // TODO Delete this
+      //This is a test of mostPopularQuestion
       let getMostPopularQuestions = $.getJSON("questions/get-most-popular/"+sessionID);
       global.logPromise(getMostPopularQuestions, scriptFilename, "Requesting most popular questions");
 
-      Promise.all([getAllQuestionsPromise, isTeacherPromise]).then((values) => {
+      Promise.all([getAllQuestionsPromise, isTeacherPromise, getMostPopularQuestions]).then((values) => {
         let questionsData = values[0];   // Return value from getAllQuestionsPromise
         let isTeacher = values[1];       // Return value from isTeacherPromise
+        console.log(values[2]);
 
-        console.log(questionsData);
 
         $.each(questionsData, function (key, val) {
           addToTable([val["Question"], val["Username"], val["ID"]]);
