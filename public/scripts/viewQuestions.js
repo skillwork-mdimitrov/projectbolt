@@ -2,7 +2,6 @@
  ============================================================== */
 const viewQuestions = function () {
   const scriptFilename = "viewQuestions.js";
-  let questionsVisited = [];
 
   const addToTable = function (question) {
     let questionText = question[0];
@@ -53,10 +52,7 @@ const viewQuestions = function () {
     rowItemAnswerLink.textContent = "Answers";
     rowItemAnswerLink.title = "Answers";
     rowItemAnswerLink.href = "answers.html?qid=" + questionID;
-    // Register where the user is going
-    $(rowItemAnswerLink).on("click", function() {
-      // TODO: SOMEWHERE HERE I'LL STORE THE QUESTION ID THE USER IS GOING FOR
-    });
+    global.trackQuestionsVisited($(rowItemAnswerLink), questionID);
     rowItemAnswer.appendChild(rowItemAnswerLink);
 
     // Append the delete button, question, user and answer to that table row
@@ -111,7 +107,7 @@ const viewQuestions = function () {
   };
 
   return {
-    reloadQuestions: reloadQuestions
+    reloadQuestions: reloadQuestions,
   }
 }();
 
@@ -124,7 +120,6 @@ $(document).ready(function () {
     viewQuestions.reloadQuestions().then(() => {
       global.hideLoader();
 	    userOfTheMonth.getUserOfTheMonth().then((someData) => {
-        console.log(someData);
       }).catch((reason) => {
         console.log(reason);
       }); 
