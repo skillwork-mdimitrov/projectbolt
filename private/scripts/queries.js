@@ -54,6 +54,15 @@ function getAllQuestionsQuery() {
     return {query: query, params: params};
 }
 
+function getAllQuestionsForPopular() {
+    var query = "SELECT Questions.ID, COUNT(Answers.ID) AS AnswerCount " +
+                "FROM Questions " +
+                "INNER JOIN Answers ON Answers.questionID = Questions.ID " +
+                "GROUP BY Questions.ID";
+    var params = []
+    return {query: query, params: params};
+}
+
 function getAllNonBannedQuestionsQuery() {
     var query = `SELECT Questions.ID, Questions.Question, Questions.UserID, Users.Username 
                 FROM Questions 
@@ -266,6 +275,7 @@ exports.getInsertRatingQuery = getInsertRatingQuery;
 exports.getUpdateRatingQuery = getUpdateRatingQuery;
 
 exports.getAllQuestionsQuery = getAllQuestionsQuery;
+exports.getAllQuestionsForPopular = getAllQuestionsForPopular;
 exports.getAllNonBannedQuestionsQuery = getAllNonBannedQuestionsQuery;
 exports.getQuestionTextByIdQuery = getQuestionTextByIdQuery;
 exports.getQuestionIdByTextQuery = getQuestionIdByTextQuery;

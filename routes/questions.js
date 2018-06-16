@@ -2,6 +2,7 @@ var express = require('express');
 var database = require('../private/scripts/database');
 var login = require('../private/scripts/login');
 var similarity = require('../private/scripts/similarity');
+var mostPopular = require('../private/scripts/mostPopular');
 var path = require('path');
 var router = express.Router();
 
@@ -15,11 +16,28 @@ router.get('/get-all-questions/:sessionID', function(req, res, next) {
     }).catch(
     (reason) => {
       res.status(500).send(reason.toString());
-    });  
+    });
   }
   else {
     res.status(500).send('Invalid request');
   }
+});
+
+/* GET ten most popular questions */
+router.get('/get-most-popular/:sessionID', function(req, res, next) {
+    let sessionID = req.params["sessionID"];
+
+    if (login.sessionValid(sessionID)) {
+      mostPopular.getMostPopularQuestions(10).then((mostPopularQuestions) => {
+      res.json(mostPopularQuestions);
+      }).catch(
+          (reason) => {
+          res.status(500).send(reason.toString());
+      });
+    }
+    else {
+        res.status(500).send('Invalid request');
+    }
 });
 
 /* GET similarity ratings from all the questions promise */

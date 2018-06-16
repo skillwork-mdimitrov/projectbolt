@@ -152,6 +152,16 @@ function getAllQuestions() {
     });   
 }
 
+function getAllQuestionsForPopular() {
+    return new Promise((resolve, reject) => {
+        getJsonDataSet(queries.getAllQuestionsForPopular()).then((questions) => {
+            resolve(questions);
+        }).catch((reason) => {
+            reject(reason);
+        });
+    });
+}
+
 function getAllNonBannedQuestions() {
     return new Promise((resolve, reject) => {
         getJsonDataSet(queries.getAllNonBannedQuestionsQuery()).then((questions) => {
@@ -392,6 +402,7 @@ exports.insertRating = insertRating;
 exports.updateRating = updateRating;
 
 exports.getAllQuestions = getAllQuestions;
+exports.getAllQuestionsForPopular = getAllQuestionsForPopular;
 exports.getAllNonBannedQuestions = getAllNonBannedQuestions;
 exports.getQuestionTextById = getQuestionTextById;
 exports.getQuestionIdByText = getQuestionIdByText;

@@ -69,6 +69,7 @@ const viewAnswers = function() {
     };
 
     const addToTable = function(answer) {
+        console.log("EXECUTING");
         let answerText = answer[0];
         let answerID = answer[1];
         let username = answer[2];
