@@ -266,9 +266,8 @@ function getUsersPostedAnsersByMonth(monthStart, monthEnd) {
 				FROM dbo.Answers
 				WHERE dbo.Answers.Date between @monthStart and @monthEnd
 				GROUP BY dbo.Answers.UserID 
+				ORDER BY COUNT(*) DESC;
 				`;
-				console.out(query);
-				return;
     var params = [
 		{paramName: "monthStart", paramType: TYPES.NVarChar, paramValue: monthStart},
         {paramName: "monthEnd", paramType: TYPES.NVarChar, paramValue: monthEnd}

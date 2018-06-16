@@ -394,7 +394,7 @@ function unbanUser(userID) {
 
 function getUsersPostedAnsersByMonth(monthStart, monthEnd) {
     return new Promise((resolve, reject) => {
-        getJsonDataSet(queries.getUsernamesBannedStatusQuery(monthStart, monthEnd)).then((userPostedAnsers) => {
+        getJsonDataSet(queries.getUsersPostedAnsersByMonth(monthStart, monthEnd)).then((userPostedAnsers) => {
             resolve(userPostedAnsers);
         }).catch((reason) => {
             reject(reason);
