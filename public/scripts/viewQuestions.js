@@ -57,7 +57,7 @@ const viewQuestions = function () {
 
     if(isTopUser) {
       let rowItemImg = document.createElement("img");
-      rowItemImg.src = "images/topBadge.jpg";
+      rowItemImg.src = "images/topBadge.png";
       rowItemImg.style.height = "20px";
       rowItemImg.alt = "Top user";
       // Add flex stuff here
