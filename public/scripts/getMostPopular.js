@@ -1,5 +1,4 @@
-
-//Get the most Popular question
+// Get the most Popular questions
 const getMostPopular = function () {
     let sessionID = sessionStorage.getItem('projectBoltSessionID');
     let getMostPopularQuestions = function() {
@@ -14,7 +13,6 @@ const getMostPopular = function () {
                 reject();
             });
         });
-
     };
 
     return {

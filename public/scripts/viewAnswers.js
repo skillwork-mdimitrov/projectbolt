@@ -69,7 +69,6 @@ const viewAnswers = function() {
     };
 
     const addToTable = function(answer) {
-        console.log("EXECUTING");
         let answerText = answer[0];
         let answerID = answer[1];
         let username = answer[2];
@@ -122,7 +121,7 @@ const viewAnswers = function() {
         rowItemAnswer.setAttribute("class", "Table-row-item u-Flex-grow9");
         rowItemAnswer.setAttribute("data-header", "Answer");
 
-        //TO DO:: Add verified icon before the text
+        // TODO:: Add verified icon before the text
         if(verified){
           rowItemAnswer.textContent = "Verified Answer: " + answerText;
         }
@@ -130,12 +129,13 @@ const viewAnswers = function() {
           rowItemAnswer.textContent = answerText;
         }
 
-
         // The user
         const rowUser = document.createElement("div");
         rowUser.setAttribute("class", "Table-row-item u-Flex-grow1");
         rowUser.setAttribute("data-header", "User");
         rowUser.textContent = username;
+
+        // TODO: Add top user here as well
 
         // The rating
         const rowItemRating = document.createElement("div");

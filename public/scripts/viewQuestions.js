@@ -2,21 +2,24 @@
  ============================================================== */
 const viewQuestions = function () {
   const scriptFilename = "viewQuestions.js";
+  const getTopQuestionsBtn = $('#getTopQuestionsBtn');
+  let topQuestionsIDsArr = [];
+
+  const extractTopQuestionIDs = (() => {
+    getMostPopular.getMostPopularQuestions().then((data) => {
+      for(let elem of data) {
+        topQuestionsIDsArr.push(elem["ID"]);
+      }
+    })
+  })(); // IIFE;
 
   const addToTable = function (question, isTopUser) {
     let questionText = question[0];
     let questionUser = question[1];
     let questionID = question[2];
     let questionsTable = document.getElementById("questionsTable");
-    let topUser = false; // by default, when addToTable is called the row won't contain a user of the month
 
-    (function ensureParamIsProvided() {
-      if(typeof isTopUser !== "undefined" || isTopUser !== undefined || isTopUser !== null) {
-        topUser = isTopUser;
-      }
-    })();
-
-    // A row with a delete button, question, user and answers
+    // A row with action , question, user and answers
     let tableRow = document.createElement("div");
     tableRow.setAttribute("class", "Table-row");
 
@@ -37,6 +40,7 @@ const viewQuestions = function () {
     rowItemDeleteButton.setAttribute("class", "deleteButton fa fa-close");
     rowItemDeleteButton.setAttribute("id", questionID);
     rowItemDelete.appendChild(rowItemDeleteButton);
+    // ============================================================== */
 
     // The question
     let rowItemQuestion = document.createElement("div");
@@ -50,7 +54,7 @@ const viewQuestions = function () {
     rowItemUser.setAttribute("data-header", "User");
     rowItemUser.textContent = questionUser;
 
-    if(topUser) {
+    if(isTopUser) {
       let rowItemImg = document.createElement("img");
       rowItemImg.src = "images/topBadge.jpg";
       rowItemImg.style.height = "20px";
@@ -80,7 +84,7 @@ const viewQuestions = function () {
     questionsTable.appendChild(tableRow);
   };
 
-  const reloadQuestions = function () {
+  const reloadQuestions = function (topQuestionsOnly) {
     return new Promise((resolve, reject) => {
       // Remove all from the table except for the headers
       $(".Table-row:not(.Table-header)").remove();
@@ -95,30 +99,34 @@ const viewQuestions = function () {
       let isUserOfTheMonthPromise = userOfTheMonth.getUserOfTheMonth();
       global.logPromise(isUserOfTheMonthPromise, scriptFilename, "Requesting user of the month");
 
-      // TODO Delete this
-      // This is a test of mostPopularQuestion
-      let getMostPopularQuestions = $.getJSON("questions/get-most-popular/"+sessionID);
-      global.logPromise(getMostPopularQuestions, scriptFilename, "Requesting most popular questions");
-
-      Promise.all([getAllQuestionsPromise, isTeacherPromise, getMostPopularQuestions, isUserOfTheMonthPromise]).then((values) => {
+      Promise.all([getAllQuestionsPromise, isTeacherPromise, isUserOfTheMonthPromise]).then((values) => {
         let questionsData = values[0];      // Return value from getAllQuestionsPromise
         let isTeacher = values[1];          // Return value from isTeacherPromise
-        let getMostPopularQuestions = [2];  // Return value from getMostPopularQuestions
-        let isUserOfTheMonth = values[3];   // Return value from isUserOfTheMonthPromise
-
+        let isUserOfTheMonth = values[2];   // Return value from isUserOfTheMonthPromise
         $.each(questionsData, function (key, val) {
-          if(val["UserID"] === isUserOfTheMonth) {
-            addToTable([val["Question"], val["Username"], val["ID"]], true);
+          // Reload is for top questions only
+          if(topQuestionsOnly) {
+            // TODO: Here is where the sorting is getting lost, might fix it eventually
+            if(topQuestionsIDsArr.includes(val["ID"])) {
+              val["UserID"] === isUserOfTheMonth ?
+                addToTable([val["Question"], val["Username"], val["ID"]], true): // is the user of the month
+                addToTable([val["Question"], val["Username"], val["ID"]], false); // is not user of the month
+            }
           }
+          // Reload is for all questions
           else {
-            addToTable([val["Question"], val["Username"], val["ID"]], false);
+            val["UserID"] === isUserOfTheMonth ?
+              addToTable([val["Question"], val["Username"], val["ID"]], true):
+              addToTable([val["Question"], val["Username"], val["ID"]], false);
           }
         });
 
-        $(".deleteColumn").css("display", "none");      
+        $(".deleteColumn").css("display", "none");
+
         if (isTeacher) {
           $(".deleteColumn").css("display", "flex");
         }
+
         $('.deleteButton').on("click", function(){
           removeQuestion.removeQuestion($(this));
         });
@@ -133,10 +141,26 @@ const viewQuestions = function () {
 
   return {
     reloadQuestions: reloadQuestions,
+    getTopQuestionsBtn: getTopQuestionsBtn,
   }
 }();
 
 $(document).ready(function () {
+  "use strict";
+  /* ATTACH EVENT LISTENERS
+  ============================================================== */
+  viewQuestions.getTopQuestionsBtn.on("click", () => {
+    // Toggle between top questions and all questions
+    const clicks = $(this).data('clicks');
+    if (clicks) {
+      viewQuestions.reloadQuestions();
+    }
+    else {
+      viewQuestions.reloadQuestions(true);
+    }
+    $(this).data("clicks", !clicks);
+  });
+
   let loginCheckPromise = loginCheck.checkLogin();
   let loadNavigationPromise = navigation.loadNavigation();
   let initNotificationsPromise = notifications.initNotifications();
