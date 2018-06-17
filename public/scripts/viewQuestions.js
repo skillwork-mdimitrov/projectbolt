@@ -3,12 +3,18 @@
 const viewQuestions = function () {
   const scriptFilename = "viewQuestions.js";
 
-  const addToTable = function (question) {
+  const addToTable = function (question, isTopUser) {
     let questionText = question[0];
     let questionUser = question[1];
     let questionID = question[2];
-
     let questionsTable = document.getElementById("questionsTable");
+    let topUser = false; // by default, when addToTable is called the row won't contain a user of the month
+
+    (function ensureParamIsProvided() {
+      if(typeof isTopUser !== "undefined" || isTopUser !== undefined || isTopUser !== null) {
+        topUser = isTopUser;
+      }
+    })();
 
     // A row with a delete button, question, user and answers
     let tableRow = document.createElement("div");
@@ -44,6 +50,14 @@ const viewQuestions = function () {
     rowItemUser.setAttribute("data-header", "User");
     rowItemUser.textContent = questionUser;
 
+    if(topUser) {
+      let rowItemImg = document.createElement("img");
+      rowItemImg.src = "images/topBadge.jpg";
+      rowItemImg.style.height = "20px";
+      // Add flex stuff here
+      rowItemUser.appendChild(rowItemImg);
+    }
+
     // The answers link
     let rowItemAnswer = document.createElement("div");
     rowItemAnswer.setAttribute("class", "Table-row-item u-Flex-grow1");
@@ -73,22 +87,31 @@ const viewQuestions = function () {
 
       let getAllQuestionsPromise = $.getJSON("questions/get-all-questions/"+sessionID);
       global.logPromise(getAllQuestionsPromise, scriptFilename, "Requesting all question data");
+
       let isTeacherPromise = $.get("login/is-teacher/"+sessionID);
       global.logPromise(isTeacherPromise, scriptFilename, "Requesting user teacher status");
 
+      let isUserOfTheMonthPromise = userOfTheMonth.getUserOfTheMonth();
+      global.logPromise(isUserOfTheMonthPromise, scriptFilename, "Requesting user of the month");
+
       // TODO Delete this
-      //This is a test of mostPopularQuestion
+      // This is a test of mostPopularQuestion
       let getMostPopularQuestions = $.getJSON("questions/get-most-popular/"+sessionID);
       global.logPromise(getMostPopularQuestions, scriptFilename, "Requesting most popular questions");
 
-      Promise.all([getAllQuestionsPromise, isTeacherPromise, getMostPopularQuestions]).then((values) => {
-        let questionsData = values[0];   // Return value from getAllQuestionsPromise
-        let isTeacher = values[1];       // Return value from isTeacherPromise
-        console.log(values[2]);
-
+      Promise.all([getAllQuestionsPromise, isTeacherPromise, getMostPopularQuestions, isUserOfTheMonthPromise]).then((values) => {
+        let questionsData = values[0];      // Return value from getAllQuestionsPromise
+        let isTeacher = values[1];          // Return value from isTeacherPromise
+        let getMostPopularQuestions = [2];  // Return value from getMostPopularQuestions
+        let isUserOfTheMonth = values[3];   // Return value from isUserOfTheMonthPromise
 
         $.each(questionsData, function (key, val) {
-          addToTable([val["Question"], val["Username"], val["ID"]]);
+          if(val["UserID"] === isUserOfTheMonth) {
+            addToTable([val["Question"], val["Username"], val["ID"]], true);
+          }
+          else {
+            addToTable([val["Question"], val["Username"], val["ID"]], false);
+          }
         });
 
         $(".deleteColumn").css("display", "none");      
@@ -120,11 +143,6 @@ $(document).ready(function () {
   Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
     viewQuestions.reloadQuestions().then(() => {
       global.hideLoader();
-	    userOfTheMonth.getUserOfTheMonth().then((someData) => {
-			console.log(someData);
-      }).catch((reason) => {
-        console.log(reason);
-      }); 
     }).catch(() => {
       unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
       setTimeout(function(){ global.logout(); }, 5000);   
