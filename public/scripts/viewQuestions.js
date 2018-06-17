@@ -2,7 +2,8 @@
  ============================================================== */
 const viewQuestions = function () {
   const scriptFilename = "viewQuestions.js";
-  const getTopQuestionsBtn = $('#getTopQuestionsBtn');
+  const getAllQuestionsBtn = $("#getAllQuestionsBtn");
+  const getTopQuestionsBtn = $("#getTopQuestionsBtn");
   let topQuestionsIDsArr = [];
 
   const extractTopQuestionIDs = (() => {
@@ -140,8 +141,9 @@ const viewQuestions = function () {
   };
 
   return {
-    reloadQuestions: reloadQuestions,
+    getAllQuestionsBtn: getAllQuestionsBtn,
     getTopQuestionsBtn: getTopQuestionsBtn,
+    reloadQuestions: reloadQuestions,
   }
 }();
 
@@ -149,16 +151,12 @@ $(document).ready(function () {
   "use strict";
   /* ATTACH EVENT LISTENERS
   ============================================================== */
+  viewQuestions.getAllQuestionsBtn.on("click", () => {
+    viewQuestions.reloadQuestions();
+  });
+
   viewQuestions.getTopQuestionsBtn.on("click", () => {
-    // Toggle between top questions and all questions
-    const clicks = $(this).data('clicks');
-    if (clicks) {
-      viewQuestions.reloadQuestions();
-    }
-    else {
-      viewQuestions.reloadQuestions(true);
-    }
-    $(this).data("clicks", !clicks);
+    viewQuestions.reloadQuestions(true);
   });
 
   let loginCheckPromise = loginCheck.checkLogin();

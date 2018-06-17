@@ -11,11 +11,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- Icons -->
     <link rel="stylesheet" type="text/css" href="styles/viewQuestions.css">
     <link rel="stylesheet" type="text/css" href="styles/loader.css" />
+    <link rel="stylesheet" type="text/css" href="styles/segmentedControl.css">
   </head>
   <body>     
     <div id="loader"></div>
     <div class="mainContainer" id="mainContainer">
-      <button id="getTopQuestionsBtn">Top questions</button><span>&larr;Toggle</span>
+
+      <!-- Nav-bar alike segment controller (areas for more buttons) -->
+      <div class="container">
+        <div class="segmented" id="segmented">
+          <label class="checked"><input type="radio" id="getAllQuestionsBtn" name="segmented" checked />All questions</label>
+          <label><input type="radio" id="getTopQuestionsBtn" name="segmented" />Top questions</label>
+        </div>
+      </div>
+
       <!-- Questions table -->
       <div id="questionsTable" class="Table">
         <!-- Headings -->
@@ -36,6 +45,7 @@
     <script src="scripts/global.js"></script>    
     <script src="scripts/loginCheck.js"></script>    
     <script src="scripts/unfoldingHeader.js"></script> <!-- Collapsing header -->
+    <script src="scripts/segmentBtns.js"></script>
     <script src="scripts/getMostPopular.js"></script>
     <script src="scripts/userOfTheMonth.js"></script>
     <script src="scripts/viewQuestions.js"></script>
