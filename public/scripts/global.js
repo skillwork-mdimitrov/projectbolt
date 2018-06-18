@@ -147,7 +147,7 @@ const global = function() {
     setInterval(() => {
       sendStatistics();
       resetStatistics();
-    }, 5000)
+    }, 30000)
   })(); // IIFE;
 
   const logout = function logout() { 
