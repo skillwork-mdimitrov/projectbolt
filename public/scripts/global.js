@@ -6,6 +6,7 @@ const global = function() {
   // Initially create an empty array, if "questionsVisited" session exists, the array is filled with the contents of the session
   let questionsVisited = sessionStorage.getItem("questionsVisited") ? JSON.parse(sessionStorage.getItem('questionsVisited')) : [];
 
+  // TODO: Maybe when they enter the URL as well
   // Register to which question the user is going
   const trackQuestionsVisited = (indicator, questionID) => {
     // indicator needs to be a jQuery object
@@ -85,20 +86,6 @@ const global = function() {
     }
   };
 
-  const logout = function logout() { 
-    sessionStorage.removeItem("projectBoltSessionID");
-
-    sendStatistics();
-
-    // Reset the visited pages
-    (function resetVisitedPage() {
-      sessionStorage.removeItem("questionsVisited");
-      questionsVisited.length = 0;
-    })();
-
-    redirect("login");
-  };
-
   /* Console.log an AJAX request error
    * functionName example: logout.name
    * jqXHR examplse: $.ajax( . . . error(function(jqXHR)); $.getJSON().fail(function(jqXHR)
@@ -126,6 +113,51 @@ const global = function() {
     else {
       return false;
     }
+  };
+
+  const sendStatistics = () => {
+    // @return {true} if the user has visited some questions
+    const statsNotEmpty = () => questionsVisited.length > 0;
+    // @return [] of unique values only (so user can't spam the same question)
+    const getUniqueVisited = () => rmArrDuplicates(questionsVisited);
+
+    // JSON'ize and stringify the body to be send
+    // TODO: Maybe add the sessionID as well
+    const JSONstringifyBody = () => {
+      return {
+        visited: JSON.stringify(getUniqueVisited()),
+        date: JSON.stringify(getTodaysDate())
+      };
+    };
+
+    if(statsNotEmpty()) {
+      $.post("/sendStatistics", JSONstringifyBody());
+      return true;
+    }
+    return false;
+  };
+
+  const resetStatistics = function() {
+    sessionStorage.removeItem("questionsVisited");
+    questionsVisited.length = 0;
+  };
+
+  // Every 30 seconds send visited statistics and reset them
+  const regularlySendStats = (() => {
+    setInterval(() => {
+      sendStatistics();
+      resetStatistics();
+    }, 5000)
+  })(); // IIFE;
+
+  const logout = function logout() { 
+    sessionStorage.removeItem("projectBoltSessionID");
+
+    // In case of logout ↓
+    sendStatistics();
+    resetStatistics();
+
+    redirect("login");
   };
 
   const getUniqueLogId = function(N) {
@@ -186,28 +218,6 @@ const global = function() {
     // Extend if needed, add parameters and adjust today = mm +'/'+ dd +'/'+ yyyy to change the format
     today = yyyy + "/" + mm + "/" + dd;
     return today;
-  };
-
-  const sendStatistics = () => {
-    // @return {true} if the user has visited some questions
-    const statsNotEmpty = () => questionsVisited.length > 0;
-    // @return [] of unique values only (so user can't spam the same question)
-    const getUniqueVisited = () => rmArrDuplicates(questionsVisited);
-
-    // JSON'ize and stringify the body to be send
-    // TODO: Maybe add the sessionID as well
-    const JSONstringifyBody = () => {
-      return {
-        visited: JSON.stringify(getUniqueVisited()),
-        date: JSON.stringify(getTodaysDate())
-      };
-    };
-
-    if(statsNotEmpty()) {
-      $.post("/sendStatistics", JSONstringifyBody());
-      return true;
-    }
-    return false;
   };
 
   return {
