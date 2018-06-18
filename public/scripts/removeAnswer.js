@@ -4,11 +4,10 @@ const removeAnswer = function() {
     const removeAnswer = function(deleteButton) {
         let sessionID = sessionStorage.getItem('projectBoltSessionID');
         let answerID = deleteButton.attr("id");
-
         console.log("Removing answer " + answerID);
         $.post("answers/remove-answer", { answerID: answerID, sessionID: sessionID }, function() {})
         .done(function() {
-            unfoldingHeader.unfoldHeader("Removed successfully", "green");      
+            unfoldingHeader.unfoldHeader("Removed successfully", "green", true);
             /* RE-FETCH all the answers
             ============================================================== */
             viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
@@ -17,9 +16,9 @@ const removeAnswer = function() {
             global.showLoader();
             // Populate the answers table again (with the new answers)
             viewAnswers.getAnswers().then(function() {
-                // When answers arrive animate them in                
-                viewAnswers.answersTableUI().show();
+                // When answers arrive animate them in
                 global.hideLoader();
+                viewAnswers.answersTableUI().show();
                 viewAnswers.answersTableUI().fadeIn();
             })
             .catch(function(message) {

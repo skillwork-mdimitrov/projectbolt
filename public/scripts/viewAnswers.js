@@ -15,9 +15,6 @@ const viewAnswers = function() {
     const submitAnswerBtn = $('#submitAnswerBtn');
     const cancelAnswerBtn = $('#cancelAnswerBtn');
 
-    // Vanilla JS
-    const loader = document.getElementById("loader");
-
     // Make the answers table with the heading columns
     const mkAnswersTableSkeleton = function() {
 
@@ -124,7 +121,7 @@ const viewAnswers = function() {
         rowItemAnswer.setAttribute("class", "Table-row-item u-Flex-grow9");
         rowItemAnswer.setAttribute("data-header", "Answer");
 
-        //TO DO:: Add verified icon before the text
+        // TODO:: Add verified icon before the text
         if(verified){
           rowItemAnswer.textContent = "Verified Answer: " + answerText;
         }
@@ -132,12 +129,13 @@ const viewAnswers = function() {
           rowItemAnswer.textContent = answerText;
         }
 
-
         // The user
         const rowUser = document.createElement("div");
         rowUser.setAttribute("class", "Table-row-item u-Flex-grow1");
         rowUser.setAttribute("data-header", "User");
         rowUser.textContent = username;
+
+        // TODO: Add top user here as well
 
         // The rating
         const rowItemRating = document.createElement("div");
@@ -188,11 +186,12 @@ const viewAnswers = function() {
           }
         };
 
-        const toggleUI = function() {
+        const toggleUI = () => new Promise(function (resolve) {
           toggleContainer();
           toggleButtons()
-              .then(changeText);
-        };
+              .then(changeText)
+              .then((function(){resolve("answers UI toggled")}))
+        });
 
         return {
           toggleUI: toggleUI
@@ -248,10 +247,12 @@ const viewAnswers = function() {
                 }
 
                 $('.deleteButton').on("click", function(){
+                    global.showLoader();
                     removeAnswer.removeAnswer($(this));
                 });
 
                 $('.verifyButton').on("click", function(){
+                  global.showLoader();
                   verifyAnswer.verifyAnswer($(this));
                 });
 
@@ -339,14 +340,13 @@ $(document).ready(function() {
 
       viewAnswers.submitAnswerBtn.on("click", function() {
         const buttonID = this.id; // for logging purposes
-
         $.ajax({
           type: 'get',
           url: 'login/get-userID/'+sessionStorage.getItem('projectBoltSessionID'),
+          // Session check AJAX request
           success: function (userID) {
-
             if(global.fieldNotEmpty(viewAnswers.addAnswerArea)) {
-
+              global.showLoader();
               // JSON'ize the question
               let bodyJSON = {
                 question: document.getElementById("questionHeading").textContent,
@@ -356,25 +356,28 @@ $(document).ready(function() {
                 sessionID: sessionStorage.getItem('projectBoltSessionID')
               };
 
-              // TODO I'll be replacing the loader with the old way as it looks nicer
-              global.showLoader();
-              // Send the AJAX request
+              // Send post answer AJAX request
               addAnswer.postAnswer(bodyJSON).then(function() {
-                viewAnswers.addOwnAnswer.toggleUI();
-                viewAnswers.addAnswerArea.val(''); // Reset textarea
-
-                /* RE-FETCH all the answers
+                /* UI
                 ============================================================== */
-                viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
-                viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
-                viewAnswers.answersTableUI().hide();              
-                // Populate the answers table again (with the new answers)
-                viewAnswers.getAnswers().then(function() {
-                  // When answers arrive animate them in              
-                  viewAnswers.answersTableUI().show();
-                  global.hideLoader();
-                  viewAnswers.answersTableUI().fadeIn();
+                global.hideLoader();
+                viewAnswers.addOwnAnswer.toggleUI().then(function() {
+                  viewAnswers.addAnswerArea.val(''); // Reset textarea
+                  /* RE-FETCH all the answers
+                  ============================================================== */
+                  viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
+                  viewAnswers.mkAnswersTableSkeleton(); // Create a new answers table
+                  viewAnswers.answersTableUI().hide();
+                  global.showLoader();
+                  // Populate the answers table again (with the new answers)
+                  viewAnswers.getAnswers().then(function() {
+                    // When answers arrive animate them in
+                    global.hideLoader();
+                    viewAnswers.answersTableUI().show();
+                    viewAnswers.answersTableUI().fadeIn();
+                  })
                 })
+                // ============================================================== */
                 .catch(function(reject) {
                   console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
                   global.hideLoader();
@@ -396,12 +399,17 @@ $(document).ready(function() {
         });
       });
 
+      /* Cancel submitting answer button
+      ============================================================== */
       viewAnswers.cancelAnswerBtn.on("click", function() {
         viewAnswers.addAnswerArea.val(''); // Reset textarea
         viewAnswers.addOwnAnswer.toggleUI();
       });
 
       console.log("Sending get answers request");
+
+      /* The initial build and population of the Answers table
+      ============================================================== */
       viewAnswers.mkAnswersTableSkeleton(); // Create the answers table skeleton
       // Populate the answers table
       viewAnswers.getAnswers().then(function() {
@@ -414,8 +422,11 @@ $(document).ready(function() {
         console.log(`getAnswers promise got rejected, reject message: ↓ \n ${reject}`);
         return false;
       });
-    }).catch(() => {
+      // ============================================================== */
+    })
+    // Promise.all catch
+    .catch(() => {
       unfoldingHeader.unfoldHeader("An error ocurred (logging out in 5 seconds)", "red");
-      setTimeout(function(){ global.logout(); }, 5000);   
-    }); 
+      setTimeout(function(){ global.logout(); }, 5000);
+    });
 });

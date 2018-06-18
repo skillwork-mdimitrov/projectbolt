@@ -7,6 +7,9 @@
   width: 100%;
   font-family: "Barlow", sans-serif;
   background-color: #19354E;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 .nav ul {
   display: flex;
@@ -246,5 +249,22 @@ button.submitOwnAnswerBtn:hover {
 }
 
 /*  ============================================================== */
+/* Submit and cancel buttons
+ ============================================================== */
+.submitAnswerBtn:hover {
+  cursor: pointer;
+}
+
+.submitAnswerBtn:active {
+  border: 1px solid white;
+}
+
+.cancelAnswerBtn:hover {
+  cursor: pointer;
+}
+
+.cancelAnswerBtn:active {
+  border: 1px solid white;
+}
 
 /*# sourceMappingURL=viewAnswers.css.map */

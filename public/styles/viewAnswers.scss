@@ -217,4 +217,21 @@ button.submitOwnAnswerBtn:hover {
 }
 /*  ============================================================== */
 
+/* Submit and cancel buttons
+ ============================================================== */
 
+.submitAnswerBtn:hover {
+  cursor: pointer;
+}
+
+.submitAnswerBtn:active {
+  border: 1px solid white;
+}
+
+.cancelAnswerBtn:hover {
+  cursor: pointer;
+}
+
+.cancelAnswerBtn:active {
+  border: 1px solid white;
+}

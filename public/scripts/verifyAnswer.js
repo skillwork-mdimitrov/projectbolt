@@ -8,7 +8,7 @@ const verifyAnswer = function() {
     console.log("Verifying answer " + answerID);
     $.post("answers/verify-answer", { answerID: answerID, sessionID: sessionID }, function() {})
         .done(function() {
-          unfoldingHeader.unfoldHeader("Verified successfully", "green");
+          unfoldingHeader.unfoldHeader("Verified successfully", "green", true);
           /* RE-FETCH all the answers
           ============================================================== */
           viewAnswers.rmAnswersTable(); // Remove the answers table from the DOM (so it can be recreated)
@@ -18,14 +18,14 @@ const verifyAnswer = function() {
           // Populate the answers table again (with the new answers)
           viewAnswers.getAnswers().then(function() {
             // When answers arrive animate them in
-            viewAnswers.answersTableUI().show();
             global.hideLoader();
+            viewAnswers.answersTableUI().show();
             viewAnswers.answersTableUI().fadeIn();
           })
-              .catch(function(message) {
-                unfoldingHeader.unfoldHeader("Failed retrieving answers, see console for details", "red");
-                console.log("Failed retrieving answers " + answerID + ": " + message);
-              });
+          .catch(function(message) {
+            unfoldingHeader.unfoldHeader("Failed retrieving answers, see console for details", "red");
+            console.log("Failed retrieving answers " + answerID + ": " + message);
+          });
         })
         .fail(function(message) {
           unfoldingHeader.unfoldHeader("Failed removing answer, see console for details", "red");

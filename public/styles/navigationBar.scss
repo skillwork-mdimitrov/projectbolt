@@ -8,6 +8,7 @@ $grey: #8190A5;
   width: 100%;
   font-family: 'Barlow', sans-serif; // to generalize
   background-color: $darkBlue;
+  @include prefix(border-radius, 3px, webkit moz);
 
   ul {
     display: flex;

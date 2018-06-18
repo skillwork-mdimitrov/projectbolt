@@ -3,6 +3,19 @@
  * A script for abstract, reusable functions                 */
 
 const global = function() {
+  // Initially create an empty array, if "questionsVisited" session exists, the array is filled with the contents of the session
+  let questionsVisited = sessionStorage.getItem("questionsVisited") ? JSON.parse(sessionStorage.getItem('questionsVisited')) : [];
+
+  // TODO: Maybe when they enter the URL as well
+  // Register to which question the user is going
+  const trackQuestionsVisited = (indicator, questionID) => {
+    // indicator needs to be a jQuery object
+    indicator.on("click", () => {
+      // Store the questionID visited
+      questionsVisited.push(questionID);
+      sessionStorage.setItem("questionsVisited", JSON.stringify(questionsVisited)); // store the array in the session (to persists through pages)
+    })
+  };
 
   /* @return {true} if the field is NOT empty
   ============================================================== */
@@ -47,14 +60,16 @@ const global = function() {
     }
   };
 
-  const showLoader = function() {
+  const showLoader = function(hideMainContent) {
+    if (hideMainContent === true) {
+      document.getElementById("mainContainer").style.display = "none";
+    }
     document.getElementById("loader").style.display = "block";
-    document.getElementById("mainContainer").style.display = "none";
   };
 
   const hideLoader = function() {
-    document.getElementById("loader").style.display = "none";
     document.getElementById("mainContainer").style.display = "block";
+    document.getElementById("loader").style.display = "none";
   };
 
   const redirect = function redirect(route) {
@@ -66,14 +81,9 @@ const global = function() {
     }
     else {
       let portIndex = window.location.href.indexOf(":3000");
-      let baseUrl = window.location.href.substring(0, portIndex)
+      let baseUrl = window.location.href.substring(0, portIndex);
       window.location.href = baseUrl+":3000/"+route;
     }
-  };
-
-  const logout = function logout() { 
-    sessionStorage.removeItem("projectBoltSessionID");
-    redirect("login");
   };
 
   /* Console.log an AJAX request error
@@ -105,6 +115,51 @@ const global = function() {
     }
   };
 
+  const sendStatistics = () => {
+    // @return {true} if the user has visited some questions
+    const statsNotEmpty = () => questionsVisited.length > 0;
+    // @return [] of unique values only (so user can't spam the same question)
+    const getUniqueVisited = () => rmArrDuplicates(questionsVisited);
+
+    // JSON'ize and stringify the body to be send
+    // TODO: Maybe add the sessionID as well
+    const JSONstringifyBody = () => {
+      return {
+        visited: JSON.stringify(getUniqueVisited()),
+        date: JSON.stringify(getTodaysDate())
+      };
+    };
+
+    if(statsNotEmpty()) {
+      $.post("/sendStatistics", JSONstringifyBody());
+      return true;
+    }
+    return false;
+  };
+
+  const resetStatistics = function() {
+    sessionStorage.removeItem("questionsVisited");
+    questionsVisited.length = 0;
+  };
+
+  // Every 30 seconds send visited statistics and reset them
+  const regularlySendStats = (() => {
+    setInterval(() => {
+      sendStatistics();
+      resetStatistics();
+    }, 30000)
+  })(); // IIFE;
+
+  const logout = function logout() { 
+    sessionStorage.removeItem("projectBoltSessionID");
+
+    // In case of logout ↓
+    sendStatistics();
+    resetStatistics();
+
+    redirect("login");
+  };
+
   const getUniqueLogId = function(N) {
     // Return a random string of N characters
     return Array(N+1).join((Math.random().toString(36)+'00000000000000000').slice(2, 18)).slice(0, N);   
@@ -123,7 +178,52 @@ const global = function() {
     }); 
   };
 
+  // TODO Date ranges will be added, so visits only for a desired period can be extracted
+  // FOR MICHELA ↓
+  // AJAX retrieve all questions (their id's) and their number of visits
+  const getQuestionStats = function() {
+    $.getJSON("/allQuestionsStats", function(resolve) {
+      // Log the questionID and visits
+      console.log(resolve);
+    })
+    .fail(function(jqXHR) {
+      global.logAJAXErr(getQuestionStats.name, jqXHR);
+      unfoldingHeader.unfoldHeader("Failed obtaining the question statistics", "orange");
+    })
+  };
+
+  // @return {unique []}
+  const rmArrDuplicates = (arrArg) => {
+    return arrArg.filter((elem, pos, arr) => {
+      return arr.indexOf(elem) === pos;
+    });
+  };
+
+  /* @return {date: YYYY-MM-DD}
+  ============================================================== */
+  const getTodaysDate = function() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; // January is 0
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+      dd = '0' + dd;
+    }
+
+    if(mm<10) {
+      mm = '0' + mm;
+    }
+
+    // Extend if needed, add parameters and adjust today = mm +'/'+ dd +'/'+ yyyy to change the format
+    today = yyyy + "/" + mm + "/" + dd;
+    return today;
+  };
+
   return {
+    trackQuestionsVisited: trackQuestionsVisited,
+    getQuestionStats: getQuestionStats,
+
     fieldNotEmpty: fieldNotEmpty,
     fieldIsEmpty: fieldIsEmpty,
     rmElemFromArray: rmElemFromArray,

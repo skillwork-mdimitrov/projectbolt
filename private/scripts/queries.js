@@ -54,6 +54,23 @@ function getAllQuestionsQuery() {
     return {query: query, params: params};
 }
 
+function getAllQuestionsForPopular() {
+    var query = "SELECT  Questions.ID, " +
+                "MAX(Questions.Question) AS Question, " +
+                "COUNT(DISTINCT Answers.ID) AS AnswerCount, " +
+                "COUNT(DISTINCT VisitsStats.VisitID) AS VisitCount, " +
+                "MAX(Users.Username) AS Username, " +
+                "SUM(DISTINCT Ratings.Rating) AS TotalRating " +
+                "FROM Questions " +
+                "LEFT JOIN Answers ON Answers.questionID = Questions.ID " +
+                "LEFT JOIN VisitsStats ON VisitsStats.questionID = Questions.ID " +
+                "LEFT JOIN Users ON Questions.UserID = Users.ID " +
+                "LEFT JOIN Ratings ON Ratings.AnswerID = Answers.ID " +
+                "GROUP BY Questions.ID;";
+    var params = []
+    return {query: query, params: params};
+}
+
 function getAllNonBannedQuestionsQuery() {
     var query = `SELECT Questions.ID, Questions.Question, Questions.UserID, Users.Username 
                 FROM Questions 
@@ -154,14 +171,24 @@ function getNonBannedAnswersByQuestionIdQuery(questionID) {
     return {query: query, params: params};
 }
 
-function getInsertAnswerQuery(answer, questionID, userID) {
-    var query = "INSERT INTO Answers (answer, questionid, userid) VALUES ( @answer , @questionID , @userID )";
+function getInsertAnswerQuery(answer, questionID, userID, date) {
+    var query = "INSERT INTO Answers (answer, questionid, userid, date) VALUES ( @answer , @questionID , @userID , @date)";
     var params = [
         {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID},
         {paramName: "userID", paramType: TYPES.Int, paramValue: userID},
-        {paramName: "answer", paramType: TYPES.NVarChar, paramValue: answer}
+        {paramName: "answer", paramType: TYPES.NVarChar, paramValue: answer},
+		{paramName: "date", paramType: TYPES.NVarChar, paramValue: date}
     ]
     return {query: query, params: params}; 
+}
+
+function getInsertVisitsQuery(questionID, date) {
+    var query = "INSERT INTO VisitsStats (QuestionID, VisitDate) VALUES ( @questionID, @date );";
+    var params = [
+      {paramName: "questionID", paramType: TYPES.Int, paramValue: questionID},
+      {paramName: "date", paramType: TYPES.Date, paramValue: date}
+    ];
+  return {query: query, params: params}
 }
 
 function getDeleteAnswerQuery(answerID) {
@@ -192,7 +219,15 @@ function getIdPasswordByUsernameQuery(username) {
         {paramName: "username", paramType: TYPES.NVarChar, paramValue: username}
     ]
     return {query: query, params: params};
-} 
+}
+
+function getVisitsForAllQuestionsQuery() {
+    var query = "SELECT QuestionID, COUNT(QuestionID) AS NumberOfVisits\n" +
+        "FROM VisitsStats\n" +
+        "GROUP BY QuestionID;";
+    var params = [];
+    return {query: query, params: params};
+}
 
 function getUsernameByIdQuery(userID) {
     var query = "SELECT Username FROM Users WHERE ID = @userID";
@@ -242,6 +277,21 @@ function getUnbanUserQuery(userID) {
     return {query: query, params: params};
 }
 
+function getUsersPostedAnsersByMonth(monthStart, monthEnd) {
+    var query = `
+				SELECT dbo.Answers.UserID, COUNT(*) AS Answers
+				FROM dbo.Answers
+				WHERE dbo.Answers.Date between @monthStart and @monthEnd
+				GROUP BY dbo.Answers.UserID 
+				ORDER BY COUNT(*) DESC;
+				`;
+    var params = [
+		{paramName: "monthStart", paramType: TYPES.NVarChar, paramValue: monthStart},
+        {paramName: "monthEnd", paramType: TYPES.NVarChar, paramValue: monthEnd}
+    ]
+    return {query: query, params: params};
+}
+
 exports.getRatingsByAnswerIdQuery = getRatingsByAnswerIdQuery;
 exports.getNonBannedRatingsByAnswerIdQuery = getNonBannedRatingsByAnswerIdQuery;
 exports.getRatingByAnswerIdAndUserIdQuery = getRatingByAnswerIdAndUserIdQuery;
@@ -249,6 +299,7 @@ exports.getInsertRatingQuery = getInsertRatingQuery;
 exports.getUpdateRatingQuery = getUpdateRatingQuery;
 
 exports.getAllQuestionsQuery = getAllQuestionsQuery;
+exports.getAllQuestionsForPopular = getAllQuestionsForPopular;
 exports.getAllNonBannedQuestionsQuery = getAllNonBannedQuestionsQuery;
 exports.getQuestionTextByIdQuery = getQuestionTextByIdQuery;
 exports.getQuestionIdByTextQuery = getQuestionIdByTextQuery;
@@ -258,10 +309,12 @@ exports.getDeleteQuestionQuery = getDeleteQuestionQuery;
 
 exports.getAnswersByQuestionIdQuery = getAnswersByQuestionIdQuery;
 exports.getUsernameByAnswerQuery = getUsernameByAnswerQuery;
+exports.getVisitsForAllQuestionsQuery = getVisitsForAllQuestionsQuery;
 exports.getUserIdByAnswerIdQuery = getUserIdByAnswerIdQuery;
 exports.getAnswerIdByTextQuery = getAnswerIdByTextQuery;
 exports.getNonBannedAnswersByQuestionIdQuery = getNonBannedAnswersByQuestionIdQuery;
 exports.getInsertAnswerQuery = getInsertAnswerQuery;
+exports.getInsertVisitsQuery = getInsertVisitsQuery;
 exports.getDeleteAnswerQuery = getDeleteAnswerQuery;
 exports.getVerifyAnswerQuery = getVerifyAnswerQuery;
 
@@ -273,3 +326,4 @@ exports.getUserRoleByIdQuery = getUserRoleByIdQuery;
 exports.getUserBannedStatusByIdQuery = getUserBannedStatusByIdQuery;
 exports.getBanUserQuery = getBanUserQuery;
 exports.getUnbanUserQuery = getUnbanUserQuery;
+exports.getUsersPostedAnsersByMonth = getUsersPostedAnsersByMonth;

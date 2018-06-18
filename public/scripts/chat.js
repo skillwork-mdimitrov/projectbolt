@@ -30,7 +30,7 @@ const chat = function() {
 	// Emit message
 	send_message.click(function(){
 		if (global.fieldIsEmpty(message)) {
-			unfoldingHeader.unfoldHeader("Please type something...^^", "orange");
+			unfoldingHeader.unfoldHeader("Message can't be empty", "orange", true);
 			return false;
 		}
 		chatSocket.emit('new_message', {message : message.val()});

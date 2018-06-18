@@ -33,9 +33,7 @@ const addAnswer = function() {
               notifications.notificationSocket.emit('newAnswer', {question: bodyJSON.question, 
                                                                   questionID: bodyJSON.questionID, 
                                                                   userID: questionUserID,
-                                                                  username: firstname});  
-              
-              unfoldingHeader.unfoldHeader("Answer added successfully", "green");
+                                                                  username: firstname});
               resolve();
             }).catch(() => {
               unfoldingHeader.unfoldHeader("Failed retrieving question user id", "red");

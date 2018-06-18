@@ -22,18 +22,19 @@
     <div id="loader"></div>
     
     <!-- Holds everything -->
-    <div class="mainContainer" style="display:none;" id="mainContainer">
+    <div class="mainContainer" id="mainContainer">
 
       <h1 id="questionHeading"></h1>
 
       <!-- Add own answer -->
       <div id="addAnswerInput" style="display:none;">
         <span id="addOwnAnswerBtn" class="addOwnAnswerBtn">Add your own answer</span><!-- Span for no button inherited properties -->
-        <button id="submitAnswerBtn" class="notDisplayed">Submit</button>
-        <button id="cancelAnswerBtn" class="notDisplayed">Cancel</button>
+        <button id="submitAnswerBtn" class="submitAnswerBtn notDisplayed">Submit</button>
+        <button id="cancelAnswerBtn" class="cancelAnswerBtn notDisplayed">Cancel</button>
         <div id="addAnswerContainer" class="addAnswerContainer notDisplayed">
           <div class="areaContainer">
-            <textarea rows="4" cols="55" placeholder="Write your answer here..." class="addAnswerArea" id="addAnswerArea"></textarea>
+            <!-- 300 cols will take the whole screen -->
+            <textarea rows="4" cols="300" placeholder="Write your answer here..." class="addAnswerArea" id="addAnswerArea"></textarea>
           </div>
         </div>
       </div>

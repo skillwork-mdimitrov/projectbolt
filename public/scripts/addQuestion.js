@@ -10,17 +10,19 @@ const addQuestion = function() {
     if(global.fieldNotEmpty(addQuestion.questionBox)) {
       let sessionID = sessionStorage.getItem('projectBoltSessionID');
       let question = addQuestion.questionBox.val();
-      global.showLoader();
+      global.showLoader(true);
 
       let userIdPromise = $.get("login/get-userID/"+sessionID);
       global.logPromise(userIdPromise, scriptFilename, "Requesting user ID");
       let bestQuestionSimilarityPromise = suggestions.getBestQuestionSimilarity(question);
 
       Promise.all([userIdPromise, bestQuestionSimilarityPromise]).then((values) => {
-        let userID = parseInt(values[0])              // Return value from userIdPromise
-        let bestQuestionSimilarity = values[1]   // Return value from bestQuestionSimilarityPromise
+        let userID = parseInt(values[0]);             // Return value from userIdPromise
+        let bestQuestionSimilarity = values[1];       // Return value from bestQuestionSimilarityPromise
 
+        // If question is unique
         if (bestQuestionSimilarity.rating < suggestions.maximumQuestionSimilarity) {
+          // JSON'ize the input to be send
           let questionData = {
             question: question,
             userID: userID,
