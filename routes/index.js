@@ -19,7 +19,6 @@ router.post('/sendStatistics', function(req, res, next) {
       console.log(reason)
     });
   }
-  // TODO: Hook the successful status to a promise when the above loop is done
   res.status(200).send("Stats received");
 });
 

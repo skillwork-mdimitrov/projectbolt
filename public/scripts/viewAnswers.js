@@ -121,7 +121,6 @@ const viewAnswers = function() {
         rowItemAnswer.setAttribute("class", "Table-row-item u-Flex-grow9");
         rowItemAnswer.setAttribute("data-header", "Answer");
 
-        // TODO:: Add verified icon before the text
         if(verified){
           rowItemAnswer.textContent = "Verified Answer: " + answerText;
         }
@@ -134,8 +133,6 @@ const viewAnswers = function() {
         rowUser.setAttribute("class", "Table-row-item u-Flex-grow1");
         rowUser.setAttribute("data-header", "User");
         rowUser.textContent = username;
-
-        // TODO: Add top user here as well
 
         // The rating
         const rowItemRating = document.createElement("div");

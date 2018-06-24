@@ -49,4 +49,6 @@ function compare(a, b)
     return b.score - a.score;
 }
 
+// Function definitions for accessing in other scripts
+
 exports.getMostPopularQuestions = getMostPopularQuestions;

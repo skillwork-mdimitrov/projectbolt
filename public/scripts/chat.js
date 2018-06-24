@@ -5,9 +5,7 @@ const chat = function() {
   /* DOM selectors
   ============================================================== */
 	const message = $("#message");
-	const usernameextra = $("#usernamenew");
 	const send_message = $("#send_message");
-	const send_username = $("#send_username");
 	const chatroom = $("#chatroom");
 	const feedback = $("#feedback");
 	const connected = $("#connected");
@@ -20,13 +18,6 @@ const chat = function() {
 		}
 	});
 
-	// In the change name field, enter will simulate click
-	usernameextra.keyup(function(event) {
-		if (event.keyCode === 13) {
-			$("#send_username").click();
-		}
-	});
-	
 	// Emit message
 	send_message.click(function(){
 		if (global.fieldIsEmpty(message)) {
@@ -58,12 +49,7 @@ const chat = function() {
 	chatSocket.on('updateUsers', function(message) {
 		connected.html(message.activeUsers);
 	});
-	
-	// Emit a username
-	send_username.click(function(){
-		chatSocket.emit('changeUsername', {username : username+"@"+usernameextra.val()});
-	});
-	
+
 	// Emit typing
 	message.bind("keypress", () => {
 		chatSocket.emit('typing');

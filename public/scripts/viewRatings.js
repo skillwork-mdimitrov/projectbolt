@@ -1,4 +1,7 @@
+/* Namespace for viewing ratings within the answers page of a question
+ ============================================================== */
 const viewRatings = function() {
+    // Update all the rating elements on an answers page
     const updateAllRatings = function updateAllRatings() {
         return new Promise(function(resolve, reject) {
             console.log("Updating all ratings");
@@ -22,6 +25,8 @@ const viewRatings = function() {
         });
     };
 
+    // Update a single rating, after an action is performed on it
+    // For example inserting or updating the rating
     const updateRating = function updateRatings(ratingElement) {
         return new Promise(function(resolve, reject) {
             ratingElement.rating("disable");
@@ -31,6 +36,7 @@ const viewRatings = function() {
             console.log("Acquiring ratings of answerID " + answerID);
             $.getJSON( "rating/get-all-ratings/"+answerID+"/"+sessionID, function() {})
             .done(function(data) {
+                // Calculate the average rating 
                 console.log("Ratings recieved of answerID " + answerID);
                 let totalRating = 0;
                 let ratingCount = data.length;
@@ -47,6 +53,7 @@ const viewRatings = function() {
                 reject();
             })
             .always(function() {
+                // Always enable the rating element if appropriate
                 $.getJSON( "answers/get-userID/"+answerID+"/"+sessionID, function() {})
                 .done(function(answerUserID) {
                     $.get( "login/get-userID/"+sessionID, function() {})

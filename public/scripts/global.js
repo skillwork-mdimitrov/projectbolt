@@ -6,7 +6,6 @@ const global = function() {
   // Initially create an empty array, if "questionsVisited" session exists, the array is filled with the contents of the session
   let questionsVisited = sessionStorage.getItem("questionsVisited") ? JSON.parse(sessionStorage.getItem('questionsVisited')) : [];
 
-  // TODO: Maybe when they enter the URL as well
   // Register to which question the user is going
   const trackQuestionsVisited = (indicator, questionID) => {
     // indicator needs to be a jQuery object
@@ -122,7 +121,6 @@ const global = function() {
     const getUniqueVisited = () => rmArrDuplicates(questionsVisited);
 
     // JSON'ize and stringify the body to be send
-    // TODO: Maybe add the sessionID as well
     const JSONstringifyBody = () => {
       return {
         visited: JSON.stringify(getUniqueVisited()),
@@ -178,8 +176,6 @@ const global = function() {
     }); 
   };
 
-  // TODO Date ranges will be added, so visits only for a desired period can be extracted
-  // FOR MICHELA ↓
   // AJAX retrieve all questions (their id's) and their number of visits
   const getQuestionStats = function() {
     $.getJSON("/allQuestionsStats", function(resolve) {

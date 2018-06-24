@@ -107,7 +107,6 @@ const viewQuestions = function () {
         $.each(questionsData, function (key, val) {
           // Reload is for top questions only
           if(topQuestionsOnly) {
-            // TODO: Here is where the sorting is getting lost, might fix it eventually
             if(topQuestionsIDsArr.includes(val["ID"])) {
               val["UserID"] === isUserOfTheMonth ?
                 addToTable([val["Question"], val["Username"], val["ID"]], true): // is the user of the month
