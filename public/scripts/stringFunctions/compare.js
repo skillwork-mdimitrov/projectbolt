@@ -1,17 +1,24 @@
-/* generic comparing strings NAMESPACE
+/* String compare functions namespace
  ============================================================== */
- const compare = function() {
+const compare = function() {
+
+    // Main function for retrieving the similarity between two strings
+    // Makes use of all the following functions and combines them with 
+    // A pre specified weighting distribution
     const getCombinedSimularity = function(question, query)
     {
         var similarity = 0;
         var sanitizedQuestion = sanitize(question);
 
+        // If the two strings are similar by basic comparison then return 100% match
         if (originalQuery === question || sanitizedQuery === sanitizedQuestion)
         {
             similarity = 100;
         }
         else
         {
+            // The different functions have different weights
+            // Towards the overall similarity of the strings
             var stringLengthWeight = 0.05;
             var characterOccurenceWeight = 0.175;
             var characterPositionWeight = 0.125;
@@ -27,9 +34,11 @@
             similarity += getSentenceOccurenceSimilarity(sanitizedQuestion, sanitizedQuery) * sentenceOccurenceWeight;
         }
 
+        // Rounded towards the next integer
         return Math.round(similarity);
     }
 
+    // Sanatize a string to remove any non-essential elements for comparison
     const sanitize = function(string)
     {
         var sanitizedQuestion = string;
@@ -40,6 +49,7 @@
         return sanitizedQuestion;
     }
 
+    // Get the similarity rating based on string length
     const getStringLengthSimilarity = function(question, sanitizedQuery)
     {
         var similarity = 100;
@@ -60,6 +70,8 @@
         return similarity;
     }
 
+    // Get the similarity rating based on the amount of times 
+    // Different characters appear in both strings
     const getCharacterOccurenceSimilarity = function(question, sanitizedQuery)
     {
         var similarity = 100;
@@ -107,6 +119,8 @@
         return similarity;
     }
 
+    // Get the similarity rating based on the position of the 
+    // Characters in both strings
     const getCharacterPositionSimilarity = function(question, sanitizedQuery)
     {
         var similarity = 100;
@@ -123,6 +137,8 @@
         return similarity;
     }
 
+    // Get the similarity rating based on the amount of times
+    // Different words appear in each string
     const getWordOccurenceSimilarity = function(question, sanitizedQuery)
     {
         var similarity = 100;
@@ -173,6 +189,8 @@
         return similarity;
     }
 
+    // Get the similarity rating based on the position
+    // Of the words in each string
     const getWordPositionSimilarity = function(question, sanitizedQuery)
     {
         var similarity = 100;
@@ -192,6 +210,8 @@
         return similarity;
     }
 
+    // Get the similarity rating based on the longest part of
+    // The string which matches the other string
     const getSentenceOccurenceSimilarity = function(question, sanitizedQuery)
     {
         var similarity = 100;

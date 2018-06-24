@@ -1,5 +1,11 @@
 var TYPES = require('tedious').TYPES;
 
+/*
+    The following functions generate queries using parameterized values where needed
+    The query strings are defined separately from the dabase script for keeping the 
+    Definition of the parameters seperate from the definition of the database calls
+*/
+
 function getRatingsByAnswerIdQuery(answerID) {
     var query  = "SELECT Rating FROM Ratings WHERE AnswerID = @answerID";
     var params = [
@@ -291,6 +297,8 @@ function getUsersPostedAnsersByMonth(monthStart, monthEnd) {
     ]
     return {query: query, params: params};
 }
+
+// Function definitions for accessing in other scripts
 
 exports.getRatingsByAnswerIdQuery = getRatingsByAnswerIdQuery;
 exports.getNonBannedRatingsByAnswerIdQuery = getNonBannedRatingsByAnswerIdQuery;
