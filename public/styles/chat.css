@@ -135,3 +135,15 @@ p.message {
 	color: black;
 }
 
+.boltChatTitle {
+	margin-top: 10px;
+}
+
+.sendMsgBtn {
+	font-family: "Barlow", sans-serif;
+}
+
+#connectedUsers {
+	font-family: "Barlow", sans-serif;
+}
+
