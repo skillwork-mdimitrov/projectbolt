@@ -1,4 +1,7 @@
+/* Namespace for adding ratings to a question
+ ============================================================== */
 const addRating = function() {
+    // Change the rating of an answer
     const rateAnswer = function rateAnswer(ratingElement) {
         ratingElement.rating("disable");
         let answerID = ratingElement.attr("id");
@@ -15,7 +18,7 @@ const addRating = function() {
         $.getJSON("rating/get-rating-answer-user/"+answerID+"/"+sessionID, function () {})
         .done(function (data) {
             console.log("Rating check complete on answerID " + answerID);
-
+            // If the rating already exists, update it
             if (data.length > 0) {
                 console.log("Requesting update rating on answerID " + answerID);
                 $.post("rating/update-rating", ratingData, function() {})
