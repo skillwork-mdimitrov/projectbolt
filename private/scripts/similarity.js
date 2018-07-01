@@ -1,12 +1,6 @@
 var stringSimilarity = require('string-similarity');
 var database = require('./database');
 
-/*
-    The following functions compute the similarity of a search string with all the answers or questions
-    Using the string-similarity library from JQUERY
-*/
-
-// Get the similarity ratings compared to all questions in the database
 function getQuestionSimilarities(searchQuery) {
     return new Promise((resolve, reject) => {
         database.getAllQuestions().then((questions) => {
@@ -27,7 +21,6 @@ function getQuestionSimilarities(searchQuery) {
     });
 }
 
-// Get the similarity ratings compared to all answers in the database
 function getAnswerSimilarities(searchQuery, questionID) {
     return new Promise((resolve, reject) => {
         database.getAnswersByQuestionId(questionID).then((answers) => {
@@ -47,8 +40,6 @@ function getAnswerSimilarities(searchQuery, questionID) {
         });  
     });
 }
-
-// Function definitions for accessing in other scripts
 
 exports.getQuestionSimilarities = getQuestionSimilarities;
 exports.getAnswerSimilarities = getAnswerSimilarities;

@@ -2,14 +2,11 @@ var bcrypt = require('bcrypt');
 var database = require('./database');
 
 var sessionData = {};
-// Starting session ID
 var nextSessionID = 0;
 // 15 minute session duration
 var sessionTimeout = 900000;
-// Pre defined hashing salt for user passwords
 var hashingSalt = "$2b$10$HsyAVPkQft2HZybIRduZUO";
 
-// Create a new session for a user that is logging in
 function createSession(userID) {
     var currentDateTime = new Date();
     var currentSessionID = nextSessionID;
@@ -20,7 +17,6 @@ function createSession(userID) {
     return currentSessionID;
 };
 
-// Check if a session is still valid based on the timeout value
 function sessionValid(sessionID) {
     if (sessionData[sessionID] !== undefined) {
         var sessionCreatedDateTime = sessionData[sessionID]['created'];
@@ -40,7 +36,6 @@ function sessionValid(sessionID) {
     }
 }
 
-// Compute the hash of a password, making use of the pre-defined salt
 function getHash(inputString) {
     return new Promise((resolve, reject) => {
         bcrypt.hash(inputString, hashingSalt, function(err, hash) {
@@ -58,7 +53,6 @@ function getSessionData(sessionID) {
     return sessionData[sessionID];
 }
 
-// Helper function for time differentials in absolute milliseconds
 function getTimeDifference(dateA, dateB) {
     var utcA = Date.UTC(dateA.getFullYear(), 
                         dateA.getMonth(), 
@@ -76,7 +70,6 @@ function getTimeDifference(dateA, dateB) {
     return Math.floor(utcB - utcA);
 }
 
-// Check if a session belongs to an admin (roleID 3)
 function isAdmin(sessionID) {
     return new Promise((resolve, reject) => {
         database.getUserRoleById(sessionData[sessionID]["userID"]).then((userRole) => {
@@ -89,7 +82,6 @@ function isAdmin(sessionID) {
     });
 }
 
-// Check if a session belongs to a teacher (roleID 2)
 function isTeacher(sessionID) {
     return new Promise((resolve, reject) => {
         database.getUserRoleById(sessionData[sessionID]["userID"]).then((userRole) => {
@@ -102,8 +94,6 @@ function isTeacher(sessionID) {
     });
 }
   
-// Function definitions for accessing in other scripts
-
 exports.createSession = createSession;
 exports.sessionValid = sessionValid;  
 exports.getHash = getHash;

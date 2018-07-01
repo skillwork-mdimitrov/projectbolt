@@ -41,6 +41,3 @@ jspm_packages
 
 # local sync
 .stfolder
-
-# Visual code config
-.vscode

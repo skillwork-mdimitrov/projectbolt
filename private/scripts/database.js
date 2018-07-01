@@ -3,8 +3,6 @@ var Request = require('tedious').Request;
 var queries = require('./queries');
 var TYPES = require('tedious').TYPES;
 
-// Database configuration
-// Accessing Azure database using Tedious library
 var config = {
     userName: 'pbadmin',
     password: '56(E+!,?NGQ85tY"a%l#%5IU~[J>GU',
@@ -15,8 +13,6 @@ var config = {
     }
 };
 
-// Running a generic query which does not expect any return value
-// For example delete or insert queries
 function runGenericQuery(query)
 {
     return new Promise((resolve, reject) => {
@@ -46,9 +42,6 @@ function runGenericQuery(query)
     });
 }
 
-// Running a query where you expect a return value in the form of a JSON dataset
-// The values are organized in an array with every index corresponding to a row in the database
-// Every row contains a JSON object with the keys being the column names and the values being the column values
 function getJsonDataSet(query)
 {
     return new Promise((resolve, reject) => {
@@ -69,7 +62,6 @@ function getJsonDataSet(query)
     }); 
 }
 
-// Intermediate function for parsing the input parameters
 function getQueryResult(connection, query) {
     return new Promise((resolve, reject) => {
         var result = [];
@@ -419,8 +411,6 @@ function getUsersPostedAnsersByMonth(monthStart, monthEnd) {
         }); 
     }); 
 }
-
-// Function definitions for accessing in other scripts
 
 exports.runGenericQuery = runGenericQuery;
 exports.getJsonDataSet = getJsonDataSet;

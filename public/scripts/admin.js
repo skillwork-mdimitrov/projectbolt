@@ -1,9 +1,6 @@
-/* Namespace for admin functions
- ============================================================== */
 const admin = function () {
     const scriptFilename = "admin.js";
 
-    // Reload the users table to reflect changes in ban status
     const reloadTable = function() {
         $("#userTable tr").remove();
         
@@ -14,7 +11,6 @@ const admin = function () {
         $("#userTable").append(newRow);
     };
 
-    // Add user to users table with ban status
     const addToTable = function(userData) {
         newRow = $("<tr/>");
 
@@ -44,7 +40,6 @@ const admin = function () {
         $("#userTable").append(newRow);
     }
 
-    // Retrieve and display all the users in the database
     const loadUsers = function() {    
         return new Promise((resolve, reject) => {
             let sessionID = sessionStorage.getItem("projectBoltSessionID");
@@ -68,9 +63,9 @@ const admin = function () {
         });
     };
 
-    // Execute a ban or unban depedning on the status of the user
     const execute = function(banButton) {
         let userID = banButton.attr("id");
+        let buttonText = banButton.text();
         let sessionID = sessionStorage.getItem("projectBoltSessionID");
 
         global.showLoader(true);
@@ -102,7 +97,6 @@ $(document).ready(function () {
     let loadNavigationPromise = navigation.loadNavigation();
     let initNotificationsPromise = notifications.initNotifications();
 
-    // Check if user is logged in, load the navigation bar and initialize notifications on this page
     Promise.all([loginCheckPromise, loadNavigationPromise, initNotificationsPromise]).then(() => {
         let sessionID = sessionStorage.getItem("projectBoltSessionID");
 
@@ -110,7 +104,6 @@ $(document).ready(function () {
         global.logPromise(isAdminPromise, admin.scriptFilename, "Requesting user admin status");
         let loadUsersPromise = admin.loadUsers();
         
-        // Check if the user is an admin and load the users
         Promise.all([isAdminPromise, loadUsersPromise]).then((values) => {
             let isAdmin = values[0]; // Return value from isAdminPromise
             if (isAdmin) {            
