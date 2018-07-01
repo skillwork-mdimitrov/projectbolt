@@ -41,7 +41,7 @@ const userOfTheMonth = function () {
 				currentMonth - 1;
 			}
 			//for testing, this is set to the current month, please set to - 2 if you want the previous one
-			var lastmonth = currentMonth - 1;
+			var lastmonth = currentMonth - 2;
 			if (lastmonth <= 0)
 			{
 				lastmonth = 1;
