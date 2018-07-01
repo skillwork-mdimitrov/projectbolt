@@ -65,7 +65,15 @@ const userOfTheMonth = function () {
 			function loop (userPostedAnsers) 
 			{
 				//now work with the given array ^^
-				let userOfTheMonthID = userPostedAnsers[0].UserID
+				let userOfTheMonthID = 0;
+				if(userPostedAnsers[0] != NULL)
+				{
+					let userOfTheMonthID = userPostedAnsers[0].UserID;
+				}
+				else
+				{
+					userOfTheMonthID = 1;
+				}
 				//console.log(userOfTheMonthID);
 				return userOfTheMonthID;
 			};
