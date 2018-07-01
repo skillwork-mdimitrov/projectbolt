@@ -66,7 +66,7 @@ const userOfTheMonth = function () {
 			{
 				//now work with the given array ^^
 				let userOfTheMonthID = 0;
-				if(userPostedAnsers[0] != NULL)
+				if(userPostedAnsers[0] != null)
 				{
 					let userOfTheMonthID = userPostedAnsers[0].UserID;
 				}
